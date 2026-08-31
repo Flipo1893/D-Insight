@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Impressum — D-Insight",
+  title: "Impressum",
 };
 
 export default function Impressum() {
@@ -15,8 +15,8 @@ export default function Impressum() {
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Impressum
           </h1>
-          <p className="mt-4 text-sm text-accent">
-            Platzhalter — bitte mit den tatsächlichen Angaben nach § 5 TMG
+          <p className="mt-4 text-sm text-accent-text">
+            Platzhalter. Bitte mit den tatsächlichen Angaben nach § 5 TMG
             ersetzen.
           </p>
 

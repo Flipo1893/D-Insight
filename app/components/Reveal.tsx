@@ -1,19 +1,27 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
   className?: string;
-  /** Optional stagger delay in ms, applied via inline transition-delay. */
-  delay?: number;
+  /** Stagger position among siblings. Drives --reveal-index in globals.css. */
+  index?: number;
+  style?: CSSProperties;
 };
 
 /**
- * Fades + slides a section into view the first time it crosses into the
- * viewport. Pairs with the [data-reveal]/.is-visible rules in globals.css.
+ * Fades and lifts content into view the first time it crosses the viewport.
+ * Pairs with the [data-reveal] rules in globals.css, which also carry the
+ * reduced-motion fallback. Uses IntersectionObserver rather than a scroll
+ * listener so nothing runs per frame.
  */
-export default function Reveal({ children, className = "", delay = 0 }: RevealProps) {
+export default function Reveal({
+  children,
+  className = "",
+  index = 0,
+  style,
+}: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,7 +35,7 @@ export default function Reveal({ children, className = "", delay = 0 }: RevealPr
           observer.unobserve(node);
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -80px 0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
     );
 
     observer.observe(node);
@@ -38,7 +46,7 @@ export default function Reveal({ children, className = "", delay = 0 }: RevealPr
     <div
       ref={ref}
       data-reveal
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      style={{ ["--reveal-index" as string]: index, ...style }}
       className={className}
     >
       {children}

@@ -1,18 +1,21 @@
 import Link from "next/link";
+import { site } from "../lib/content";
 
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted sm:flex-row">
-        <p>© 2026 D-Insight — Website-Refactoring</p>
-        <div className="flex gap-6">
-          <Link href="/impressum" className="hover:text-foreground">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-10 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          &copy; {new Date().getFullYear()} {site.name}, {site.tagline}
+        </p>
+        <nav aria-label="Rechtliches" className="flex gap-6">
+          <Link href="/impressum" className="transition-colors hover:text-foreground">
             Impressum
           </Link>
-          <Link href="/datenschutz" className="hover:text-foreground">
+          <Link href="/datenschutz" className="transition-colors hover:text-foreground">
             Datenschutz
           </Link>
-        </div>
+        </nav>
       </div>
     </footer>
   );

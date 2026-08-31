@@ -1,51 +1,45 @@
 import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
+import { steps } from "../lib/content";
 
-const steps = [
-  {
-    number: "01",
-    title: "Analyse",
-    description:
-      "Wir prüfen bestehende Website, Technik und Suchmaschinen-Performance.",
-  },
-  {
-    number: "02",
-    title: "Konzept & Design",
-    description:
-      "Struktur und visuelles Konzept entstehen, abgestimmt mit Ihnen.",
-  },
-  {
-    number: "03",
-    title: "Umsetzung",
-    description:
-      "Code-Refactoring, Redesign und KI-SEO werden implementiert und getestet.",
-  },
-  {
-    number: "04",
-    title: "Launch & Betreuung",
-    description: "Go-live, Erfolgsmessung und Betreuung nach Bedarf.",
-  },
-];
-
+/**
+ * Layout family: horizontal rail with markers, collapsing to a vertical
+ * timeline below 768px. Step labels are the step names themselves, not
+ * "Phase 01" style enumeration.
+ */
 export default function Process() {
   return (
     <section id="prozess" className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-20">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            Prozess
-          </p>
+          <SectionHeading className="max-w-xl">
+            Von der Analyse bis zum Launch.
+          </SectionHeading>
         </Reveal>
-        <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+
+        <ol className="relative mt-14 grid gap-10 md:grid-cols-4 md:gap-8">
+          {/* The rail: horizontal on desktop, vertical on mobile. */}
+          <span
+            aria-hidden
+            className="absolute left-[5px] top-2 bottom-2 w-px bg-border md:left-0 md:right-0 md:top-[5px] md:bottom-auto md:h-px md:w-full"
+          />
           {steps.map((step, index) => (
-            <Reveal key={step.number} delay={index * 90} className="group">
-              <span className="mb-3 block h-2 w-2 bg-accent transition-transform duration-300 group-hover:scale-150" />
-              <h3 className="font-semibold">
-                {step.number} · {step.title}
-              </h3>
-              <p className="mt-2 text-sm text-muted">{step.description}</p>
+            <Reveal key={step.title} index={index} className="relative">
+              <li className="relative pl-8 md:pl-0 md:pt-8">
+                <span
+                  aria-hidden
+                  className="absolute left-0 top-1.5 block h-2.5 w-2.5 rounded-full bg-accent ring-4 ring-background md:top-0"
+                />
+                <h3 className="text-lg font-semibold tracking-tight">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  {step.description}
+                </p>
+              </li>
             </Reveal>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 export const metadata: Metadata = {
-  title: "Datenschutz — D-Insight",
+  title: "Datenschutz",
 };
 
 export default function Datenschutz() {
@@ -15,8 +15,8 @@ export default function Datenschutz() {
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Datenschutzerklärung
           </h1>
-          <p className="mt-4 text-sm text-accent">
-            Platzhalter — bitte vor Veröffentlichung durch einen
+          <p className="mt-4 text-sm text-accent-text">
+            Platzhalter. Bitte vor Veröffentlichung durch einen
             rechtsgültigen Text (z. B. via Anwalt oder Datenschutz-Generator)
             ersetzen.
           </p>

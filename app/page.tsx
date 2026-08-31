@@ -8,27 +8,51 @@ import Contact from "./components/Contact";
 import FAQ from "./components/FAQ";
 import CtaBanner from "./components/CtaBanner";
 import Footer from "./components/Footer";
+import { faqs, services, site, team } from "./lib/content";
 
-// Structured data so search engines and AI assistants (ChatGPT, Perplexity,
-// Google AI Overviews, …) can understand and cite this business directly —
-// the same practice we sell as "KI-SEO" / GEO.
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: "D-Insight",
-  description:
-    "Website-Refactoring, visuelles Redesign und KI-gestützte Suchmaschinenoptimierung (GEO) für bestehende Unternehmenswebsites.",
-  areaServed: "DE",
-  founders: [
-    { "@type": "Person", name: "Dominic Felder", jobTitle: "Web Developer" },
-    { "@type": "Person", name: "Beg Sherifi", jobTitle: "Web Developer" },
-  ],
-  makesOffer: [
-    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Visuelles Redesign" } },
-    { "@type": "Offer", itemOffered: { "@type": "Service", name: "Technisches Refactoring" } },
-    { "@type": "Offer", itemOffered: { "@type": "Service", name: "KI-SEO / GEO" } },
-  ],
-};
+/*
+ * Structured data so search engines and AI assistants (ChatGPT, Perplexity,
+ * Google AI Overviews) can understand and cite this business directly. This
+ * is the same practice we sell as KI-SEO / GEO, so the site has to pass its
+ * own test. The FAQ graph is generated from the same array the accordion
+ * renders, which keeps markup and content in sync by construction.
+ */
+const graph = [
+  {
+    "@type": "ProfessionalService",
+    "@id": `${site.url}/#business`,
+    name: site.name,
+    url: site.url,
+    email: site.email,
+    description:
+      "Website-Refactoring, visuelles Redesign und KI-gestützte Suchmaschinenoptimierung (GEO) für bestehende Unternehmenswebsites.",
+    areaServed: "DE",
+    founders: team.map((person) => ({
+      "@type": "Person",
+      name: person.name,
+      jobTitle: person.role,
+    })),
+    makesOffer: services.map((service) => ({
+      "@type": "Offer",
+      itemOffered: {
+        "@type": "Service",
+        name: service.title,
+        description: service.description,
+      },
+    })),
+  },
+  {
+    "@type": "FAQPage",
+    "@id": `${site.url}/#faq`,
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: { "@type": "Answer", text: faq.answer },
+    })),
+  },
+];
+
+const jsonLd = { "@context": "https://schema.org", "@graph": graph };
 
 export default function Home() {
   return (
