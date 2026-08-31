@@ -75,7 +75,13 @@ export default function TrafficChart({ daily }: { daily: DailyVisitors[] }) {
           />
         ))}
 
-        <path d={areaPath} fill="var(--accent)" fillOpacity={0.12} stroke="none" />
+        <path
+          d={areaPath}
+          fill="var(--accent)"
+          fillOpacity={0.12}
+          stroke="none"
+          className="animate-fade-in-delayed"
+        />
         <path
           d={linePath}
           fill="none"
@@ -83,6 +89,8 @@ export default function TrafficChart({ daily }: { daily: DailyVisitors[] }) {
           strokeWidth={2}
           strokeLinecap="round"
           strokeLinejoin="round"
+          pathLength={1}
+          className="animate-draw-line"
         />
 
         {hoverIndex !== null && (

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import DashboardNav from "../components/DashboardNav";
+import Reveal from "../components/Reveal";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getCurrentUser } from "@/lib/supabase/auth";
 
@@ -45,17 +46,28 @@ export default async function DashboardLayout({
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-6xl px-6 pt-12">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+          <p
+            className="animate-hero text-sm font-semibold uppercase tracking-wider text-accent"
+            style={{ animationDelay: "0ms" }}
+          >
             Kundenbereich
           </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight md:text-4xl">
+          <h1
+            className="animate-hero mt-2 text-3xl font-semibold tracking-tight md:text-4xl"
+            style={{ animationDelay: "80ms" }}
+          >
             Willkommen, {user.email}
           </h1>
         </div>
-        <div className="mx-auto max-w-6xl px-6 pt-8">
+        <div
+          className="animate-hero mx-auto max-w-6xl px-6 pt-8"
+          style={{ animationDelay: "160ms" }}
+        >
           <DashboardNav />
         </div>
-        <div className="mx-auto max-w-6xl px-6 py-12">{children}</div>
+        <div className="mx-auto max-w-6xl px-6 py-12">
+          <Reveal>{children}</Reveal>
+        </div>
       </main>
       <Footer />
     </>

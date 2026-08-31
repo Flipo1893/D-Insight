@@ -1,4 +1,5 @@
 import type { TrafficSummary } from "@/lib/analytics/types";
+import CountUp from "./CountUp";
 
 function formatSeconds(seconds: number) {
   const minutes = Math.floor(seconds / 60);
@@ -8,8 +9,8 @@ function formatSeconds(seconds: number) {
 
 export default function StatTiles({ summary }: { summary: TrafficSummary }) {
   const tiles = [
-    { label: "Besucher (30 Tage)", value: summary.visitors30d.toLocaleString("de-DE") },
-    { label: "Seitenaufrufe (30 Tage)", value: summary.pageviews30d.toLocaleString("de-DE") },
+    { label: "Besucher (30 Tage)", value: <CountUp value={summary.visitors30d} /> },
+    { label: "Seitenaufrufe (30 Tage)", value: <CountUp value={summary.pageviews30d} /> },
     { label: "Ø Sitzungsdauer", value: formatSeconds(summary.avgSessionSeconds) },
   ];
 
@@ -18,10 +19,10 @@ export default function StatTiles({ summary }: { summary: TrafficSummary }) {
       {tiles.map((tile) => (
         <div
           key={tile.label}
-          className="rounded-lg border border-border bg-surface p-6"
+          className="rounded-lg border border-border bg-surface p-6 transition-colors hover:border-accent/40"
         >
           <p className="text-sm text-muted">{tile.label}</p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight">
+          <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums">
             {tile.value}
           </p>
         </div>
