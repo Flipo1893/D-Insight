@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Reveal from "./Reveal";
 
 const faqs = [
   {
@@ -31,14 +32,16 @@ export default function FAQ() {
   return (
     <section className="border-t border-border">
       <div className="mx-auto max-w-6xl px-6 py-20">
-        <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-          FAQ
-        </p>
+        <Reveal>
+          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+            FAQ
+          </p>
+        </Reveal>
         <div className="mt-8 divide-y divide-border border-t border-border">
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div key={faq.question}>
+              <Reveal key={faq.question} delay={index * 60}>
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
@@ -47,17 +50,23 @@ export default function FAQ() {
                 >
                   <span className="text-lg font-medium">{faq.question}</span>
                   <span
-                    className={`shrink-0 text-2xl leading-none text-accent transition-transform ${
+                    className={`shrink-0 text-2xl leading-none text-accent transition-transform duration-300 ${
                       isOpen ? "rotate-45" : ""
                     }`}
                   >
                     +
                   </span>
                 </button>
-                {isOpen && (
-                  <p className="max-w-2xl pb-6 text-muted">{faq.answer}</p>
-                )}
-              </div>
+                <div
+                  className={`grid overflow-hidden transition-[grid-template-rows] duration-300 ease-out ${
+                    isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                  }`}
+                >
+                  <div className="min-h-0">
+                    <p className="max-w-2xl pb-6 text-muted">{faq.answer}</p>
+                  </div>
+                </div>
+              </Reveal>
             );
           })}
         </div>
