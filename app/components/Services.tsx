@@ -23,29 +23,20 @@ const services = [
 
 export default function Services() {
   return (
-    <section id="leistungen" className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <Reveal>
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            Leistungen
-          </p>
+    <div className="divide-y divide-border border-t border-border">
+      {services.map((service, index) => (
+        <Reveal
+          key={service.number}
+          delay={index * 100}
+          className="grid gap-4 py-8 transition-colors md:grid-cols-[80px_1fr_1fr] md:gap-8 hover:bg-surface/60"
+        >
+          <span className="text-sm text-muted">{service.number}</span>
+          <h3 className="text-xl font-semibold md:text-2xl">
+            {service.title}
+          </h3>
+          <p className="max-w-md text-muted">{service.description}</p>
         </Reveal>
-        <div className="mt-8 divide-y divide-border border-t border-border">
-          {services.map((service, index) => (
-            <Reveal
-              key={service.number}
-              delay={index * 100}
-              className="grid gap-4 py-8 transition-colors md:grid-cols-[80px_1fr_1fr] md:gap-8 hover:bg-surface/60"
-            >
-              <span className="text-sm text-muted">{service.number}</span>
-              <h3 className="text-xl font-semibold md:text-2xl">
-                {service.title}
-              </h3>
-              <p className="max-w-md text-muted">{service.description}</p>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }

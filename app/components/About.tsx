@@ -16,27 +16,18 @@ const team = [
 
 export default function About() {
   return (
-    <section className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-20">
-        <Reveal>
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            Über uns
-          </p>
+    <div className="grid gap-10 md:grid-cols-2">
+      {team.map((person, index) => (
+        <Reveal key={person.name} delay={index * 120}>
+          <PlaceholderImage
+            label={`Foto: ${person.name}`}
+            hint="wird nachgeliefert"
+          />
+          <h3 className="mt-4 text-xl font-semibold">{person.name}</h3>
+          <p className="text-sm text-muted">{person.role}</p>
+          <p className="mt-3 max-w-md text-muted">{person.bio}</p>
         </Reveal>
-        <div className="mt-8 grid gap-10 md:grid-cols-2">
-          {team.map((person, index) => (
-            <Reveal key={person.name} delay={index * 120}>
-              <PlaceholderImage
-                label={`Foto: ${person.name}`}
-                hint="wird nachgeliefert"
-              />
-              <h3 className="mt-4 text-xl font-semibold">{person.name}</h3>
-              <p className="text-sm text-muted">{person.role}</p>
-              <p className="mt-3 max-w-md text-muted">{person.bio}</p>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 }
