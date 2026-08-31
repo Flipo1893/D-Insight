@@ -1,36 +1,27 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useActionState } from "react";
+import { initialAuthState, type AuthActionState } from "@/lib/supabase/types";
 
 type AuthFormProps = {
   mode: "login" | "signup";
+  action: (state: AuthActionState, formData: FormData) => Promise<AuthActionState>;
 };
 
-// No backend yet — user accounts land in Supabase later. For now this just
-// confirms the submission and explains that the customer area is coming.
-export default function AuthForm({ mode }: AuthFormProps) {
-  const [submitted, setSubmitted] = useState(false);
+export default function AuthForm({ mode, action }: AuthFormProps) {
+  const [state, formAction, pending] = useActionState(action, initialAuthState);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSubmitted(true);
-  }
-
-  if (submitted) {
+  if (state.message) {
     return (
       <div className="rounded-md border border-border bg-surface p-6 text-center">
-        <p className="font-medium">Danke!</p>
-        <p className="mt-2 text-sm text-muted">
-          Der Kundenbereich ist noch im Aufbau. Sobald er startet, melden wir
-          uns bei Ihnen — inklusive der Möglichkeit, Ihre Website-Inhalte
-          selbst zu bearbeiten und Traffic-Zahlen einzusehen.
-        </p>
+        <p className="font-medium">Fast geschafft!</p>
+        <p className="mt-2 text-sm text-muted">{state.message}</p>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form action={formAction} className="flex flex-col gap-4">
       {mode === "signup" && (
         <div>
           <label htmlFor="name" className="mb-1 block text-sm text-muted">
@@ -74,11 +65,18 @@ export default function AuthForm({ mode }: AuthFormProps) {
         />
       </div>
 
+      {state.error && <p className="text-sm text-accent">{state.error}</p>}
+
       <button
         type="submit"
-        className="mt-2 w-full rounded-md bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+        disabled={pending}
+        className="mt-2 w-full rounded-md bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover disabled:opacity-60"
       >
-        {mode === "login" ? "Anmelden" : "Konto erstellen"}
+        {pending
+          ? "Einen Moment…"
+          : mode === "login"
+            ? "Anmelden"
+            : "Konto erstellen"}
       </button>
     </form>
   );
