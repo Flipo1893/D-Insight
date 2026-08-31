@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     description,
     url: "/",
     type: "website",
-    locale: "de_DE",
+    locale: "de_CH",
     siteName: site.name,
   },
   twitter: {

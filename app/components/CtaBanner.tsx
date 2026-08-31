@@ -17,7 +17,7 @@ export default function CtaBanner() {
           </h2>
           <a
             href="#kontakt"
-            className="group inline-flex shrink-0 items-center gap-2 rounded-brand bg-white px-6 py-3 text-sm font-semibold whitespace-nowrap text-accent-strong shadow-lg transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
+            className="group inline-flex w-fit shrink-0 self-start items-center gap-2 rounded-brand bg-white px-6 py-3 text-sm font-semibold whitespace-nowrap text-accent-strong shadow-lg transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
           >
             {primaryCta}
             <span

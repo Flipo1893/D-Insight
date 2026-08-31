@@ -122,7 +122,7 @@ export default function ContactForm() {
           required
           autoComplete="email"
           disabled={busy}
-          placeholder="name@firma.de"
+          placeholder="name@firma.ch"
           className={fieldClass}
         />
       </div>
@@ -139,7 +139,7 @@ export default function ContactForm() {
           inputMode="url"
           autoComplete="url"
           disabled={busy}
-          placeholder="https://ihre-website.de"
+          placeholder="https://ihre-website.ch"
           className={fieldClass}
         />
       </div>

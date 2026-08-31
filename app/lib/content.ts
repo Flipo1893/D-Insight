@@ -6,9 +6,9 @@
 
 export const site = {
   name: "D-Insight",
-  url: "https://www.d-insight.de",
+  url: "https://www.d-insight.ch",
   tagline: "Website-Refactoring & KI-SEO",
-  email: "hallo@d-insight.de",
+  email: "info@d-insight.ch",
   replyWindow: "zwei Werktagen",
 } as const;
 

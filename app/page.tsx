@@ -27,7 +27,7 @@ const graph = [
     email: site.email,
     description:
       "Website-Refactoring, visuelles Redesign und KI-gestützte Suchmaschinenoptimierung (GEO) für bestehende Unternehmenswebsites.",
-    areaServed: "DE",
+    areaServed: "CH",
     founders: team.map((person) => ({
       "@type": "Person",
       name: person.name,

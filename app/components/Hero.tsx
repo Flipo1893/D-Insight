@@ -26,7 +26,12 @@ export default function Hero() {
       id="top"
       className="relative isolate mx-auto flex min-h-[calc(100dvh-4rem)] max-w-6xl flex-col justify-center px-6 pb-20 pt-16 md:pb-28 md:pt-24"
     >
-      <div className="bg-aurora" aria-hidden />
+      <div className="hero-visual" aria-hidden>
+        <div className="hero-visual__grid" />
+        <div className="hero-visual__orb hero-visual__orb--a" />
+        <div className="hero-visual__orb hero-visual__orb--b" />
+        <div className="hero-visual__beam" />
+      </div>
 
       <div className="grid grid-cols-12">
         <h1 className="col-span-12 text-[clamp(2.75rem,9vw,6.5rem)] font-semibold leading-[0.95] tracking-tighter lg:col-span-11">

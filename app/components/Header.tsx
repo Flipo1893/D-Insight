@@ -116,7 +116,7 @@ export default function Header() {
               onClick={() => setOpen((value) => !value)}
               aria-expanded={open}
               aria-controls="mobile-nav"
-              aria-label={open ? "Menü schließen" : "Menü öffnen"}
+              aria-label={open ? "Menü schliessen" : "Menü öffnen"}
               className="-mr-2 flex h-10 w-10 items-center justify-center rounded-brand text-foreground md:hidden"
             >
               <span className="relative block h-3.5 w-5">
