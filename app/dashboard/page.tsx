@@ -1,72 +1,61 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import LogoutButton from "../components/LogoutButton";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
+import { isMongoConfigured } from "@/lib/mongodb/config";
+import { getWebsiteContent } from "@/lib/mongodb/websites";
+import { getCurrentUser } from "@/lib/supabase/auth";
 
 export const metadata: Metadata = {
   title: "Dashboard",
   robots: { index: false, follow: false },
 };
 
-export default async function Dashboard() {
-  if (!isSupabaseConfigured) {
-    return (
-      <>
-        <Header />
-        <main className="flex-1">
-          <section className="mx-auto max-w-2xl px-6 py-24 text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-              Kundenbereich
-            </p>
-            <h1 className="mt-4 text-3xl font-semibold tracking-tight">
-              Noch nicht konfiguriert
-            </h1>
-            <p className="mt-4 text-muted">
-              Sobald <code className="text-foreground">NEXT_PUBLIC_SUPABASE_URL</code>{" "}
-              und <code className="text-foreground">NEXT_PUBLIC_SUPABASE_ANON_KEY</code>{" "}
-              in <code className="text-foreground">.env.local</code> gesetzt sind, können
-              sich Kund:innen hier anmelden und ihre Website verwalten.
-            </p>
-          </section>
-        </main>
-        <Footer />
-      </>
-    );
-  }
-
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
+export default async function DashboardOverview() {
+  const user = await getCurrentUser();
+  const content =
+    isMongoConfigured && user ? await getWebsiteContent(user.id) : null;
 
   return (
-    <>
-      <Header />
-      <main className="flex-1">
-        <section className="mx-auto max-w-6xl px-6 py-20">
-          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-            Kundenbereich
+    <div className="flex flex-col gap-6">
+      <p className="max-w-xl text-muted">
+        Hier verwalten Sie künftig Ihre gerefactorte Website: Inhalte anpassen
+        und Ihre Traffic-Zahlen im Blick behalten.
+      </p>
+
+      <div className="grid gap-6 sm:grid-cols-2">
+        <Link
+          href="/dashboard/inhalte"
+          className="group rounded-lg border border-border bg-surface p-6 transition-colors hover:border-accent"
+        >
+          <p className="text-sm text-muted">Website-Inhalte</p>
+          <h2 className="mt-2 flex items-center gap-2 text-xl font-semibold">
+            Inhalte bearbeiten
+            <span className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            {content
+              ? `Zuletzt geändert am ${content.updatedAt.toLocaleDateString("de-DE")}.`
+              : "Noch keine eigenen Inhalte gespeichert."}
           </p>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-4xl">
-            Willkommen, {user.email}
-          </h1>
-          <p className="mt-4 max-w-xl text-muted">
-            Hier entstehen als Nächstes: die Inhalte Ihrer Website selbst
-            bearbeiten und Ihre Traffic-Zahlen einsehen.
+        </Link>
+
+        <Link
+          href="/dashboard/traffic"
+          className="group rounded-lg border border-border bg-surface p-6 transition-colors hover:border-accent"
+        >
+          <p className="text-sm text-muted">Traffic</p>
+          <h2 className="mt-2 flex items-center gap-2 text-xl font-semibold">
+            Zahlen ansehen
+            <span className="transition-transform group-hover:translate-x-1">
+              →
+            </span>
+          </h2>
+          <p className="mt-2 text-sm text-muted">
+            Besucher, Seitenaufrufe und meistgesehene Seiten.
           </p>
-          <div className="mt-8">
-            <LogoutButton variant="button" />
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+        </Link>
+      </div>
+    </div>
   );
 }
