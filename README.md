@@ -25,6 +25,12 @@ Seite läuft dann unter [http://localhost:3000](http://localhost:3000).
 - **Impressum & Datenschutz**: Enthalten Platzhaltertexte
   (`app/impressum`, `app/datenschutz`) — vor Live-Schaltung mit echten
   Angaben bzw. rechtsgültigem Text ersetzen.
+- **Login & Registrieren**: `app/login` und `app/registrieren` sind aktuell
+  reine UI (`app/components/AuthForm.tsx`), ohne Backend — ein Absenden
+  zeigt nur eine "kommt bald"-Meldung. Geplant: Kundenbereich, in dem
+  Kunden ihre gerefactorte Website selbst bearbeiten (Texte etc.) und
+  Traffic-Daten einsehen können. User-Verwaltung soll über Supabase laufen,
+  die übrigen Daten (Website-Inhalte, Traffic) über MongoDB.
 
 ## Build
 
