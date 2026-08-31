@@ -12,7 +12,7 @@ export default function Datenschutz() {
       <Header />
       <main className="flex-1">
         <div className="mx-auto max-w-3xl px-6 py-20">
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+          <h1 className="break-words text-3xl font-semibold tracking-tight md:text-4xl">
             Datenschutzerklärung
           </h1>
           <p className="mt-4 text-sm text-accent">

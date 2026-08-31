@@ -53,7 +53,7 @@ export default async function DashboardLayout({
             Kundenbereich
           </p>
           <h1
-            className="animate-hero mt-2 text-3xl font-semibold tracking-tight md:text-4xl"
+            className="animate-hero mt-2 break-words text-3xl font-semibold tracking-tight md:text-4xl"
             style={{ animationDelay: "80ms" }}
           >
             Willkommen, {user.email}
