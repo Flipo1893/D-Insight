@@ -49,6 +49,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="de" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important;}`}</style>
+        </noscript>
         {children}
       </body>
     </html>

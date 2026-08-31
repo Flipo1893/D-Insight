@@ -1,3 +1,5 @@
+import Reveal from "./Reveal";
+
 const steps = [
   {
     number: "01",
@@ -28,18 +30,20 @@ export default function Process() {
   return (
     <section id="prozess" className="border-t border-border">
       <div className="mx-auto max-w-6xl px-6 py-20">
-        <p className="text-sm font-semibold uppercase tracking-wider text-accent">
-          Prozess
-        </p>
+        <Reveal>
+          <p className="text-sm font-semibold uppercase tracking-wider text-accent">
+            Prozess
+          </p>
+        </Reveal>
         <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {steps.map((step) => (
-            <div key={step.number}>
-              <span className="mb-3 block h-2 w-2 bg-accent" />
+          {steps.map((step, index) => (
+            <Reveal key={step.number} delay={index * 90} className="group">
+              <span className="mb-3 block h-2 w-2 bg-accent transition-transform duration-300 group-hover:scale-150" />
               <h3 className="font-semibold">
                 {step.number} · {step.title}
               </h3>
               <p className="mt-2 text-sm text-muted">{step.description}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>
