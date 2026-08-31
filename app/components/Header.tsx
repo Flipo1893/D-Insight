@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { isSupabaseConfigured } from "@/lib/supabase/config";
-import { createClient } from "@/lib/supabase/server";
+import { getCurrentUser } from "@/lib/supabase/auth";
 import LogoutButton from "./LogoutButton";
 
 const navItems = [
@@ -12,9 +11,7 @@ const navItems = [
 ];
 
 export default async function Header() {
-  const user = isSupabaseConfigured
-    ? (await (await createClient()).auth.getUser()).data.user
-    : null;
+  const user = await getCurrentUser();
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">

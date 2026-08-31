@@ -25,6 +25,7 @@ Seite läuft dann unter [http://localhost:3000](http://localhost:3000).
 - **Impressum & Datenschutz**: Enthalten Platzhaltertexte
   (`app/impressum`, `app/datenschutz`) — vor Live-Schaltung mit echten
   Angaben bzw. rechtsgültigem Text ersetzen.
+
 ## Login / Kundenbereich (Supabase)
 
 Login, Registrieren, Logout und `/dashboard` sind vollständig mit
@@ -47,10 +48,33 @@ Bei Registrierung verschickt Supabase standardmäßig eine
 Bestätigungs-E-Mail mit einem Link auf `/auth/callback` — das ist bereits
 als Route Handler eingerichtet (`app/auth/callback/route.ts`).
 
-**Geplant, noch nicht umgesetzt**: Kundenbereich, in dem Kund:innen ihre
-gerefactorte Website selbst bearbeiten (Texte etc.) und Traffic-Daten
-einsehen können. Diese Inhalte (Website-Texte, Traffic) sollen über
-MongoDB laufen, während Supabase nur die User-Verwaltung übernimmt.
+## Kundenbereich (`/dashboard`)
+
+Eingeloggte Kund:innen landen im Kundenbereich mit drei Tabs
+(`app/dashboard/layout.tsx` + `app/components/DashboardNav.tsx`):
+
+- **Übersicht** — Einstieg mit Links zu den beiden anderen Tabs.
+- **Inhalte** (`/dashboard/inhalte`) — Formular für ein paar Beispieltexte
+  der eigenen Website (Hero-Überschrift, Hero-Text, Über-uns-Text), über
+  MongoDB gespeichert (`lib/mongodb/`, `app/dashboard/inhalte/actions.ts`).
+  Genau wie bei Supabase: ohne `MONGODB_URI` bleibt die Seite nutzbar, zeigt
+  aber Beispielinhalte und erklärt beim Speichern, dass die Anbindung fehlt.
+- **Traffic** (`/dashboard/traffic`) — Besucher-Chart, Kennzahlen-Kacheln und
+  meistgesehene Seiten. Läuft aktuell auf Beispieldaten
+  (`lib/analytics/mock.ts`); welcher Analytics-Anbieter (Vercel Analytics,
+  Plausible, GA4, …) das später liefert, hängt vom Deployment-Ziel ab — die
+  UI erwartet nur die `TrafficSummary`-Form aus `lib/analytics/types.ts`,
+  das Ersetzen von `getTrafficSummary()` durch einen echten Provider-Call
+  ändert an den Komponenten nichts.
+
+MongoDB anbinden:
+
+1. Cluster auf [mongodb.com/cloud/atlas](https://mongodb.com/cloud/atlas)
+   anlegen (Free Tier reicht).
+2. Connection String unter *Database → Connect → Drivers* kopieren, in
+   `.env.local` als `MONGODB_URI` eintragen (siehe `.env.local.example`).
+3. Fertig — der "Inhalte"-Tab speichert dann pro Nutzer:in in der
+   `websites`-Collection.
 
 ## Build
 
