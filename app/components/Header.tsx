@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
+import { createClient } from "@/lib/supabase/server";
+import LogoutButton from "./LogoutButton";
 
 const navItems = [
   { href: "/leistungen", label: "Leistungen" },
@@ -8,7 +11,11 @@ const navItems = [
   { href: "/#kontakt", label: "Kontakt" },
 ];
 
-export default function Header() {
+export default async function Header() {
+  const user = isSupabaseConfigured
+    ? (await (await createClient()).auth.getUser()).data.user
+    : null;
+
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
@@ -28,18 +35,38 @@ export default function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="hidden text-sm font-medium text-muted transition-colors hover:text-foreground sm:inline-block"
-          >
-            Login
-          </Link>
-          <Link
-            href="/registrieren"
-            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20"
-          >
-            Registrieren
-          </Link>
+          {user ? (
+            <>
+              <Link
+                href="/dashboard"
+                className="hidden text-sm font-medium text-muted transition-colors hover:text-foreground sm:inline-block"
+              >
+                Dashboard
+              </Link>
+              <LogoutButton className="hidden sm:inline-block" />
+              <Link
+                href="/dashboard"
+                className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20 sm:hidden"
+              >
+                Dashboard
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="hidden text-sm font-medium text-muted transition-colors hover:text-foreground sm:inline-block"
+              >
+                Login
+              </Link>
+              <Link
+                href="/registrieren"
+                className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20"
+              >
+                Registrieren
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>

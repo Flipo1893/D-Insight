@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AuthForm from "../components/AuthForm";
 import Reveal from "../components/Reveal";
+import { login } from "./actions";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -27,7 +28,7 @@ export default function Login() {
           </p>
 
           <div className="mt-8">
-            <AuthForm mode="login" />
+            <AuthForm mode="login" action={login} />
           </div>
 
           <p className="mt-6 text-sm text-muted">

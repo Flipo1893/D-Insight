@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import AuthForm from "../components/AuthForm";
 import Reveal from "../components/Reveal";
+import { signup } from "./actions";
 
 export const metadata: Metadata = {
   title: "Registrieren",
@@ -28,7 +29,7 @@ export default function Registrieren() {
           </p>
 
           <div className="mt-8">
-            <AuthForm mode="signup" />
+            <AuthForm mode="signup" action={signup} />
           </div>
 
           <p className="mt-6 text-sm text-muted">
