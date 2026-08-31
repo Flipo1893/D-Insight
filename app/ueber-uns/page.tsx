@@ -22,7 +22,7 @@ export default function UeberUns() {
           description="Wir sind Dominic Felder und Beg Sherifi — zwei Webentwickler, die sich Technik und Konzept aufteilen, damit Sie während des gesamten Projekts einen direkten Draht zu beidem haben."
         />
         <section className="border-t border-border">
-          <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-16">
             <About />
           </div>
         </section>

@@ -27,7 +27,7 @@ export default async function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] items-center justify-between px-6 py-4">
         <Link href="/" className="text-lg font-semibold tracking-tight">
           D-Insight
         </Link>

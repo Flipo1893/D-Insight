@@ -9,7 +9,7 @@ type PageHeroProps = {
 
 export default function PageHero({ eyebrow, title, description }: PageHeroProps) {
   return (
-    <section className="mx-auto max-w-6xl px-6 pt-16 pb-12 md:pt-24">
+    <section className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-16 pb-12 md:pt-24">
       <Reveal>
         <Link
           href="/"

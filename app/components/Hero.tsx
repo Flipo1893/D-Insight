@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <section id="top" className="mx-auto max-w-6xl px-6 pt-20 pb-16 md:pt-28">
+    <section id="top" className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-20 pb-16 md:pt-28">
       <h1
         className="animate-hero max-w-3xl text-4xl font-semibold leading-tight tracking-tight md:text-6xl"
         style={{ animationDelay: "0ms" }}

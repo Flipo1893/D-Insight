@@ -3,7 +3,7 @@ import Reveal from "./Reveal";
 export default function CtaBanner() {
   return (
     <section className="overflow-hidden bg-accent">
-      <div className="mx-auto max-w-6xl px-6 py-20">
+      <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-20">
         <Reveal>
           <h2 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">
             Bereit für eine neue Website?

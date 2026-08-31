@@ -22,7 +22,7 @@ export default function Leistungen() {
           description="Redesign, Refactoring und KI-SEO greifen ineinander — visuell, technisch und in der Sichtbarkeit. Je nach Ausgangslage setzen wir bei einem oder allen drei Bausteinen an."
         />
         <section className="border-t border-border">
-          <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-16">
             <Services />
           </div>
         </section>

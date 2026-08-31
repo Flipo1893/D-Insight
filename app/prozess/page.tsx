@@ -22,7 +22,7 @@ export default function Prozess() {
           description="Von der ersten Analyse bis zum Go-live wissen Sie jederzeit, in welcher Phase wir stecken und was als Nächstes kommt."
         />
         <section className="border-t border-border">
-          <div className="mx-auto max-w-6xl px-6 py-16">
+          <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-16">
             <Process />
           </div>
         </section>

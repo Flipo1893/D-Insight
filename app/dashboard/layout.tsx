@@ -45,7 +45,7 @@ export default async function DashboardLayout({
     <>
       <Header />
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-6 pt-12">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-12">
           <p
             className="animate-hero text-sm font-semibold uppercase tracking-wider text-accent"
             style={{ animationDelay: "0ms" }}
@@ -60,12 +60,12 @@ export default async function DashboardLayout({
           </h1>
         </div>
         <div
-          className="animate-hero mx-auto max-w-6xl px-6 pt-8"
+          className="animate-hero mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-8"
           style={{ animationDelay: "160ms" }}
         >
           <DashboardNav />
         </div>
-        <div className="mx-auto max-w-6xl px-6 py-12">
+        <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-12">
           <Reveal>{children}</Reveal>
         </div>
       </main>

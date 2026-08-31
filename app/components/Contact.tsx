@@ -4,7 +4,7 @@ import Reveal from "./Reveal";
 export default function Contact() {
   return (
     <section id="kontakt" className="border-t border-border">
-      <div className="mx-auto grid max-w-6xl gap-10 px-6 py-20 md:grid-cols-2 md:gap-16">
+      <div className="mx-auto grid max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] gap-10 px-6 py-20 md:grid-cols-2 md:gap-16">
         <Reveal>
           <p className="text-sm font-semibold uppercase tracking-wider text-accent">
             Kontakt

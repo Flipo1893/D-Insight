@@ -25,7 +25,7 @@ const links = [
 export default function ExploreLinks() {
   return (
     <section className="border-t border-border">
-      <div className="mx-auto max-w-6xl px-6 py-20">
+      <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-20">
         <div className="grid gap-6 sm:grid-cols-3">
           {links.map((link, index) => (
             <Reveal key={link.href} delay={index * 100}>
