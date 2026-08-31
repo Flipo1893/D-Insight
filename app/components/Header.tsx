@@ -5,6 +5,7 @@ const navItems = [
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/#beispiele", label: "Beispiele" },
   { href: "/prozess", label: "Prozess" },
+  { href: "/#kontakt", label: "Kontakt" },
 ];
 
 export default function Header() {
@@ -26,12 +27,20 @@ export default function Header() {
             </Link>
           ))}
         </nav>
-        <Link
-          href="/#kontakt"
-          className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20"
-        >
-          Angebot anfordern
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/login"
+            className="hidden text-sm font-medium text-muted transition-colors hover:text-foreground sm:inline-block"
+          >
+            Login
+          </Link>
+          <Link
+            href="/registrieren"
+            className="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-lg hover:shadow-accent/20"
+          >
+            Registrieren
+          </Link>
+        </div>
       </div>
     </header>
   );
