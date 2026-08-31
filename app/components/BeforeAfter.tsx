@@ -28,12 +28,14 @@ export default function BeforeAfter() {
               <PlaceholderImage
                 label="Screenshot vorher"
                 hint="wird nachgeliefert"
+                align="left"
               />
             }
             after={
               <PlaceholderImage
                 label="Screenshot nachher"
                 hint="wird nachgeliefert"
+                align="right"
               />
             }
           />

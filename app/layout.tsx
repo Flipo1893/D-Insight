@@ -75,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Zum Inhalt springen
         </a>
         {children}
+        <div className="grain" aria-hidden />
       </body>
     </html>
   );

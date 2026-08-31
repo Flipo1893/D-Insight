@@ -113,3 +113,18 @@ export const faqs = [
       "Das hängt vom Umfang Ihrer Website ab. Nach der Analyse erhalten Sie ein individuelles, unverbindliches Angebot mit fixem Preis statt einer offenen Stundenrechnung.",
   },
 ] as const;
+
+/**
+ * Symptoms we hear from clients, used in the marquee. Real problems the
+ * services answer, not decorative filler words.
+ */
+export const symptoms = [
+  "Lädt zu langsam",
+  "Sieht auf dem Handy kaputt aus",
+  "Taucht bei Google nicht auf",
+  "Niemand fragt über die Seite an",
+  "Text lässt sich nicht selbst ändern",
+  "Design von 2014",
+  "Kein SSL, Browser warnt",
+  "KI-Assistenten kennen die Firma nicht",
+] as const;

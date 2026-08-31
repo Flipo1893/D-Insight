@@ -27,7 +27,7 @@ export default function CompareSlider({
   const id = useId();
 
   return (
-    <div className="group relative aspect-[16/10] w-full select-none overflow-hidden rounded-brand border border-border bg-surface">
+    <div className="group relative aspect-[2/1] max-h-[420px] w-full select-none overflow-hidden rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2">
       {/* After state sits underneath and is revealed as the handle moves left. */}
       <div className="absolute inset-0">{after}</div>
 

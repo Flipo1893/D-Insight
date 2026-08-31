@@ -64,7 +64,7 @@ export default function Header() {
     <>
       <div ref={sentinel} aria-hidden className="absolute top-0 h-px w-full" />
       <header
-        className={`sticky top-0 z-[var(--z-header)] bg-background/85 backdrop-blur-md transition-colors duration-300 ${
+        className={`sticky top-0 z-[var(--z-header)] relative bg-background/85 backdrop-blur-md transition-colors duration-300 ${
           pinned ? "border-b border-border" : "border-b border-transparent"
         }`}
       >
@@ -138,6 +138,12 @@ export default function Header() {
               </span>
             </button>
           </div>
+        {/* Reading progress. Driven by scroll(), so no JS and no listener. */}
+        <span
+          aria-hidden
+          className="read-progress absolute inset-x-0 bottom-0 h-px origin-left bg-accent"
+        />
+
         </div>
 
         {/* Mobile sheet. Height transition keeps it off the main thread. */}
