@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import SmoothScroll from "./components/SmoothScroll";
 import { site } from "./lib/content";
 import "./globals.css";
 
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Zum Inhalt springen
         </a>
+        <SmoothScroll />
         {children}
         <div className="grain" aria-hidden />
       </body>
