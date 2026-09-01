@@ -155,8 +155,8 @@ export default function QuickCheck() {
                 Website gerade?
               </SectionHeading>
               <p className="mt-5 max-w-sm text-muted">
-                Adresse eintragen, wir prüfen in Sekunden acht Punkte, die
-                darüber entscheiden, ob Sie gefunden werden. Kostenlos, ohne
+                Adresse eintragen, wir prüfen in Sekunden 16 Punkte: acht zur
+                Auffindbarkeit und acht zur Barrierefreiheit. Kostenlos, ohne
                 Anmeldung.
               </p>
 
@@ -351,6 +351,53 @@ export default function QuickCheck() {
                     );
                   })}
                 </ul>
+
+                {/* Accessibility as its own block with its own score, rather
+                    than mixed into the visibility findings. The two answer
+                    different questions and one of them is becoming a legal
+                    requirement, so it deserves its own heading. */}
+                <div className="mt-10">
+                  <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-border pb-4">
+                    <h3 className="text-lg font-semibold tracking-tight">
+                      Barrierefreiheit
+                    </h3>
+                    <p className="text-2xl font-semibold tracking-tight tabular-nums">
+                      {report.a11yScore}
+                      <span className="text-base text-muted"> / 100</span>
+                    </p>
+                  </div>
+
+                  <ul>
+                    {report.a11yItems.map((item) => (
+                      <li
+                        key={item.id}
+                        className="flex gap-4 border-b border-border py-4"
+                      >
+                        <span
+                          aria-hidden
+                          className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${statusStyles[item.status].dot}`}
+                        />
+                        <div className="min-w-0">
+                          <p className="font-medium">
+                            {item.label}
+                            <span className="ml-2 text-sm font-normal text-muted">
+                              {statusStyles[item.status].label}
+                            </span>
+                          </p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted">
+                            {item.detail}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p className="mt-4 text-xs leading-relaxed text-muted">
+                    Farbkontraste, Fokusreihenfolge und Tastaturbedienung
+                    lassen sich nur an der dargestellten Seite prüfen, nicht am
+                    Quelltext. Sie sind hier bewusst nicht bewertet.
+                  </p>
+                </div>
 
                 {/* The findings are the argument, so the handover names them
                     instead of repeating a generic CTA. The address is carried

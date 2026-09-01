@@ -1,3 +1,5 @@
+import { accessibilityScore, analyseAccessibility } from "./accessibility";
+
 export type CheckStatus = "gut" | "teilweise" | "fehlt";
 
 export type CheckItem = {
@@ -8,6 +10,9 @@ export type CheckItem = {
 };
 
 export type CheckReport = {
+  /** Accessibility findings and their own score, see accessibility.ts */
+  a11yItems: CheckItem[];
+  a11yScore: number;
   url: string;
   finalUrl: string;
   loadMs: number;
@@ -174,6 +179,8 @@ export async function analyse(url: URL): Promise<CheckReport> {
     0,
   );
 
+  const a11yItems = analyseAccessibility(html);
+
   return {
     url: url.toString(),
     finalUrl,
@@ -181,6 +188,8 @@ export async function analyse(url: URL): Promise<CheckReport> {
     htmlKb,
     score: Math.round((points / items.length) * 100),
     items,
+    a11yItems,
+    a11yScore: accessibilityScore(a11yItems),
   };
 }
 
