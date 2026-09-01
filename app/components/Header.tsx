@@ -103,7 +103,16 @@ export default function Header() {
             })}
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Points at /dashboard rather than /login so it works in both
+                states: the dashboard sends anyone without a session on to
+                the login page and back again afterwards. */}
+            <Link
+              href="/dashboard"
+              className="hidden text-sm text-muted transition-colors hover:text-foreground md:inline-block"
+            >
+              Kundenbereich
+            </Link>
             <a
               href="#kontakt"
               className="hidden rounded-brand bg-accent-strong px-4 py-2 text-sm font-semibold text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px md:inline-block"
@@ -170,6 +179,13 @@ export default function Header() {
                   {item.label}
                 </a>
               ))}
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="border-b border-border py-4 text-lg text-muted-strong transition-colors hover:text-foreground"
+              >
+                Kundenbereich
+              </Link>
               <a
                 href="#kontakt"
                 onClick={() => setOpen(false)}
