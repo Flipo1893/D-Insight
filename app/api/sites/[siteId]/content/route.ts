@@ -22,16 +22,26 @@ export async function GET(
   }
 
   const { siteId } = await params;
-  const site = await getSite(siteId);
 
-  return NextResponse.json(
-    { ...site.content, updatedAt: site.updatedAt },
-    {
-      headers: {
-        // ISR-friendly: the client site can cache this and revalidate
-        // periodically instead of hitting MongoDB on every request.
-        "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+  try {
+    const site = await getSite(siteId);
+
+    return NextResponse.json(
+      { ...site.content, updatedAt: site.updatedAt },
+      {
+        headers: {
+          // ISR-friendly: the client site can cache this and revalidate
+          // periodically instead of hitting MongoDB on every request.
+          "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+        },
       },
-    },
-  );
+    );
+  } catch {
+    // A customer's website should get a clean, handleable failure here
+    // rather than an HTML error page from a crashed route.
+    return NextResponse.json(
+      { error: "Inhalte sind derzeit nicht abrufbar." },
+      { status: 503, headers: { "Cache-Control": "no-store" } },
+    );
+  }
 }

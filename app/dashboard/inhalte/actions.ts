@@ -27,16 +27,23 @@ export async function saveContent(
     return { error: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an." };
   }
 
-  // Only the fields an admin configured for this site get saved — the form
-  // is rendered from the same list, so anything else in the payload is
-  // ignored rather than trusted.
-  const site = await getSite(user.id);
-  const content: Record<string, string> = {};
-  for (const field of site.fields) {
-    content[field.key] = (formData.get(field.key) as string | null) ?? "";
-  }
+  try {
+    // Only the fields an admin configured for this site get saved — the
+    // form is rendered from the same list, so anything else in the payload
+    // is ignored rather than trusted.
+    const site = await getSite(user.id);
+    const content: Record<string, string> = {};
+    for (const field of site.fields) {
+      content[field.key] = (formData.get(field.key) as string | null) ?? "";
+    }
 
-  await saveSiteContent(user.id, content);
+    await saveSiteContent(user.id, content);
+  } catch {
+    return {
+      error:
+        "Die Datenbank ist gerade nicht erreichbar — Ihre Änderungen wurden nicht gespeichert. Bitte versuchen Sie es erneut.",
+    };
+  }
 
   revalidatePath("/dashboard/inhalte");
   return { error: null, success: true };

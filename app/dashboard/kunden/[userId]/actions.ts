@@ -73,11 +73,18 @@ export async function saveSettings(
     return { error: "Mindestens ein gültiges Feld angeben (Schlüssel z. B. heroTitle)." };
   }
 
-  await saveSiteSettings(targetUserId, {
-    siteName: ((formData.get("siteName") as string | null) ?? "").trim(),
-    siteUrl: ((formData.get("siteUrl") as string | null) ?? "").trim(),
-    fields,
-  });
+  try {
+    await saveSiteSettings(targetUserId, {
+      siteName: ((formData.get("siteName") as string | null) ?? "").trim(),
+      siteUrl: ((formData.get("siteUrl") as string | null) ?? "").trim(),
+      fields,
+    });
+  } catch {
+    return {
+      error:
+        "Die Datenbank ist gerade nicht erreichbar — die Einstellungen wurden nicht gespeichert.",
+    };
+  }
 
   revalidatePath("/dashboard/kunden");
   revalidatePath(`/dashboard/kunden/${targetUserId}`);

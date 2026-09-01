@@ -45,9 +45,15 @@ export default async function DashboardLayout({
   }
 
   // Record who this account belongs to, so admins see the customer in the
-  // list even before they have saved any content.
+  // list even before they have saved any content. Bookkeeping only — an
+  // unreachable database must not take the whole dashboard down with it,
+  // and errors thrown in a layout escape the segment's error boundary.
   if (isMongoConfigured && user.email) {
-    await rememberSiteOwner(user.id, user.email);
+    try {
+      await rememberSiteOwner(user.id, user.email);
+    } catch {
+      // The pages below surface the database problem themselves.
+    }
   }
 
   return (
