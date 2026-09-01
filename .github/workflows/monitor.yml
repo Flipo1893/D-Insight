@@ -1,0 +1,25 @@
+name: Monitoring
+
+# Weekly check of every customer site, for hosts without their own cron.
+# Vercel users get the same thing from vercel.json; running both would only
+# duplicate rows, so enable one.
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger monitoring run
+        run: |
+          if [ -z "${{ secrets.MONITOR_SECRET }}" ] || [ -z "${{ vars.SITE_URL }}" ]; then
+            echo "MONITOR_SECRET oder SITE_URL fehlt, übersprungen."
+            exit 0
+          fi
+          code=$(curl -s -o /tmp/out.json -w '%{http_code}' -X POST \
+            -H "Authorization: Bearer ${{ secrets.MONITOR_SECRET }}" \
+            "${{ vars.SITE_URL }}/api/monitor/run")
+          cat /tmp/out.json
+          test "$code" = "200"

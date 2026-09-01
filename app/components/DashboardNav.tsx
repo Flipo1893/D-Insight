@@ -6,12 +6,14 @@ import { usePathname } from "next/navigation";
 const baseTabs = [
   { href: "/dashboard", label: "Übersicht" },
   { href: "/dashboard/inhalte", label: "Inhalte" },
+  { href: "/dashboard/verlauf", label: "Verlauf" },
   { href: "/dashboard/traffic", label: "Traffic" },
 ];
 
 const adminTabs = [
   { href: "/dashboard/kunden", label: "Kunden" },
   { href: "/dashboard/statistik", label: "Statistik" },
+  { href: "/dashboard/monitoring", label: "Monitoring" },
 ];
 
 export default function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
