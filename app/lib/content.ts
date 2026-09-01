@@ -124,20 +124,6 @@ export const faqs = [
   },
 ] as const;
 
-/**
- * Symptoms we hear from clients, used in the marquee. Real problems the
- * services answer, not decorative filler words.
- */
-export const symptoms = [
-  "Lädt zu langsam",
-  "Sieht auf dem Handy kaputt aus",
-  "Taucht bei Google nicht auf",
-  "Niemand fragt über die Seite an",
-  "Text lässt sich nicht selbst ändern",
-  "Design von 2014",
-  "Kein SSL, Browser warnt",
-  "KI-Assistenten kennen die Firma nicht",
-] as const;
 
 /** Qualification options on the contact form. */
 export const budgetOptions = [
@@ -161,43 +147,43 @@ export const timelineOptions = [
  * customers as a range they will hold us to.
  */
 export const pricing = {
-  base: { min: 2400, max: 3600 },
-  perPage: { min: 180, max: 320 },
+  base: { min: 800, max: 1400 },
+  perPage: { min: 80, max: 150 },
   options: [
     {
       id: "redesign",
       label: "Visuelles Redesign",
       hint: "Neues Erscheinungsbild statt nur Technik",
-      min: 1800,
-      max: 3200,
+      min: 600,
+      max: 1200,
     },
     {
       id: "seo",
       label: "KI-SEO",
       hint: "Strukturierte Daten und Sichtbarkeit in KI-Suche",
-      min: 1200,
-      max: 2400,
+      min: 400,
+      max: 900,
     },
     {
       id: "cms",
       label: "Inhalte selbst pflegen",
       hint: "Redaktionsbereich zum eigenständigen Ändern",
-      min: 1400,
-      max: 2600,
+      min: 500,
+      max: 1000,
     },
     {
       id: "shop",
       label: "Onlineshop",
       hint: "Produkte, Warenkorb und Zahlung",
-      min: 3500,
-      max: 8000,
+      min: 1500,
+      max: 3500,
     },
     {
       id: "multilang",
       label: "Mehrsprachig",
       hint: "Zweite Sprachversion, zum Beispiel Französisch",
-      min: 900,
-      max: 1800,
+      min: 300,
+      max: 700,
     },
   ],
 } as const;

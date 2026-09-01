@@ -367,23 +367,6 @@ section[id] {
   transform: translateX(120%);
 }
 
-/* Marquee. One per page, per the skill's marquee rule. */
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 38s linear infinite;
-}
-
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
-  to {
-    transform: translateX(-50%);
-  }
-}
-
 /*
  * Scroll-driven enhancements. Progressive: without support the elements keep
  * their normal static appearance, so nothing depends on these landing.
@@ -451,8 +434,7 @@ section[id] {
 @media (prefers-reduced-motion: reduce) {
   .hero-visual__grid,
   .hero-visual__beam,
-  .hero-visual__orb,
-  .marquee-track {
+  .hero-visual__orb {
     animation: none;
   }
 

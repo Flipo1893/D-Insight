@@ -7,7 +7,6 @@ import Process from "./components/Process";
 import Contact from "./components/Contact";
 import FAQ from "./components/FAQ";
 import CtaBanner from "./components/CtaBanner";
-import Marquee from "./components/Marquee";
 import QuickCheck from "./components/QuickCheck";
 import Estimator from "./components/Estimator";
 import Footer from "./components/Footer";
@@ -68,7 +67,6 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <About />
-        <Marquee />
         <Services />
         <BeforeAfter />
         <QuickCheck />
