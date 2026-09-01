@@ -25,17 +25,42 @@
 
 html {
   scroll-behavior: smooth;
+  /* The browser's default scrollbar is a light, blocky bar on Windows —
+     very visible against this dark theme, unlike macOS's overlay
+     scrollbar. Style it to match instead of leaving it to the OS default. */
+  scrollbar-color: var(--border) var(--background);
+  scrollbar-width: thin;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
 }
 
 ::selection {
   background: var(--accent);
   color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius: 999px;
+  border: 3px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--muted);
 }
 
 /* Anchor targets sit below the sticky header, so offset the scroll stop. */
