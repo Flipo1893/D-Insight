@@ -8,7 +8,6 @@ import Contact from "./components/Contact";
 import FAQ from "./components/FAQ";
 import CtaBanner from "./components/CtaBanner";
 import QuickCheck from "./components/QuickCheck";
-import Estimator from "./components/Estimator";
 import Footer from "./components/Footer";
 import { faqs, services, site, team } from "./lib/content";
 
@@ -71,7 +70,6 @@ export default function Home() {
         <BeforeAfter />
         <QuickCheck />
         <Process />
-        <Estimator />
         <Contact />
         <FAQ />
         <CtaBanner />

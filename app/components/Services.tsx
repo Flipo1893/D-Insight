@@ -48,9 +48,9 @@ export default function Services() {
                       <p className="text-sm leading-relaxed text-muted">
                         {service.description}
                       </p>
-                      {/* Spelling out what is included and how long it takes
-                          answers the two questions every first reply asks,
-                          and gives search and AI systems something to cite. */}
+                      {/* What is in scope, stated plainly. No timeline and no
+                          price: quoting either before seeing the site reads
+                          as hedging, and the analysis is what settles both. */}
                       <ul className="mt-5 flex flex-col gap-2">
                         {service.included.map((item) => (
                           <li key={item} className="flex gap-3 text-sm">
@@ -63,11 +63,7 @@ export default function Services() {
                         ))}
                       </ul>
 
-                      <p className="mt-5 border-t border-border pt-4 font-mono text-xs uppercase tracking-wide text-muted">
-                        Dauer: {service.duration}
-                      </p>
-
-                      <ul className="mt-4 flex flex-wrap gap-2">
+                      <ul className="mt-5 flex flex-wrap gap-2">
                         {service.deliverables.map((item) => (
                           <li
                             key={item}
