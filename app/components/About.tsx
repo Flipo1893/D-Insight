@@ -1,8 +1,20 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import Image from "next/image";
 import PlaceholderImage from "./PlaceholderImage";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 import { team } from "../lib/content";
+
+/**
+ * Photos are dropped into public/team by hand, so the file may not be there
+ * yet. About is a server component, so it can just check the filesystem at
+ * build time and fall back to the placeholder rather than shipping a broken
+ * image. No code change needed when the files finally land.
+ */
+function hasPhoto(photo: string) {
+  return photo !== "" && existsSync(join(process.cwd(), "public", photo));
+}
 
 /**
  * Layout family: two-up people cards, photo and text side by side. The photo
@@ -29,7 +41,7 @@ export default function About() {
               <article className="sheen group h-full rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2/40 p-6 transition-colors duration-300 hover:border-border-strong">
                 <div className="flex items-start gap-5">
                   <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-brand sm:h-24 sm:w-24">
-                    {person.photo ? (
+                    {hasPhoto(person.photo) ? (
                       <Image
                         src={person.photo}
                         alt={`Portrait von ${person.name}`}
