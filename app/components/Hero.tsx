@@ -68,10 +68,10 @@ export default function Hero() {
               />
             </a>
             <a
-              href="#beispiele"
+              href="#schnellcheck"
               className="group -my-2 inline-flex items-center gap-2 py-2 text-sm font-semibold text-foreground transition-colors hover:text-accent-text"
             >
-              Beispiele ansehen
+              Website prüfen
               <span
                 aria-hidden
                 className="transition-transform duration-200 group-hover:translate-x-1"

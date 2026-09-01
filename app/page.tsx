@@ -1,5 +1,6 @@
 import Header from "./components/Header";
 import ExploreLinks from "./components/ExploreLinks";
+import TeamStrip from "./components/TeamStrip";
 import Hero from "./components/Hero";
 import BeforeAfter from "./components/BeforeAfter";
 import Contact from "./components/Contact";
@@ -63,9 +64,10 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <ExploreLinks />
-        <BeforeAfter />
         <QuickCheck />
+        <TeamStrip />
+        <BeforeAfter />
+        <ExploreLinks />
         <Contact />
         <FAQ />
         <CtaBanner />
