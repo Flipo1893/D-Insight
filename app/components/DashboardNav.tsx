@@ -9,11 +9,14 @@ const baseTabs = [
   { href: "/dashboard/traffic", label: "Traffic" },
 ];
 
-const adminTab = { href: "/dashboard/kunden", label: "Kunden" };
+const adminTabs = [
+  { href: "/dashboard/kunden", label: "Kunden" },
+  { href: "/dashboard/statistik", label: "Statistik" },
+];
 
 export default function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
-  const tabs = isAdmin ? [...baseTabs, adminTab] : baseTabs;
+  const tabs = isAdmin ? [...baseTabs, ...adminTabs] : baseTabs;
 
   return (
     <nav className="flex gap-6 overflow-x-auto border-b border-border">

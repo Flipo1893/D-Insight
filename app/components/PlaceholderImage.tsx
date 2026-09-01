@@ -1,37 +1,40 @@
 type PlaceholderImageProps = {
   label: string;
   hint: string;
+  /**
+   * Where the caption sits. In the compare slider the two panels overlap and
+   * the drag handle sits dead centre, so those captions move to opposite
+   * sides and drop to the bottom edge to stay clear of it.
+   */
+  align?: "center" | "left" | "right";
   className?: string;
 };
 
+const alignment = {
+  center: "items-center justify-center",
+  left: "items-start justify-end pl-[7%] pb-5",
+  right: "items-end justify-end pr-[7%] pb-5",
+} as const;
+
 /**
- * Marks a spot where a real photo/screenshot goes later.
- * Replace with <Image src="..." ... /> once assets are delivered.
+ * Marks a slot where a real photo or screenshot goes once assets are
+ * delivered. Kept deliberately typographic: no hand-drawn icon, no fake
+ * product UI built out of divs. Swap for <Image src="..." /> on delivery.
  */
 export default function PlaceholderImage({
   label,
   hint,
+  align = "center",
   className = "",
 }: PlaceholderImageProps) {
   return (
     <div
-      className={`flex aspect-4/3 flex-col items-center justify-center gap-2 border border-dashed border-border bg-surface text-center ${className}`}
+      className={`flex h-full w-full flex-col gap-1 border border-dashed border-border bg-surface p-4 text-center ${alignment[align]} ${className}`}
     >
-      <svg
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        className="text-muted"
-      >
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <circle cx="8.5" cy="8.5" r="1.5" />
-        <path d="M21 15l-5-5L5 21" />
-      </svg>
-      <span className="text-sm font-medium text-muted">{label}</span>
-      <span className="text-xs text-muted/70">{hint}</span>
+      <span className="font-mono text-xs uppercase tracking-wider text-muted-strong">
+        {label}
+      </span>
+      <span className="text-xs text-muted">{hint}</span>
     </div>
   );
 }

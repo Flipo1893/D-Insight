@@ -3,12 +3,16 @@ import { getCurrentUser } from "@/lib/supabase/auth";
 import LogoutButton from "./LogoutButton";
 import MobileMenu from "./MobileMenu";
 
+// Beispiele and Kontakt dropped in favour of the two entries that were
+// unreachable: the quick check sat mid-page in no menu at all, and /wissen
+// was linked only from the footer. Both anchors keep working from the
+// subpages because they carry the leading slash.
 const navItems = [
   { href: "/leistungen", label: "Leistungen" },
   { href: "/ueber-uns", label: "Über uns" },
-  { href: "/#beispiele", label: "Beispiele" },
   { href: "/prozess", label: "Prozess" },
-  { href: "/#kontakt", label: "Kontakt" },
+  { href: "/#schnellcheck", label: "Schnellcheck" },
+  { href: "/wissen", label: "Wissen" },
 ];
 
 export default async function Header() {

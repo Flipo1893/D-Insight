@@ -1,11 +1,17 @@
 import type { TopPage } from "@/lib/analytics/types";
 
-export default function TopPagesList({ pages }: { pages: TopPage[] }) {
+export default function TopPagesList({
+  pages,
+  title = "Meistgesehene Seiten",
+}: {
+  pages: TopPage[];
+  title?: string;
+}) {
   const maxViews = Math.max(...pages.map((p) => p.views));
 
   return (
     <div className="rounded-lg border border-border bg-surface p-6">
-      <h3 className="text-sm font-medium text-muted">Meistgesehene Seiten</h3>
+      <h3 className="text-sm font-medium text-muted">{title}</h3>
       <div className="mt-4 flex flex-col gap-3">
         {pages.map((page, index) => (
           <div key={page.path} className="flex items-center gap-4">

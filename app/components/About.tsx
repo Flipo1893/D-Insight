@@ -1,33 +1,84 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import Image from "next/image";
 import PlaceholderImage from "./PlaceholderImage";
 import Reveal from "./Reveal";
+import SectionHeading from "./SectionHeading";
+import { team } from "../lib/content";
 
-const team = [
-  {
-    name: "Dominic Felder",
-    role: "Web Developer",
-    bio: "Verantwortlich für Technik und Performance — von der Code-Architektur bis zur Ladezeit-Optimierung jeder Seite.",
-  },
-  {
-    name: "Beg Sherifi",
-    role: "Web Developer",
-    bio: "Verantwortlich für Konzept und Umsetzung — von der visuellen Neugestaltung bis zur technischen SEO-Struktur.",
-  },
-];
+/**
+ * Photos are dropped into public/team by hand, so the file may not be there
+ * yet. About is a server component, so it can just check the filesystem at
+ * build time and fall back to the placeholder rather than shipping a broken
+ * image. No code change needed when the files finally land.
+ */
+function hasPhoto(photo: string) {
+  return photo !== "" && existsSync(join(process.cwd(), "public", photo));
+}
 
+/**
+ * Layout family: two-up people cards, photo and text side by side. The photo
+ * is a fixed small square rather than a full-width portrait, which keeps the
+ * section dense instead of letting two big empty frames dominate it.
+ */
 export default function About() {
   return (
-    <div className="grid gap-10 md:grid-cols-2">
-      {team.map((person, index) => (
-        <Reveal key={person.name} delay={index * 120}>
-          <PlaceholderImage
-            label={`Foto: ${person.name}`}
-            hint="wird nachgeliefert"
-          />
-          <h3 className="mt-4 text-xl font-semibold">{person.name}</h3>
-          <p className="text-sm text-muted">{person.role}</p>
-          <p className="mt-3 max-w-md text-muted">{person.bio}</p>
+    <section className="relative border-t border-border">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-28">
+        <Reveal>
+          <SectionHeading className="max-w-2xl">
+            Zwei Entwickler, kein Agentur-Apparat.
+          </SectionHeading>
+          <p className="mt-5 max-w-xl text-muted">
+            Sie sprechen mit den Leuten, die auch bauen. Keine Weitergabe an
+            wechselnde Projektteams.
+          </p>
         </Reveal>
-      ))}
-    </div>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
+          {team.map((person, index) => (
+            <Reveal key={person.name} index={index} className="scroll-lift">
+              <article className="sheen group h-full rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2/40 p-6 transition-colors duration-300 hover:border-border-strong">
+                <div className="flex items-start gap-5">
+                  {/* Landscape headshots: object-cover on a square keeps the
+                      full height, so the face stays small. A slight scale
+                      crops the headroom and brings it up to size. */}
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-brand ring-1 ring-border sm:h-32 sm:w-32">
+                    {hasPhoto(person.photo) ? (
+                      <Image
+                        src={person.photo}
+                        alt={`Portrait von ${person.name}`}
+                        fill
+                        sizes="96px"
+                        className="scale-[1.18] object-cover object-[50%_18%]"
+                      />
+                    ) : (
+                      <PlaceholderImage
+                        label="Foto"
+                        hint={person.name.split(" ")[0]}
+                      />
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-semibold tracking-tight">
+                      {person.name}
+                    </h3>
+                    <p className="mt-0.5 font-mono text-xs uppercase tracking-wider text-muted">
+                      {person.role}
+                    </p>
+                    <p className="mt-2 text-sm text-accent-text">
+                      {person.focus}
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-5 text-sm leading-relaxed text-muted">
+                  {person.bio}
+                </p>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
