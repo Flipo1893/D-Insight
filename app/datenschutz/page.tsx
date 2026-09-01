@@ -80,11 +80,54 @@ export default function Datenschutz() {
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Cookies
+                Cookies und Einwilligung
               </h2>
               <p>
-                Diese Website setzt keine Cookies und bindet keine
-                Werbedienste ein.
+                Für den Betrieb dieser Website sind keine Cookies nötig. Sie
+                können die Seite vollständig nutzen, ohne einer Speicherung
+                zuzustimmen.
+              </p>
+              <p className="mt-3">
+                Sofern Google Analytics aktiviert ist, fragen wir Sie beim
+                ersten Besuch, ob wir es einsetzen dürfen. Vor Ihrer
+                ausdrücklichen Zustimmung wird nichts geladen, es wird kein
+                Cookie gesetzt und es werden keine Daten übertragen. Ablehnen
+                ist genauso einfach wie Zustimmen, und ohne Auswahl
+                geschieht nichts.
+              </p>
+              <p className="mt-3">
+                Ihre Entscheidung können Sie jederzeit über den Eintrag
+                „Cookies“ im Seitenfuss ändern. Sie wird ausschliesslich lokal
+                in Ihrem Browser gespeichert und nicht an uns übermittelt.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 text-lg font-semibold text-foreground">
+                Google Analytics
+              </h2>
+              <p>
+                Wenn Sie zustimmen, setzen wir Google Analytics ein, einen
+                Dienst der Google Ireland Limited, Gordon House, Barrow
+                Street, Dublin 4, Irland. Dabei werden Cookies gesetzt und
+                Nutzungsdaten verarbeitet, unter anderem gekürzte IP-Adresse,
+                aufgerufene Seiten, Verweildauer, ungefährer Standort sowie
+                Angaben zu Gerät und Browser.
+              </p>
+              <p className="mt-3">
+                Diese Daten können in die USA übertragen und dort von Google
+                LLC verarbeitet werden. Die USA gelten datenschutzrechtlich
+                nicht als Land mit gleichwertigem Schutzniveau; Google stützt
+                die Übermittlung auf das EU-US Data Privacy Framework und auf
+                Standardvertragsklauseln. Ein Zugriff durch US-Behörden lässt
+                sich nicht vollständig ausschliessen.
+              </p>
+              <p className="mt-3">
+                Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1
+                lit. a DSGVO beziehungsweise Art. 31 DSG. Sie können sie
+                jederzeit mit Wirkung für die Zukunft widerrufen, über den
+                Eintrag „Cookies“ im Seitenfuss. Die IP-Anonymisierung ist
+                aktiviert, Werbefunktionen sind abgeschaltet.
               </p>
             </section>
 

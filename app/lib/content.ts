@@ -238,3 +238,15 @@ export const principles = [
     body: "Wenn ein Neuaufbau nicht das ist, was Ihnen weiterhilft, sagen wir das. Ein Projekt, das nichts bringt, hilft uns langfristig auch nicht.",
   },
 ] as const;
+
+/**
+ * Google Analytics measurement id, for example G-XXXXXXXXXX.
+ *
+ * Empty means no analytics, no cookies and no consent banner: the banner
+ * only appears when there is genuinely something to consent to. Set
+ * NEXT_PUBLIC_GA_ID in .env.local to switch it on.
+ *
+ * Note that this competes with the site's own cookie-free counting, which
+ * needs no banner and which most visitors will not decline.
+ */
+export const analyticsId = process.env.NEXT_PUBLIC_GA_ID ?? "";

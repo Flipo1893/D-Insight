@@ -75,8 +75,8 @@ export default function UeberUns() {
                   {[
                     [`${measured.totalKb} KB`, "lädt diese Seite"],
                     [`${measured.requests}`, "Anfragen gesamt"],
-                    ["0", "Cookies"],
-                    ["0", "fremde Dienste beim Laden"],
+                    ["0", "Cookies ohne Ihre Zustimmung"],
+                    ["0", "Tracker vor der Einwilligung"],
                   ].map(([value, label]) => (
                     <div key={label}>
                       <dt className="sr-only">{label}</dt>
