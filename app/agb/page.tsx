@@ -95,7 +95,7 @@ const sections = [
   {
     title: "12. Anwendbares Recht und Gerichtsstand",
     paragraphs: [
-      "Es gilt schweizerisches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist [Ort], soweit nicht zwingende Bestimmungen etwas anderes vorschreiben.",
+      "Es gilt schweizerisches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist Zürich, soweit nicht zwingende Bestimmungen etwas anderes vorschreiben.",
       "Gegenüber Verbrauchern mit Wohnsitz in der EU bleiben die zwingenden Verbraucherschutzbestimmungen ihres Wohnsitzstaates unberührt.",
     ],
   },

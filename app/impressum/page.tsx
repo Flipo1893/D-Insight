@@ -32,9 +32,9 @@ export default function Impressum() {
                 <br />
                 Dominic Felder und Beg Sherifi
                 <br />
-                [Strasse und Hausnummer]
+                Bahnhofplatz 1
                 <br />
-                [PLZ und Ort]
+                8001 Zürich
                 <br />
                 Schweiz
               </p>

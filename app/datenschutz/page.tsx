@@ -28,7 +28,7 @@ export default function Datenschutz() {
                 Verantwortliche Stelle
               </h2>
               <p>
-                D-Insight, [Strasse und Hausnummer], [PLZ und Ort], Schweiz
+                D-Insight, Bahnhofplatz 1, 8001 Zürich, Schweiz
                 <br />
                 E-Mail:{" "}
                 <a

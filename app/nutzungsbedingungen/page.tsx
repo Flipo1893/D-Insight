@@ -90,7 +90,7 @@ const sections = [
   {
     title: "10. Anwendbares Recht",
     paragraphs: [
-      "Es gilt schweizerisches Recht. Gerichtsstand ist [Ort]. Gegenüber Verbrauchern mit Wohnsitz in der EU bleiben die zwingenden Bestimmungen ihres Wohnsitzstaates unberührt.",
+      "Es gilt schweizerisches Recht. Gerichtsstand ist Zürich. Gegenüber Verbrauchern mit Wohnsitz in der EU bleiben die zwingenden Bestimmungen ihres Wohnsitzstaates unberührt.",
     ],
   },
 ];
