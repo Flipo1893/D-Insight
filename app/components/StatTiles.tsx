@@ -9,24 +9,33 @@ function formatSeconds(seconds: number) {
 
 export default function StatTiles({ summary }: { summary: TrafficSummary }) {
   const tiles = [
-    { label: "Besucher (30 Tage)", value: <CountUp value={summary.visitors30d} /> },
-    { label: "Seitenaufrufe (30 Tage)", value: <CountUp value={summary.pageviews30d} /> },
-    { label: "Ø Sitzungsdauer", value: formatSeconds(summary.avgSessionSeconds) },
+    {
+      label: "Besucher, 30 Tage",
+      value: <CountUp value={summary.visitors30d} />,
+    },
+    {
+      label: "Seitenaufrufe, 30 Tage",
+      value: <CountUp value={summary.pageviews30d} />,
+    },
+    {
+      label: "Durchschnittliche Sitzungsdauer",
+      value: formatSeconds(summary.avgSessionSeconds),
+    },
   ];
 
   return (
-    <div className="grid gap-4 sm:grid-cols-3">
+    <dl className="grid gap-4 sm:grid-cols-3">
       {tiles.map((tile) => (
         <div
           key={tile.label}
-          className="rounded-lg border border-border bg-surface p-6 transition-colors hover:border-accent/40"
+          className="rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2/40 p-6 transition-colors duration-300 hover:border-border-strong"
         >
-          <p className="text-sm text-muted">{tile.label}</p>
-          <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums">
+          <dt className="text-sm text-muted">{tile.label}</dt>
+          <dd className="mt-2 text-3xl font-semibold tracking-tight tabular-nums">
             {tile.value}
-          </p>
+          </dd>
         </div>
       ))}
-    </div>
+    </dl>
   );
 }

@@ -10,6 +10,9 @@ export type ContentActionState = {
   success?: boolean;
 };
 
+/** Generous enough for a long about-text, small enough to stay sane. */
+const MAX_FIELD_LENGTH = 2000;
+
 export const notConfiguredState: ContentActionState = {
   error: "MongoDB ist noch nicht konfiguriert. Bitte MONGODB_URI in .env.local setzen.",
 };
@@ -34,7 +37,18 @@ export async function saveContent(
     const site = await getSite(user.id);
     const content: Record<string, string> = {};
     for (const field of site.fields) {
-      content[field.key] = (formData.get(field.key) as string | null) ?? "";
+      const value = String(formData.get(field.key) ?? "").trim();
+
+      // The browser enforces maxLength, but a server action is a public
+      // endpoint: anything posted straight to it skips that entirely, and
+      // an unbounded string goes into the database as-is.
+      if (value.length > MAX_FIELD_LENGTH) {
+        return {
+          error: `Das Feld "${field.label}" ist zu lang. Bitte auf ${MAX_FIELD_LENGTH} Zeichen kürzen.`,
+        };
+      }
+
+      content[field.key] = value;
     }
 
     await saveSiteContent(user.id, content);
