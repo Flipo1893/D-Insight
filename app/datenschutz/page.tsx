@@ -126,6 +126,13 @@ export default function Datenschutz() {
                 bis zum Schliessen des Browser-Tabs lokal in Ihrem Gerät
                 vorgehalten, damit das Kontaktformular sie übernehmen kann.
               </p>
+              <p className="mt-3">
+                Wenn Sie einen Bericht teilbar machen, wird das Ergebnis unter
+                einer zufällig erzeugten, nicht erratbaren Adresse gespeichert.
+                Wer diesen Link besitzt, kann den Bericht ansehen. Er ist von
+                Suchmaschinen ausgenommen und wird nach 30 Tagen automatisch
+                gelöscht. Ohne Ihr Zutun wird nichts gespeichert.
+              </p>
             </section>
 
             <section>

@@ -53,12 +53,17 @@ export default function QuickCheck() {
   const [report, setReport] = useState<CheckResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPending(true);
     setError(null);
     setReport(null);
+    setShareUrl(null);
+    setCopied(false);
 
     try {
       const response = await fetch("/api/check", {
@@ -78,6 +83,48 @@ export default function QuickCheck() {
       setError("Die Prüfung hat nicht geklappt. Bitte versuchen Sie es erneut.");
     } finally {
       setPending(false);
+    }
+  }
+
+  /**
+   * Asks the server to run the check again and keep the result. What gets
+   * stored is always the report the server computed, never something posted
+   * from here, so a shared link cannot be forged.
+   */
+  async function handleShare() {
+    setSharing(true);
+    try {
+      const response = await fetch("/api/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url,
+          rivalUrl: compare ? rivalUrl : "",
+          share: true,
+        }),
+      });
+      const data = (await response.json()) as CheckResponse;
+      if (response.ok && data.shareId) {
+        setShareUrl(new URL(`/check/${data.shareId}`, window.location.origin).toString());
+      } else {
+        setError(
+          "Der Bericht konnte nicht gespeichert werden. Der Check selbst funktioniert trotzdem.",
+        );
+      }
+    } catch {
+      setError("Der Bericht konnte nicht gespeichert werden.");
+    } finally {
+      setSharing(false);
+    }
+  }
+
+  async function copyLink() {
+    if (!shareUrl) return;
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+    } catch {
+      // Clipboard access can be refused. The link stays selectable either way.
     }
   }
 
@@ -330,6 +377,50 @@ export default function QuickCheck() {
                   <p className="mt-3 text-xs text-muted">
                     Ihre Adresse ist im Formular bereits eingetragen.
                   </p>
+
+                  {/* Someone who sees five red dots usually has to show them
+                      to whoever decides. Without a link they screenshot it,
+                      and our name falls off on the way. */}
+                  <div className="mt-6 border-t border-border pt-5">
+                    {shareUrl ? (
+                      <div className="flex flex-col gap-3">
+                        <p className="text-sm text-muted-strong">
+                          Link zum Weitergeben:
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <input
+                            readOnly
+                            value={shareUrl}
+                            aria-label="Link zum Bericht"
+                            onFocus={(event) => event.currentTarget.select()}
+                            className="min-w-0 flex-1 rounded-brand border border-border bg-background px-3 py-2 font-mono text-xs text-muted-strong"
+                          />
+                          <button
+                            type="button"
+                            onClick={copyLink}
+                            className="shrink-0 rounded-brand border border-border px-4 py-2 text-sm font-medium transition-colors hover:border-border-strong"
+                          >
+                            {copied ? "Kopiert" : "Kopieren"}
+                          </button>
+                        </div>
+                        <p className="text-xs text-muted">
+                          Wer den Link hat, sieht den Bericht. Er wird nach 30
+                          Tagen automatisch gelöscht.
+                        </p>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleShare}
+                        disabled={sharing}
+                        className="text-sm font-semibold text-accent-text transition-colors hover:text-foreground disabled:opacity-60"
+                      >
+                        {sharing
+                          ? "Wird gespeichert"
+                          : "Bericht teilbar machen"}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

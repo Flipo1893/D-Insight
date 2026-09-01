@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { analyse } from "@/lib/site-check/analyse";
 import { guardUrl } from "@/lib/site-check/guard";
+import { saveReport } from "@/lib/site-check/store";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,7 +44,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
   }
 
-  const payload = (body ?? {}) as { url?: unknown; rivalUrl?: unknown };
+  const payload = (body ?? {}) as {
+    url?: unknown;
+    rivalUrl?: unknown;
+    share?: unknown;
+  };
   const raw = typeof payload.url === "string" ? payload.url : "";
   const rivalRaw = typeof payload.rivalUrl === "string" ? payload.rivalUrl.trim() : "";
 
@@ -71,7 +76,14 @@ export async function POST(request: Request) {
 
   try {
     const report = await analyse(guarded.url);
-    return NextResponse.json({ ...report, rival, rivalError });
+
+    // Sharing stores the report this server just computed, never a body
+    // sent from the browser. Otherwise anyone could publish arbitrary
+    // content under our domain.
+    const shareId =
+      payload.share === true ? await saveReport(report, rival) : null;
+
+    return NextResponse.json({ ...report, rival, rivalError, shareId });
   } catch (error) {
     const aborted = error instanceof Error && error.name === "AbortError";
     return NextResponse.json(

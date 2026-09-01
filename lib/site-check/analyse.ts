@@ -188,4 +188,6 @@ export async function analyse(url: URL): Promise<CheckReport> {
 export type CheckResponse = CheckReport & {
   rival?: CheckReport | null;
   rivalError?: string | null;
+  /** Present when the visitor asked for a shareable link. */
+  shareId?: string | null;
 };
