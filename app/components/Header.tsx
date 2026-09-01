@@ -24,8 +24,12 @@ export default function Header() {
   }, []);
 
   // Highlight the nav item for whichever section currently owns the viewport.
+  // The nav mixes in-page anchors with real routes now, so only the anchors
+  // take part; a missing element for a route link is expected, not a bug.
   useEffect(() => {
-    const ids = navItems.map((item) => item.href.slice(1));
+    const ids = navItems
+      .filter((item) => item.href.startsWith("/#"))
+      .map((item) => item.href.slice(2));
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
@@ -36,7 +40,7 @@ export default function Header() {
         const visible = entries
           .filter((entry) => entry.isIntersecting)
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(`#${visible.target.id}`);
+        if (visible) setActive(`/#${visible.target.id}`);
       },
       { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
     );
@@ -84,7 +88,7 @@ export default function Header() {
             {navItems.map((item) => {
               const isActive = active === item.href;
               return (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   aria-current={isActive ? "true" : undefined}
@@ -98,7 +102,7 @@ export default function Header() {
                       isActive ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"
                     }`}
                   />
-                </a>
+                </Link>
               );
             })}
           </nav>
@@ -170,14 +174,14 @@ export default function Header() {
               className="flex flex-col px-6 pb-6 pt-2"
             >
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setOpen(false)}
                   className="border-b border-border py-4 text-lg text-muted-strong transition-colors hover:text-foreground"
                 >
                   {item.label}
-                </a>
+                </Link>
               ))}
               <Link
                 href="/dashboard"

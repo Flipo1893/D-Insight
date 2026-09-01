@@ -3,14 +3,22 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const tabs = [
+const baseTabs = [
   { href: "/dashboard", label: "Übersicht" },
   { href: "/dashboard/inhalte", label: "Inhalte" },
   { href: "/dashboard/traffic", label: "Traffic" },
 ];
 
-export default function DashboardNav() {
+/**
+ * showStats is decided on the server from the admin allowlist. Customers
+ * never receive the tab, and the page itself returns 404 for them anyway, so
+ * hiding it here is convenience rather than the actual gate.
+ */
+export default function DashboardNav({ showStats = false }: { showStats?: boolean }) {
   const pathname = usePathname();
+  const tabs = showStats
+    ? [...baseTabs, { href: "/dashboard/statistik", label: "Statistik" }]
+    : baseTabs;
 
   return (
     <nav aria-label="Kundenbereich" className="border-b border-border">

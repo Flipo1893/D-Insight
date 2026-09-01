@@ -80,13 +80,51 @@ export default function Datenschutz() {
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Cookies und Analyse
+                Cookies
               </h2>
               <p>
-                Diese Website setzt keine Tracking-Cookies und bindet keine
-                Analyse- oder Werbedienste ein. Sollte sich das ändern, wird
-                diese Erklärung vorher angepasst und, wo nötig, eine
-                Einwilligung eingeholt.
+                Diese Website setzt keine Cookies und bindet keine
+                Werbedienste ein.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 text-lg font-semibold text-foreground">
+                Reichweitenmessung
+              </h2>
+              <p>
+                Wir zählen selbst, wie oft welche Seite aufgerufen wird. Dabei
+                wird kein Cookie gesetzt und kein Merkmal in Ihrem Browser
+                gespeichert. Erfasst werden die aufgerufene Seite und die
+                Website, von der Sie kamen, jeweils ohne den vollständigen
+                Link.
+              </p>
+              <p className="mt-3">
+                Um Besucherinnen und Besucher zu zählen, ohne sie
+                wiederzuerkennen, bilden wir aus IP-Adresse, Browserkennung,
+                dem heutigen Datum und einem geheimen Zusatz eine Prüfsumme.
+                Diese lässt sich nicht zurückrechnen und ändert sich täglich,
+                sodass kein Verlauf über mehrere Tage entsteht. Die
+                IP-Adresse selbst wird nicht gespeichert.
+              </p>
+              <p className="mt-3">
+                Die Daten liegen auf unserer eigenen Datenbank, werden nicht an
+                Dritte weitergegeben und nach zwölf Monaten automatisch
+                gelöscht.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 text-lg font-semibold text-foreground">
+                Website-Schnellcheck
+              </h2>
+              <p>
+                Wenn Sie den Schnellcheck nutzen, ruft unser Server die von
+                Ihnen eingegebene Adresse einmal auf und wertet die öffentlich
+                sichtbaren Angaben der Seite aus. Die eingegebene Adresse wird
+                nicht dauerhaft gespeichert. Für Ihre Bequemlichkeit wird sie
+                bis zum Schliessen des Browser-Tabs lokal in Ihrem Gerät
+                vorgehalten, damit das Kontaktformular sie übernehmen kann.
               </p>
             </section>
 

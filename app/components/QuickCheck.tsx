@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import type { CheckReport, CheckStatus } from "@/lib/site-check/analyse";
+import type { CheckResponse, CheckStatus } from "@/lib/site-check/analyse";
+import { rememberCheckedUrl } from "@/lib/checked-url";
+import { measured } from "../lib/content";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 
@@ -17,15 +19,38 @@ function scoreTone(score: number) {
   return "Hier liegt einiges brach.";
 }
 
+const host = (url: string) => {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+};
+
+const formatMeasuredDate = (value: string) =>
+  new Date(value).toLocaleDateString("de-CH", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+const fieldClass =
+  "w-full rounded-brand border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted hover:border-border-strong focus:border-accent";
+
 /**
- * Lead magnet: run the service we sell on the visitor's own site and show
- * the result. Findings are deliberately explained in plain language, because
- * the point is that a business owner understands what is wrong, not that we
- * look clever.
+ * Lead magnet: run the service we sell on the visitor's own site and show the
+ * result. Findings are explained in plain language, because the point is that
+ * a business owner understands what is wrong, not that we look clever.
+ *
+ * The optional second address turns the report into a comparison. "Your
+ * competitor has structured data, you do not" argues harder than any sentence
+ * we could write ourselves.
  */
 export default function QuickCheck() {
   const [url, setUrl] = useState("");
-  const [report, setReport] = useState<CheckReport | null>(null);
+  const [rivalUrl, setRivalUrl] = useState("");
+  const [compare, setCompare] = useState(false);
+  const [report, setReport] = useState<CheckResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -39,13 +64,15 @@ export default function QuickCheck() {
       const response = await fetch("/api/check", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, rivalUrl: compare ? rivalUrl : "" }),
       });
       const data = await response.json();
       if (!response.ok) {
         setError(data.error ?? "Die Prüfung hat nicht geklappt.");
       } else {
-        setReport(data as CheckReport);
+        const result = data as CheckResponse;
+        setReport(result);
+        rememberCheckedUrl(result.finalUrl);
       }
     } catch {
       setError("Die Prüfung hat nicht geklappt. Bitte versuchen Sie es erneut.");
@@ -53,6 +80,21 @@ export default function QuickCheck() {
       setPending(false);
     }
   }
+
+  // Anything not fully in order is something we could work on, so "teilweise"
+  // counts towards the number the handover quotes.
+  const open = report
+    ? report.items.filter((item) => item.status !== "gut").length
+    : 0;
+
+  const rival = report?.rival ?? null;
+  // Only worth calling out where the other site is genuinely ahead.
+  const behind = rival
+    ? report!.items.filter((item, index) => {
+        const other = rival.items[index];
+        return item.status === "fehlt" && other?.status === "gut";
+      })
+    : [];
 
   return (
     <section id="schnellcheck" className="border-t border-border bg-surface/30">
@@ -70,33 +112,93 @@ export default function QuickCheck() {
                 darüber entscheiden, ob Sie gefunden werden. Kostenlos, ohne
                 Anmeldung.
               </p>
+
+              {/* Our own numbers, next to the tool that judges other people's.
+                  Claiming speed without ever naming a figure is the kind of
+                  thing this check exists to catch. */}
+              <dl className="mt-10 flex flex-wrap gap-x-8 gap-y-4 border-t border-border pt-6">
+                {[
+                  [`${measured.totalKb} KB`, "diese Seite lädt"],
+                  [`${measured.requests}`, "Anfragen gesamt"],
+                ].map(([value, label]) => (
+                  <div key={label}>
+                    <dt className="sr-only">{label}</dt>
+                    <dd className="text-2xl font-semibold tracking-tight tabular-nums">
+                      {value}
+                    </dd>
+                    <p aria-hidden className="mt-0.5 text-xs text-muted">
+                      {label}
+                    </p>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-3 max-w-sm text-xs leading-relaxed text-muted">
+                Gemessen am {formatMeasuredDate(measured.date)} am fertigen
+                Build, mit Kompression. Nachprüfbar mit denselben Werkzeugen,
+                die oben Ihre Seite prüfen.
+              </p>
             </Reveal>
           </div>
 
           <Reveal index={1}>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row">
-              <label htmlFor="check-url" className="sr-only">
-                Adresse Ihrer Website
-              </label>
-              <input
-                id="check-url"
-                name="url"
-                type="text"
-                inputMode="url"
-                required
-                value={url}
-                onChange={(event) => setUrl(event.target.value)}
-                disabled={pending}
-                placeholder="ihre-website.ch"
-                className="w-full rounded-brand border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted hover:border-border-strong focus:border-accent"
-              />
-              <button
-                type="submit"
-                disabled={pending}
-                className="shrink-0 rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {pending ? "Wird geprüft" : "Jetzt prüfen"}
-              </button>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <label htmlFor="check-url" className="sr-only">
+                  Adresse Ihrer Website
+                </label>
+                <input
+                  id="check-url"
+                  name="url"
+                  type="text"
+                  inputMode="url"
+                  required
+                  value={url}
+                  onChange={(event) => setUrl(event.target.value)}
+                  disabled={pending}
+                  placeholder="ihre-website.ch"
+                  className={fieldClass}
+                />
+                <button
+                  type="submit"
+                  disabled={pending}
+                  className="shrink-0 rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {pending ? "Wird geprüft" : "Jetzt prüfen"}
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  id="compare"
+                  type="checkbox"
+                  checked={compare}
+                  onChange={(event) => setCompare(event.target.checked)}
+                  disabled={pending}
+                  className="h-4 w-4 shrink-0 accent-[var(--accent)]"
+                />
+                <label htmlFor="compare" className="text-sm text-muted">
+                  Mit einer zweiten Seite vergleichen
+                </label>
+              </div>
+
+              {compare && (
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="rival-url" className="text-sm text-muted-strong">
+                    Adresse der Vergleichsseite
+                  </label>
+                  <input
+                    id="rival-url"
+                    name="rivalUrl"
+                    type="text"
+                    inputMode="url"
+                    value={rivalUrl}
+                    onChange={(event) => setRivalUrl(event.target.value)}
+                    disabled={pending}
+                    placeholder="mitbewerber.ch"
+                    className={fieldClass}
+                  />
+                </div>
+              )}
             </form>
 
             <p aria-live="polite" className="mt-3 min-h-5 text-sm">
@@ -130,41 +232,105 @@ export default function QuickCheck() {
                   </p>
                 </div>
 
+                {rival && (
+                  <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 rounded-brand border border-border bg-surface p-4">
+                    <p className="text-sm">
+                      <span className="font-mono text-xs text-muted">
+                        {host(report.finalUrl)}
+                      </span>{" "}
+                      <span className="font-semibold tabular-nums">
+                        {report.score}
+                      </span>
+                    </p>
+                    <p className="text-sm">
+                      <span className="font-mono text-xs text-muted">
+                        {host(rival.finalUrl)}
+                      </span>{" "}
+                      <span className="font-semibold tabular-nums">
+                        {rival.score}
+                      </span>
+                    </p>
+                    <p className="text-sm text-muted-strong">
+                      {report.score > rival.score
+                        ? "Sie liegen vorn."
+                        : report.score < rival.score
+                          ? "Die andere Seite liegt vorn."
+                          : "Gleichstand."}
+                    </p>
+                  </div>
+                )}
+
+                {report.rivalError && (
+                  <p className="mt-4 text-sm text-accent-text">
+                    Vergleichsseite: {report.rivalError}
+                  </p>
+                )}
+
                 <ul className="mt-2">
-                  {report.items.map((item) => (
-                    <li
-                      key={item.id}
-                      className="flex gap-4 border-b border-border py-4"
-                    >
-                      <span
-                        aria-hidden
-                        className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${statusStyles[item.status].dot}`}
-                      />
-                      <div className="min-w-0">
-                        <p className="font-medium">
-                          {item.label}
-                          <span className="ml-2 text-sm font-normal text-muted">
-                            {statusStyles[item.status].label}
-                          </span>
-                        </p>
-                        <p className="mt-1 text-sm leading-relaxed text-muted">
-                          {item.detail}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
+                  {report.items.map((item, index) => {
+                    const other = rival?.items[index];
+                    return (
+                      <li
+                        key={item.id}
+                        className="flex gap-4 border-b border-border py-4"
+                      >
+                        <span
+                          aria-hidden
+                          className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${statusStyles[item.status].dot}`}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium">
+                            {item.label}
+                            <span className="ml-2 text-sm font-normal text-muted">
+                              {statusStyles[item.status].label}
+                            </span>
+                          </p>
+                          <p className="mt-1 text-sm leading-relaxed text-muted">
+                            {item.detail}
+                          </p>
+                        </div>
+                        {other && (
+                          <div className="flex shrink-0 items-start gap-2 pt-0.5">
+                            <span className="font-mono text-[11px] text-muted">
+                              {host(rival!.finalUrl)}
+                            </span>
+                            <span
+                              aria-label={`Vergleichsseite: ${statusStyles[other.status].label}`}
+                              className={`mt-1.5 h-2 w-2 rounded-full ${statusStyles[other.status].dot}`}
+                            />
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
 
-                <p className="mt-6 text-sm text-muted">
-                  Der Check betrachtet die Startseite. Für ein vollständiges
-                  Bild schauen wir uns die ganze Seite an.{" "}
+                {/* The findings are the argument, so the handover names them
+                    instead of repeating a generic CTA. The address is carried
+                    into the form, so nobody types it twice. */}
+                <div className="mt-8 rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2/40 p-6">
+                  <p className="font-medium">
+                    {behind.length > 0
+                      ? `${behind.length} ${behind.length === 1 ? "Punkt, den" : "Punkte, die"} die Vergleichsseite hat und Ihre nicht.`
+                      : open > 0
+                        ? `${open} ${open === 1 ? "Punkt" : "Punkte"} mit Handlungsbedarf.`
+                        : "Technisch sauber aufgestellt."}
+                  </p>
+                  <p className="mt-2 max-w-md text-sm leading-relaxed text-muted">
+                    {open > 0
+                      ? "Der Check betrachtet nur die Startseite. Wir schauen uns die ganze Seite an und sagen Ihnen, was sich zuerst lohnt."
+                      : "Der Check betrachtet nur die Startseite. Für Inhalte, Struktur und Ladezeit unter echten Bedingungen schauen wir genauer hin."}
+                  </p>
                   <a
                     href="#kontakt"
-                    className="font-medium text-accent-text transition-colors hover:text-foreground"
+                    className="mt-5 inline-block rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px"
                   >
                     Angebot anfordern
                   </a>
-                </p>
+                  <p className="mt-3 text-xs text-muted">
+                    Ihre Adresse ist im Formular bereits eingetragen.
+                  </p>
+                </div>
               </div>
             )}
           </Reveal>

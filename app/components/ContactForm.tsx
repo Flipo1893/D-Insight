@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useSyncExternalStore, useState, type FormEvent } from "react";
 import Link from "next/link";
 import {
   budgetOptions,
@@ -8,6 +8,7 @@ import {
   site,
   timelineOptions,
 } from "../lib/content";
+import { readCheckedUrl, subscribeToCheckedUrl } from "@/lib/checked-url";
 
 // Formspree endpoint. Create a form at formspree.io and put the ID into
 // .env.local as NEXT_PUBLIC_FORMSPREE_ID (see .env.local.example).
@@ -20,6 +21,15 @@ const fieldClass =
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
+  // The address from the quick check lives outside React, so it is read as
+  // an external store rather than copied into state from an effect. Feeding
+  // it through the key makes the field remount with the new value while
+  // staying uncontrolled, so typing in it still works normally.
+  const checkedUrl = useSyncExternalStore(
+    subscribeToCheckedUrl,
+    readCheckedUrl,
+    () => "",
+  );
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -89,7 +99,7 @@ export default function ContactForm() {
         <button
           type="button"
           onClick={() => setStatus("idle")}
-          className="mt-6 text-sm font-semibold text-accent-text transition-colors hover:text-accent-text-text-hover"
+          className="mt-6 text-sm font-semibold text-accent-text transition-colors hover:text-foreground"
         >
           Weitere Nachricht senden
         </button>
@@ -145,6 +155,8 @@ export default function ContactForm() {
           inputMode="url"
           autoComplete="url"
           disabled={busy}
+          key={checkedUrl}
+          defaultValue={checkedUrl}
           placeholder="https://ihre-website.ch"
           className={fieldClass}
         />

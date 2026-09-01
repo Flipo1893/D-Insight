@@ -5,6 +5,7 @@ import DashboardNav from "../components/DashboardNav";
 import LogoutButton from "../components/LogoutButton";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { displayName, getCurrentUser } from "@/lib/supabase/auth";
+import { isAdmin } from "@/lib/stats/config";
 
 export default async function DashboardLayout({
   children,
@@ -56,7 +57,7 @@ export default async function DashboardLayout({
           </div>
         </div>
         <div className="mx-auto max-w-6xl px-6 pt-8">
-          <DashboardNav />
+          <DashboardNav showStats={isAdmin(user.email)} />
         </div>
         <div className="mx-auto max-w-6xl px-6 py-12">{children}</div>
       </main>

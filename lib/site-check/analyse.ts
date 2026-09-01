@@ -183,3 +183,9 @@ export async function analyse(url: URL): Promise<CheckReport> {
     items,
   };
 }
+
+/** What the API returns: the visitor's report, plus an optional rival. */
+export type CheckResponse = CheckReport & {
+  rival?: CheckReport | null;
+  rivalError?: string | null;
+};

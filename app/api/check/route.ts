@@ -43,19 +43,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
   }
 
-  const raw =
-    typeof body === "object" && body !== null && "url" in body
-      ? String((body as { url: unknown }).url)
-      : "";
+  const payload = (body ?? {}) as { url?: unknown; rivalUrl?: unknown };
+  const raw = typeof payload.url === "string" ? payload.url : "";
+  const rivalRaw = typeof payload.rivalUrl === "string" ? payload.rivalUrl.trim() : "";
 
   const guarded = await guardUrl(raw);
   if (!guarded.ok) {
     return NextResponse.json({ error: guarded.reason }, { status: 400 });
   }
 
+  // Optional second site. A failure here must not sink the primary report:
+  // the visitor came to see their own numbers.
+  let rival: Awaited<ReturnType<typeof analyse>> | null = null;
+  let rivalError: string | null = null;
+  if (rivalRaw) {
+    const guardedRival = await guardUrl(rivalRaw);
+    if (!guardedRival.ok) {
+      rivalError = guardedRival.reason;
+    } else {
+      try {
+        rival = await analyse(guardedRival.url);
+      } catch {
+        rivalError = "Die Vergleichsseite konnte nicht geladen werden.";
+      }
+    }
+  }
+
   try {
     const report = await analyse(guarded.url);
-    return NextResponse.json(report);
+    return NextResponse.json({ ...report, rival, rivalError });
   } catch (error) {
     const aborted = error instanceof Error && error.name === "AbortError";
     return NextResponse.json(

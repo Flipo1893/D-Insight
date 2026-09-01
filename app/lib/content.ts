@@ -12,10 +12,16 @@ export const site = {
   replyWindow: "zwei Werktagen",
 } as const;
 
+/**
+ * Nav order follows the funnel: what we do, proof, the free tool, then the
+ * knowledge base. The quick check used to be buried mid-page with no way to
+ * reach it, which wasted the strongest thing on the site.
+ */
 export const navItems = [
-  { href: "#leistungen", label: "Leistungen" },
-  { href: "#beispiele", label: "Beispiele" },
-  { href: "#prozess", label: "Prozess" },
+  { href: "/#leistungen", label: "Leistungen" },
+  { href: "/#beispiele", label: "Beispiele" },
+  { href: "/#schnellcheck", label: "Schnellcheck" },
+  { href: "/wissen", label: "Wissen" },
 ] as const;
 
 /** One label per intent, reused in the nav, hero, banner and form. */
@@ -95,26 +101,31 @@ export const team = [
 
 export const faqs = [
   {
+    slug: "dauer",
     question: "Wie lange dauert ein Refactoring-Projekt?",
     answer:
       "Je nach Umfang zwischen zwei und sechs Wochen. Nach der Analyse erhalten Sie einen konkreten Zeitplan mit festen Meilensteinen.",
   },
   {
+    slug: "offline",
     question: "Muss die Website währenddessen offline sein?",
     answer:
       "Nein. Wir arbeiten in einer separaten Umgebung und stellen erst live, wenn alles geprüft ist. Ihre bestehende Seite bleibt bis zum Umschalten erreichbar.",
   },
   {
+    slug: "ki-seo",
     question: "Was bedeutet KI-SEO konkret?",
     answer:
       "Inhalte und Struktur werden so aufbereitet, dass sie sowohl von klassischen Suchmaschinen als auch von KI-Suchassistenten gut verstanden und zitiert werden. Dazu gehören strukturierte Daten, eindeutige Seitenhierarchien und Texte, die eine Frage tatsächlich beantworten.",
   },
   {
+    slug: "rankings",
     question: "Verlieren wir unsere Google-Rankings beim Relaunch?",
     answer:
       "Nicht, wenn der Umzug sauber gemacht wird. Wir übernehmen bestehende URLs oder richten Weiterleitungen ein und behalten die Sichtbarkeit nach dem Launch im Blick.",
   },
   {
+    slug: "kosten",
     question: "Was kostet ein Refactoring?",
     answer:
       "Das hängt vom Umfang Ihrer Website ab. Nach der Analyse erhalten Sie ein individuelles, unverbindliches Angebot mit fixem Preis statt einer offenen Stundenrechnung.",
@@ -145,3 +156,21 @@ export const timelineOptions = [
  */
 export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
 
+
+/**
+ * Measured values of this page, so the speed argument rests on something.
+ *
+ * Taken from the production build (`npm run build && npm run start`) with
+ * compression on, which is what a browser actually downloads. Re-measure
+ * after any dependency change and update the date; stale numbers on a page
+ * that sells honesty about websites would be the worst possible look.
+ *
+ * Deliberately no response time: on localhost that figure says nothing, and
+ * once deployed it belongs to the host, not to the build.
+ */
+export const measured = {
+  date: "2026-09-01",
+  htmlKb: 14,
+  totalKb: 267,
+  requests: 15,
+} as const;

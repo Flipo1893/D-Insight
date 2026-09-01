@@ -52,15 +52,21 @@ export default function SmoothScroll() {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
       const anchor = (event.target as HTMLElement | null)?.closest?.(
-        'a[href^="#"]',
+        "a[href]",
       ) as HTMLAnchorElement | null;
-      if (!anchor) return;
+      if (!anchor || anchor.target === "_blank") return;
 
-      const id = anchor.getAttribute("href");
-      if (!id || id === "#") return;
+      // Nav links are written as /#abschnitt so they also work from /wissen
+      // and the legal pages. Only handle them when we are already on the page
+      // they point at; otherwise let Next route there normally.
+      const url = new URL(anchor.href, location.href);
+      if (url.origin !== location.origin) return;
+      if (url.pathname !== location.pathname) return;
+      if (!url.hash || url.hash === "#") return;
 
-      const target = document.querySelector(id);
+      const target = document.querySelector(url.hash);
       if (!target) return;
+      const id = url.hash;
 
       event.preventDefault();
       lenis.scrollTo(target as HTMLElement, { offset: -80 });
