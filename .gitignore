@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Full-resolution photo masters. Kept locally so the repo only ships the
+# 640px versions the site actually uses.
+/assets
