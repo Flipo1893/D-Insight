@@ -1,3 +1,4 @@
+import Image from "next/image";
 import PlaceholderImage from "./PlaceholderImage";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
@@ -27,11 +28,21 @@ export default function About() {
             <Reveal key={person.name} index={index} className="scroll-lift">
               <article className="sheen group h-full rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2/40 p-6 transition-colors duration-300 hover:border-border-strong">
                 <div className="flex items-start gap-5">
-                  <div className="h-20 w-20 shrink-0 overflow-hidden rounded-brand sm:h-24 sm:w-24">
-                    <PlaceholderImage
-                      label="Foto"
-                      hint={person.name.split(" ")[0]}
-                    />
+                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-brand sm:h-24 sm:w-24">
+                    {person.photo ? (
+                      <Image
+                        src={person.photo}
+                        alt={`Portrait von ${person.name}`}
+                        fill
+                        sizes="96px"
+                        className="object-cover object-top"
+                      />
+                    ) : (
+                      <PlaceholderImage
+                        label="Foto"
+                        hint={person.name.split(" ")[0]}
+                      />
+                    )}
                   </div>
                   <div className="min-w-0">
                     <h3 className="text-lg font-semibold tracking-tight">

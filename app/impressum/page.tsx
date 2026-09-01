@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { site } from "../lib/content";
 
 export const metadata: Metadata = {
   title: "Impressum",
+  robots: { index: false, follow: true },
 };
 
 export default function Impressum() {
@@ -16,21 +18,25 @@ export default function Impressum() {
             Impressum
           </h1>
           <p className="mt-4 text-sm text-accent-text">
-            Platzhalter. Bitte mit den tatsächlichen Angaben nach § 5 TMG
-            ersetzen.
+            Entwurf. Die Angaben in eckigen Klammern müssen vor dem Livegang
+            ersetzt und von euch geprüft werden.
           </p>
 
           <div className="mt-10 space-y-8 text-muted">
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Angaben gemäß § 5 TMG
+                Verantwortlich für diese Website
               </h2>
               <p>
-                [Vorname Nachname] / D-Insight
+                D-Insight
                 <br />
-                [Straße und Hausnummer]
+                Dominic Felder und Beg Sherifi
+                <br />
+                [Strasse und Hausnummer]
                 <br />
                 [PLZ und Ort]
+                <br />
+                Schweiz
               </p>
             </section>
 
@@ -39,35 +45,63 @@ export default function Impressum() {
                 Kontakt
               </h2>
               <p>
+                E-Mail:{" "}
+                <a
+                  href={`mailto:${site.email}`}
+                  className="text-muted-strong underline transition-colors hover:text-accent-text"
+                >
+                  {site.email}
+                </a>
+                <br />
                 Telefon: [Telefonnummer]
-                <br />
-                E-Mail: [E-Mail-Adresse]
               </p>
             </section>
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Umsatzsteuer-ID
+                Rechtsform und Register
               </h2>
               <p>
-                Umsatzsteuer-Identifikationsnummer gemäß § 27 a
-                Umsatzsteuergesetz: [USt-IdNr.]
+                [Rechtsform, zum Beispiel Einzelunternehmen oder GmbH]
+                <br />
+                Handelsregister: [UID-Nummer CHE-xxx.xxx.xxx, sofern
+                eingetragen]
+                <br />
+                Mehrwertsteuer: [MWST-Nummer, sofern MWST-pflichtig]
               </p>
             </section>
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+                Haftungsausschluss
               </h2>
               <p>
-                [Vorname Nachname]
-                <br />
-                [Straße und Hausnummer]
-                <br />
-                [PLZ und Ort]
+                Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Für
+                Richtigkeit, Vollständigkeit und Aktualität wird keine Gewähr
+                übernommen. Für Inhalte externer Websites, auf die verlinkt
+                wird, sind ausschliesslich deren Betreiber verantwortlich.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 text-lg font-semibold text-foreground">
+                Urheberrecht
+              </h2>
+              <p>
+                Die Inhalte dieser Website sind urheberrechtlich geschützt. Eine
+                Verwendung ausserhalb der Grenzen des Urheberrechtsgesetzes
+                bedarf der schriftlichen Zustimmung von D-Insight.
               </p>
             </section>
           </div>
+
+          {/* Not legal advice: this is a starting structure, not a reviewed
+              text. The Swiss requirement for an easily findable contact point
+              comes from UWG Art. 3 Abs. 1 lit. s for anyone selling online. */}
+          <p className="mt-12 border-t border-border pt-6 text-xs text-muted">
+            Hinweis: Dieser Entwurf ersetzt keine Rechtsberatung. Die
+            Kontaktangaben orientieren sich an Art. 3 Abs. 1 lit. s UWG.
+          </p>
         </div>
       </main>
       <Footer />

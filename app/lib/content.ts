@@ -76,12 +76,16 @@ export const team = [
     name: "Dominic Felder",
     role: "Web Developer",
     focus: "Technik und Performance",
+    /** Set once the file exists at public/team/dominic-felder.jpg */
+    photo: "",
     bio: "Verantwortlich für Code-Architektur und Ladezeit-Optimierung. Sorgt dafür, dass die Seite unter echten Bedingungen schnell bleibt, nicht nur im Testlabor.",
   },
   {
     name: "Beg Sherifi",
     role: "Web Developer",
     focus: "Konzept und Sichtbarkeit",
+    /** Set once the file exists at public/team/beg-sherifi.jpg */
+    photo: "",
     bio: "Verantwortlich für visuelle Neugestaltung und technische SEO-Struktur. Übersetzt das, was ein Unternehmen ausmacht, in eine Seite, die gefunden wird.",
   },
 ] as const;
