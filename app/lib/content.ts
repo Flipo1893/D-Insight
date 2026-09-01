@@ -194,3 +194,39 @@ export const pricing = {
  * section hides it entirely while it is empty rather than linking nowhere.
  */
 export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
+
+/**
+ * The before/after comparison.
+ *
+ * Deliberately qualitative. Inventing metrics ("4.8s auf 0.9s") for a
+ * project that does not exist would be a fabricated case study, and any
+ * client who asks for the source would catch it. These are statements about
+ * what we change, which we can stand behind.
+ *
+ * Replace this whole section with real screenshots and measured numbers as
+ * soon as the first project is live.
+ */
+export const comparison = {
+  before: {
+    label: "Vorher",
+    headline: "Gewachsen, nicht geplant",
+    points: [
+      "Layout bricht auf dem Handy",
+      "Lädt spürbar langsam",
+      "Texte nur über den Entwickler änderbar",
+      "Keine strukturierten Daten",
+      "In der KI-Suche nicht auffindbar",
+    ],
+  },
+  after: {
+    label: "Nachher",
+    headline: "Aufgeräumt und messbar",
+    points: [
+      "Funktioniert auf jedem Bildschirm",
+      "Ladezeit unter einer Sekunde als Ziel",
+      "Inhalte selbst pflegbar",
+      "Strukturierte Daten für Suchmaschinen",
+      "Von KI-Assistenten zitierbar",
+    ],
+  },
+} as const;

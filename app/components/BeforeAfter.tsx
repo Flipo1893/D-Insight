@@ -1,12 +1,17 @@
+import ComparePanel from "./ComparePanel";
 import CompareSlider from "./CompareSlider";
-import PlaceholderImage from "./PlaceholderImage";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import { comparison } from "../lib/content";
 
 /**
  * Layout family: full-width interactive comparison. The slider is the point
- * of the section, so it gets the whole column width rather than sitting in a
- * two-up grid of static thumbnails.
+ * of the section, so it gets the whole column width.
+ *
+ * The panels currently carry statements rather than screenshots, because
+ * there are no finished projects to show yet. When the first one is live,
+ * swap the two ComparePanel elements for <Image /> and nothing else in this
+ * file has to change.
  */
 export default function BeforeAfter() {
   return (
@@ -25,20 +30,32 @@ export default function BeforeAfter() {
         <Reveal index={1} className="mt-12">
           <CompareSlider
             before={
-              <PlaceholderImage
-                label="Screenshot vorher"
-                hint="wird nachgeliefert"
+              <ComparePanel
+                variant="before"
                 align="left"
+                headline={comparison.before.headline}
+                points={comparison.before.points}
               />
             }
             after={
-              <PlaceholderImage
-                label="Screenshot nachher"
-                hint="wird nachgeliefert"
+              <ComparePanel
+                variant="after"
                 align="right"
+                headline={comparison.after.headline}
+                points={comparison.after.points}
               />
             }
+            beforeLabel={comparison.before.label}
+            afterLabel={comparison.after.label}
           />
+        </Reveal>
+
+        <Reveal index={2}>
+          <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted">
+            Eine Gegenüberstellung dessen, was wir verändern. Sobald die ersten
+            Projekte live sind, stehen hier echte Screenshots und gemessene
+            Werte.
+          </p>
         </Reveal>
       </div>
     </section>
