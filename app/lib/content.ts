@@ -161,3 +161,80 @@ export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";
  * once deployed it belongs to the host rather than to the build.
  */
 export const measured = measuredJson;
+
+/**
+ * Depth for the three detail pages.
+ *
+ * They were a heading plus one component each, which is thin for a page of
+ * its own and gives an AI assistant almost nothing to quote. Everything
+ * here is something we can actually stand behind: no invented figures, no
+ * client names, no credentials nobody has.
+ */
+
+/** Situations people actually arrive with, in their own words. */
+export const situations = [
+  {
+    title: "Die Seite ist zehn Jahre alt",
+    body: "Sie funktioniert noch, aber sie sieht aus wie von damals, bricht auf dem Handy und niemand traut sich mehr, etwas daran zu ändern. Hier lohnt sich meistens ein vollständiger Neuaufbau, weil Flicken teurer wird als ersetzen.",
+  },
+  {
+    title: "Optisch in Ordnung, aber niemand findet sie",
+    body: "Das Design stimmt, die Anfragen bleiben aus. Dann liegt es selten am Aussehen, sondern an Struktur, Ladezeit und daran, dass Such- und KI-Systeme nicht verstehen, worum es geht.",
+  },
+  {
+    title: "Jede Textänderung braucht einen Entwickler",
+    body: "Öffnungszeiten, Preise, ein neues Projekt: Wenn dafür jedes Mal jemand extern ran muss, bleibt die Seite stehen. Hier geht es weniger um Design als darum, wer die Seite künftig pflegen kann.",
+  },
+] as const;
+
+/** Scope boundaries. Saying what we do not do is worth more than a list of buzzwords. */
+export const boundaries = [
+  "Kein Logo- und Markendesign. Wenn Ihre Marke neu entstehen soll, arbeiten wir mit jemandem zusammen, der das kann.",
+  "Keine Texterstellung von Grund auf. Wir strukturieren und schärfen, was Sie haben, aber Ihre Inhalte kennen Sie besser.",
+  "Keine Fotografie. Gute Bilder machen viel aus, dafür braucht es jemanden mit einer Kamera.",
+  "Keine laufende Werbebetreuung. Wir sorgen dafür, dass die Seite gefunden wird, nicht dafür, dass Anzeigen laufen.",
+] as const;
+
+/** What each process step needs from the client. */
+export const stepDetails = [
+  {
+    title: "Analyse",
+    weDo: "Wir sehen uns die bestehende Seite an: Technik, Ladezeit, Struktur, Sichtbarkeit. Sie bekommen eine Fundliste im Klartext, keine Kennzahlen-Tapete.",
+    weNeed: "Zugang zur Seite und, falls vorhanden, zu vorhandenen Statistiken.",
+  },
+  {
+    title: "Konzept",
+    weDo: "Struktur und visuelles Konzept entstehen und werden mit Ihnen abgestimmt, bevor eine Zeile Code geschrieben wird.",
+    weNeed: "Eine Rückmeldung, welche Richtung passt. Zwei Runden sind normal.",
+  },
+  {
+    title: "Umsetzung",
+    weDo: "Refactoring, Redesign und KI-SEO werden implementiert und auf echten Geräten getestet, nicht nur im Browserfenster.",
+    weNeed: "Inhalte, Bilder und Logo in der besten Auflösung, die Sie haben.",
+  },
+  {
+    title: "Launch",
+    weDo: "Umschalten mit Weiterleitungen, damit die Sichtbarkeit den Umzug übersteht. Danach beobachten wir Fehlerseiten und Rankings.",
+    weNeed: "Zugang zur Domain und, falls vorhanden, zur Search Console.",
+  },
+] as const;
+
+/** How we work. Principles we can be held to, not slogans. */
+export const principles = [
+  {
+    title: "Sie sprechen mit den Leuten, die bauen",
+    body: "Kein Projektmanagement dazwischen, keine wechselnden Ansprechpartner. Das begrenzt, wie viele Projekte wir gleichzeitig annehmen, und genau das ist beabsichtigt.",
+  },
+  {
+    title: "Kein Baukasten, aber auch kein Selbstzweck",
+    body: "Wir bauen mit Werkzeugen, die es in zehn Jahren noch gibt, und nicht mit dem, was gerade neu ist. Was Sie bekommen, kann auch jemand anderes weiterpflegen.",
+  },
+  {
+    title: "Messbar statt behauptet",
+    body: "Ladezeit, Struktur und Sichtbarkeit sind messbar. Wir nennen Zahlen, die Sie selbst nachprüfen können, und diese Seite hält sich an dieselbe Regel.",
+  },
+  {
+    title: "Wir sagen auch ab",
+    body: "Wenn ein Neuaufbau nicht das ist, was Ihnen weiterhilft, sagen wir das. Ein Projekt, das nichts bringt, hilft uns langfristig auch nicht.",
+  },
+] as const;
