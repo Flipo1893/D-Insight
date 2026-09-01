@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "measure": "node scripts/measure.mjs --write",
+    "measure:check": "node scripts/measure.mjs --check"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.5",
