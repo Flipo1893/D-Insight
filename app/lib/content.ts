@@ -29,6 +29,8 @@ export const services = [
     description:
       "Klare Struktur, lesbare Typografie und eine Nutzerführung, die auf jedem Gerät funktioniert. Wir gestalten nicht um des Effekts willen, sondern damit Besucher finden, wonach sie suchen.",
     deliverables: ["Designkonzept", "Responsive Layouts", "Komponenten-Bibliothek"],
+    included: ["Designkonzept mit zwei Entwürfen zur Auswahl","Layouts für Desktop, Tablet und Handy","Wiederverwendbare Komponenten statt Einzelseiten","Bildauswahl und Aufbereitung"],
+    duration: "2 bis 4 Wochen",
   },
   {
     id: "refactoring",
@@ -37,6 +39,8 @@ export const services = [
     description:
       "Schnellere Ladezeiten, stabile Struktur und eine Basis, auf der Sie langfristig weiterbauen können. Wir räumen auf, was über die Jahre entstanden ist, ohne die Funktionen zu verlieren.",
     deliverables: ["Code-Audit", "Performance-Budget", "Wartbare Architektur"],
+    included: ["Audit der bestehenden Seite mit Fundliste","Performance-Budget mit messbaren Zielwerten","Neuaufbau auf wartbarer Architektur","Dokumentation für spätere Erweiterungen"],
+    duration: "2 bis 5 Wochen",
   },
   {
     id: "ki-seo",
@@ -45,6 +49,8 @@ export const services = [
     description:
       "Inhalte und Struktur so aufbereitet, dass klassische Suchmaschinen und KI-Assistenten wie ChatGPT oder Perplexity Ihr Unternehmen verstehen und zitieren können.",
     deliverables: ["Strukturierte Daten", "Content-Struktur", "Sichtbarkeits-Messung"],
+    included: ["Strukturierte Daten für Unternehmen und Leistungen","Seitenhierarchie und interne Verlinkung","Texte, die Fragen tatsächlich beantworten","Weiterleitungskonzept für den Umzug"],
+    duration: "1 bis 2 Wochen, parallel",
   },
 ] as const;
 
@@ -132,3 +138,73 @@ export const symptoms = [
   "Kein SSL, Browser warnt",
   "KI-Assistenten kennen die Firma nicht",
 ] as const;
+
+/** Qualification options on the contact form. */
+export const budgetOptions = [
+  "unter 5'000 CHF",
+  "5'000 bis 10'000 CHF",
+  "10'000 bis 20'000 CHF",
+  "über 20'000 CHF",
+] as const;
+
+export const timelineOptions = [
+  "so bald wie möglich",
+  "in 1 bis 3 Monaten",
+  "in 3 bis 6 Monaten",
+  "noch in Planung",
+] as const;
+
+/*
+ * PLACEHOLDER PRICING. These numbers are invented so the estimator has
+ * something to compute with. Dominic and Beg have to confirm or replace
+ * every one of them before this goes live, because the page shows them to
+ * customers as a range they will hold us to.
+ */
+export const pricing = {
+  base: { min: 2400, max: 3600 },
+  perPage: { min: 180, max: 320 },
+  options: [
+    {
+      id: "redesign",
+      label: "Visuelles Redesign",
+      hint: "Neues Erscheinungsbild statt nur Technik",
+      min: 1800,
+      max: 3200,
+    },
+    {
+      id: "seo",
+      label: "KI-SEO",
+      hint: "Strukturierte Daten und Sichtbarkeit in KI-Suche",
+      min: 1200,
+      max: 2400,
+    },
+    {
+      id: "cms",
+      label: "Inhalte selbst pflegen",
+      hint: "Redaktionsbereich zum eigenständigen Ändern",
+      min: 1400,
+      max: 2600,
+    },
+    {
+      id: "shop",
+      label: "Onlineshop",
+      hint: "Produkte, Warenkorb und Zahlung",
+      min: 3500,
+      max: 8000,
+    },
+    {
+      id: "multilang",
+      label: "Mehrsprachig",
+      hint: "Zweite Sprachversion, zum Beispiel Französisch",
+      min: 900,
+      max: 1800,
+    },
+  ],
+} as const;
+
+/**
+ * Booking link, for example a Cal.com or Calendly page. Set
+ * NEXT_PUBLIC_BOOKING_URL in .env.local to switch the option on; the contact
+ * section hides it entirely while it is empty rather than linking nowhere.
+ */
+export const bookingUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? "";

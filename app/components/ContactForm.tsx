@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { primaryCta, site } from "../lib/content";
+import Link from "next/link";
+import {
+  budgetOptions,
+  primaryCta,
+  site,
+  timelineOptions,
+} from "../lib/content";
 
 // Formspree endpoint. Create a form at formspree.io and put the ID into
 // .env.local as NEXT_PUBLIC_FORMSPREE_ID (see .env.local.example).
@@ -144,6 +150,50 @@ export default function ContactForm() {
         />
       </div>
 
+      {/* Budget and timeline qualify the lead up front. Without them the
+          first reply is always the same two questions, which costs a round. */}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
+          <label htmlFor="budget" className="text-sm text-muted-strong">
+            Budgetrahmen
+          </label>
+          <select
+            id="budget"
+            name="budget"
+            defaultValue=""
+            disabled={busy}
+            className={fieldClass}
+          >
+            <option value="">Noch offen</option>
+            {budgetOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label htmlFor="timeline" className="text-sm text-muted-strong">
+            Zeitrahmen
+          </label>
+          <select
+            id="timeline"
+            name="timeline"
+            defaultValue=""
+            disabled={busy}
+            className={fieldClass}
+          >
+            <option value="">Noch offen</option>
+            {timelineOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <div className="flex flex-col gap-2">
         <label htmlFor="message" className="text-sm text-muted-strong">
           Nachricht
@@ -156,6 +206,27 @@ export default function ContactForm() {
           placeholder="Was soll sich an Ihrer Website verändern?"
           className={`${fieldClass} resize-y`}
         />
+      </div>
+
+      <div className="flex items-start gap-3">
+        <input
+          id="consent"
+          name="consent"
+          type="checkbox"
+          required
+          disabled={busy}
+          className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--accent)]"
+        />
+        <label htmlFor="consent" className="text-sm leading-relaxed text-muted">
+          Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage
+          gespeichert werden.{" "}
+          <Link
+            href="/datenschutz"
+            className="text-muted-strong underline transition-colors hover:text-accent-text"
+          >
+            Datenschutz
+          </Link>
+        </label>
       </div>
 
       {/* Honeypot. Hidden from people, tempting for bots. */}

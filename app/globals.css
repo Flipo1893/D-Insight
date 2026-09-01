@@ -114,8 +114,8 @@ section[id] {
 }
 
 .animate-rise {
-  animation: rise-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--rise-index, 0) * 90ms);
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--rise-index, 0) * 55ms);
 }
 
 /* Thin animated rule used under the section headlines. */
@@ -323,8 +323,10 @@ section[id] {
 /* Per-word hero entrance. Index comes from --word inline. */
 .word {
   display: inline-block;
-  animation: word-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--word, 0) * 70ms);
+  animation: word-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  /* 35ms rather than 70: at four words the old cascade held the last one
+     back by 350ms, which delayed the moment the claim was readable. */
+  animation-delay: calc(var(--word, 0) * 35ms);
 }
 
 @keyframes word-in {

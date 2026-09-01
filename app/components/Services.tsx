@@ -48,7 +48,26 @@ export default function Services() {
                       <p className="text-sm leading-relaxed text-muted">
                         {service.description}
                       </p>
-                      <ul className="mt-5 flex flex-wrap gap-2">
+                      {/* Spelling out what is included and how long it takes
+                          answers the two questions every first reply asks,
+                          and gives search and AI systems something to cite. */}
+                      <ul className="mt-5 flex flex-col gap-2">
+                        {service.included.map((item) => (
+                          <li key={item} className="flex gap-3 text-sm">
+                            <span
+                              aria-hidden
+                              className="mt-2 h-px w-3 shrink-0 bg-accent"
+                            />
+                            <span className="text-muted">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <p className="mt-5 border-t border-border pt-4 font-mono text-xs uppercase tracking-wide text-muted">
+                        Dauer: {service.duration}
+                      </p>
+
+                      <ul className="mt-4 flex flex-wrap gap-2">
                         {service.deliverables.map((item) => (
                           <li
                             key={item}

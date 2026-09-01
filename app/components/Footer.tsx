@@ -9,6 +9,9 @@ export default function Footer() {
           &copy; {new Date().getFullYear()} {site.name}, {site.tagline}
         </p>
         <nav aria-label="Rechtliches" className="flex gap-6">
+          <Link href="/wissen" className="-my-2 py-2 transition-colors hover:text-foreground">
+            Wissen
+          </Link>
           <Link href="/impressum" className="-my-2 py-2 transition-colors hover:text-foreground">
             Impressum
           </Link>
