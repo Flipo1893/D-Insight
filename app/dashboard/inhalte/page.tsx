@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import ContentForm from "../../components/ContentForm";
 import { isMongoConfigured } from "@/lib/mongodb/config";
-import { getWebsiteContent, type WebsiteContentFields } from "@/lib/mongodb/websites";
+import { defaultSiteFields, getSite } from "@/lib/mongodb/sites";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { siteUrl } from "@/lib/supabase/config";
 
@@ -10,17 +10,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const placeholderContent: WebsiteContentFields = {
-  heroTitle: "Ihre Website. Neu gedacht.",
-  heroSubtitle:
-    "Kurzer Text, der Besucherinnen und Besuchern sofort zeigt, worum es auf Ihrer Website geht.",
-  aboutText: "Erzählen Sie hier kurz, wer Sie sind und was Sie besonders macht.",
-};
-
 export default async function Inhalte() {
   const user = await getCurrentUser();
-  const content =
-    isMongoConfigured && user ? await getWebsiteContent(user.id) : placeholderContent;
+  const site = isMongoConfigured && user ? await getSite(user.id) : null;
+
+  const fields = site?.fields ?? defaultSiteFields;
+  const content = site?.content ?? {};
 
   return (
     <div className="max-w-xl">
@@ -29,7 +24,7 @@ export default async function Inhalte() {
       </h2>
       <p className="mt-2 text-muted">
         Passen Sie die Texte Ihrer Website an — Änderungen erscheinen nach dem
-        Speichern live auf Ihrer Seite.
+        Speichern automatisch auf Ihrer Seite.
       </p>
 
       {!isMongoConfigured && (
@@ -41,7 +36,7 @@ export default async function Inhalte() {
       )}
 
       <div className="mt-8">
-        <ContentForm content={content} />
+        <ContentForm fields={fields} content={content} />
       </div>
 
       {user && (

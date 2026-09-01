@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { isMongoConfigured } from "@/lib/mongodb/config";
-import { getWebsiteContent } from "@/lib/mongodb/websites";
+import { getSite } from "@/lib/mongodb/sites";
 import { getCurrentUser } from "@/lib/supabase/auth";
 
 export const metadata: Metadata = {
@@ -11,8 +11,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardOverview() {
   const user = await getCurrentUser();
-  const content =
-    isMongoConfigured && user ? await getWebsiteContent(user.id) : null;
+  const site = isMongoConfigured && user ? await getSite(user.id) : null;
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,8 +33,8 @@ export default async function DashboardOverview() {
             </span>
           </h2>
           <p className="mt-2 text-sm text-muted">
-            {content
-              ? `Zuletzt geändert am ${content.updatedAt.toLocaleDateString("de-DE")}.`
+            {site
+              ? `Zuletzt geändert am ${site.updatedAt.toLocaleDateString("de-DE")}.`
               : "Noch keine eigenen Inhalte gespeichert."}
           </p>
         </Link>

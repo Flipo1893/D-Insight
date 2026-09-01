@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { isMongoConfigured } from "@/lib/mongodb/config";
-import { saveWebsiteContent } from "@/lib/mongodb/websites";
+import { getSite, saveSiteContent } from "@/lib/mongodb/sites";
 import { getCurrentUser } from "@/lib/supabase/auth";
 
 export type ContentActionState = {
@@ -27,11 +27,16 @@ export async function saveContent(
     return { error: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an." };
   }
 
-  const heroTitle = formData.get("heroTitle") as string;
-  const heroSubtitle = formData.get("heroSubtitle") as string;
-  const aboutText = formData.get("aboutText") as string;
+  // Only the fields an admin configured for this site get saved — the form
+  // is rendered from the same list, so anything else in the payload is
+  // ignored rather than trusted.
+  const site = await getSite(user.id);
+  const content: Record<string, string> = {};
+  for (const field of site.fields) {
+    content[field.key] = (formData.get(field.key) as string | null) ?? "";
+  }
 
-  await saveWebsiteContent(user.id, { heroTitle, heroSubtitle, aboutText });
+  await saveSiteContent(user.id, content);
 
   revalidatePath("/dashboard/inhalte");
   return { error: null, success: true };

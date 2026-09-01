@@ -3,24 +3,31 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const tabs = [
+const baseTabs = [
   { href: "/dashboard", label: "Übersicht" },
   { href: "/dashboard/inhalte", label: "Inhalte" },
   { href: "/dashboard/traffic", label: "Traffic" },
 ];
 
-export default function DashboardNav() {
+const adminTab = { href: "/dashboard/kunden", label: "Kunden" };
+
+export default function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
+  const tabs = isAdmin ? [...baseTabs, adminTab] : baseTabs;
 
   return (
-    <nav className="flex gap-6 border-b border-border">
+    <nav className="flex gap-6 overflow-x-auto border-b border-border">
       {tabs.map((tab) => {
-        const isActive = pathname === tab.href;
+        // Sub-pages (e.g. /dashboard/kunden/<id>) keep their parent tab active.
+        const isActive =
+          pathname === tab.href ||
+          (tab.href !== "/dashboard" && pathname.startsWith(`${tab.href}/`));
+
         return (
           <Link
             key={tab.href}
             href={tab.href}
-            className={`border-b-2 pb-3 text-sm font-medium transition-colors ${
+            className={`shrink-0 border-b-2 pb-3 text-sm font-medium transition-colors ${
               isActive
                 ? "border-accent text-foreground"
                 : "border-transparent text-muted hover:text-foreground"

@@ -54,11 +54,17 @@ Eingeloggte Kund:innen landen im Kundenbereich mit drei Tabs
 (`app/dashboard/layout.tsx` + `app/components/DashboardNav.tsx`):
 
 - **Übersicht** — Einstieg mit Links zu den beiden anderen Tabs.
-- **Inhalte** (`/dashboard/inhalte`) — Formular für ein paar Beispieltexte
-  der eigenen Website (Hero-Überschrift, Hero-Text, Über-uns-Text), über
-  MongoDB gespeichert (`lib/mongodb/`, `app/dashboard/inhalte/actions.ts`).
+- **Inhalte** (`/dashboard/inhalte`) — Formular mit genau den Feldern, die
+  ein Admin für diese Kundenwebsite freigegeben hat, über MongoDB
+  gespeichert (`lib/mongodb/sites.ts`, `app/dashboard/inhalte/actions.ts`).
   Genau wie bei Supabase: ohne `MONGODB_URI` bleibt die Seite nutzbar, zeigt
   aber Beispielinhalte und erklärt beim Speichern, dass die Anbindung fehlt.
+- **Kunden** (`/dashboard/kunden`) — nur für Admins sichtbar (siehe
+  `ADMIN_EMAILS`): Liste aller Kund:innen, die sich angemeldet haben, mit
+  Projektname, Website-URL und Anzahl editierbarer Felder. Pro Kunde lässt
+  sich dort festlegen, welche Felder er oder sie bearbeiten darf (Schlüssel
+  = Name in der Content-API, Bezeichnung = was der Kunde sieht, ein- oder
+  mehrzeilig). Nicht-Admins bekommen auf diesen Seiten eine 404.
 - **Traffic** (`/dashboard/traffic`) — Besucher-Chart, Kennzahlen-Kacheln und
   meistgesehene Seiten. Läuft aktuell auf Beispieldaten
   (`lib/analytics/mock.ts`); welcher Analytics-Anbieter (Vercel Analytics,
@@ -75,6 +81,22 @@ MongoDB anbinden:
    `.env.local` als `MONGODB_URI` eintragen (siehe `.env.local.example`).
 3. Fertig — der "Inhalte"-Tab speichert dann pro Nutzer:in in der
    `websites`-Collection.
+
+Damit ihr selbst den "Kunden"-Tab seht, zusätzlich `ADMIN_EMAILS` in
+`.env.local` auf eure E-Mail-Adressen setzen (kommagetrennt, dieselben, mit
+denen ihr euch im Portal einloggt).
+
+### Ablauf bei einer neuen Kundenwebsite
+
+1. Kunde registriert sich im Portal (`/registrieren`) und öffnet einmal den
+   Kundenbereich — danach taucht er unter `/dashboard/kunden` auf.
+2. Ihr öffnet ihn dort, tragt Projektname + Website-URL ein und legt die
+   editierbaren Felder fest (z. B. `heroTitle` → "Hero-Überschrift").
+3. Ihr baut die Kundenwebsite wie gewohnt als eigenes Projekt und lest die
+   freigegebenen Felder über die Content-API aus (siehe unten) — die
+   passende URL steht auf der Kundenseite zum Kopieren.
+4. Der Kunde pflegt seine Texte unter `/dashboard/inhalte`; seine Website
+   zieht die Änderung beim nächsten Revalidate automatisch nach.
 
 ## Wie Kundenwebsites die Inhalte einbinden
 

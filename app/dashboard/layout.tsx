@@ -5,6 +5,9 @@ import DashboardNav from "../components/DashboardNav";
 import Reveal from "../components/Reveal";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getCurrentUser } from "@/lib/supabase/auth";
+import { isAdminEmail } from "@/lib/admin";
+import { isMongoConfigured } from "@/lib/mongodb/config";
+import { rememberSiteOwner } from "@/lib/mongodb/sites";
 
 export default async function DashboardLayout({
   children,
@@ -41,6 +44,12 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  // Record who this account belongs to, so admins see the customer in the
+  // list even before they have saved any content.
+  if (isMongoConfigured && user.email) {
+    await rememberSiteOwner(user.id, user.email);
+  }
+
   return (
     <>
       <Header />
@@ -63,7 +72,7 @@ export default async function DashboardLayout({
           className="animate-hero mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-8"
           style={{ animationDelay: "160ms" }}
         >
-          <DashboardNav />
+          <DashboardNav isAdmin={isAdminEmail(user.email)} />
         </div>
         <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-12">
           <Reveal>{children}</Reveal>

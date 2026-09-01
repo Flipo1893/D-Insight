@@ -25,6 +25,10 @@
 
 html {
   scroll-behavior: smooth;
+  /* Renders native controls (select dropdowns, scrollbars, autofill,
+     focus rings) in their dark variant instead of the OS light default —
+     otherwise these look out of place on Windows in particular. */
+  color-scheme: dark;
   /* The browser's default scrollbar is a light, blocky bar on Windows —
      very visible against this dark theme, unlike macOS's overlay
      scrollbar. Style it to match instead of leaving it to the OS default. */
