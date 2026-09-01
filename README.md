@@ -76,6 +76,52 @@ MongoDB anbinden:
 3. Fertig — der "Inhalte"-Tab speichert dann pro Nutzer:in in der
    `websites`-Collection.
 
+## Wie Kundenwebsites die Inhalte einbinden
+
+Architektur-Entscheidung: Jede Kundenwebsite bleibt ihr eigenes, individuell
+gestaltetes Projekt (eigenes Deployment, eigene Domain) — es gibt bewusst
+keine gemeinsame Vorlage/Plattform für alle Kunden. Dieses Dashboard ist die
+einzige zentrale Stelle, an der Kund:innen ihre Inhalte pflegen; die
+jeweilige Kundenwebsite holt sich diese Inhalte über eine kleine
+öffentliche, lesende API ab:
+
+```
+GET /api/sites/{site-id}/content
+```
+
+(`site-id` ist aktuell die Supabase-User-ID der Kund:in — steht auch direkt
+im Dashboard unter „Inhalte" zum Kopieren.) Antwort z. B.:
+
+```json
+{
+  "heroTitle": "Ihre Website. Neu gedacht.",
+  "heroSubtitle": "…",
+  "aboutText": "…",
+  "updatedAt": "2026-09-01T12:00:00.000Z"
+}
+```
+
+Beim Bau einer neuen Kundenwebsite werden die editierbaren Stellen (z. B.
+die Hero-Sektion) so gebaut, dass sie diese Inhalte serverseitig abrufen,
+statt festen Text zu enthalten — z. B. in einer Next.js Server Component:
+
+```tsx
+async function Hero() {
+  const res = await fetch(
+    "https://d-insight.de/api/sites/<site-id>/content",
+    { next: { revalidate: 60 } }, // ISR: alle 60s neu abrufen
+  );
+  const content = await res.json();
+
+  return <h1>{content.heroTitle}</h1>;
+}
+```
+
+Kein Login/API-Key nötig — die Route liefert genau die Inhalte, die ohnehin
+öffentlich auf der Kundenwebsite stehen sollen. Sobald reale
+Kundenwebsites angebunden werden, ist das der Punkt, an dem eine
+sprechendere Site-ID (statt der rohen User-ID) sinnvoll wird.
+
 ## Build
 
 ```bash

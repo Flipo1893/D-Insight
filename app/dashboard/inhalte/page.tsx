@@ -3,6 +3,7 @@ import ContentForm from "../../components/ContentForm";
 import { isMongoConfigured } from "@/lib/mongodb/config";
 import { getWebsiteContent, type WebsiteContentFields } from "@/lib/mongodb/websites";
 import { getCurrentUser } from "@/lib/supabase/auth";
+import { siteUrl } from "@/lib/supabase/config";
 
 export const metadata: Metadata = {
   title: "Inhalte bearbeiten",
@@ -42,6 +43,19 @@ export default async function Inhalte() {
       <div className="mt-8">
         <ContentForm content={content} />
       </div>
+
+      {user && (
+        <div className="mt-10 rounded-md border border-border bg-surface p-4">
+          <p className="text-sm font-medium">Content-API für Ihre Website</p>
+          <p className="mt-1 text-sm text-muted">
+            Ihre Website ruft diese Inhalte über folgende Adresse ab (nur
+            lesend, kein Login nötig):
+          </p>
+          <code className="mt-2 block overflow-x-auto rounded bg-background px-3 py-2 text-xs text-foreground">
+            {siteUrl}/api/sites/{user.id}/content
+          </code>
+        </div>
+      )}
     </div>
   );
 }
