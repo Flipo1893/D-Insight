@@ -1,17 +1,18 @@
-import ComparePanel from "./ComparePanel";
+import Image from "next/image";
 import CompareSlider from "./CompareSlider";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
-import { comparison } from "../lib/content";
 
 /**
- * Layout family: full-width interactive comparison. The slider is the point
- * of the section, so it gets the whole column width.
+ * Layout family: full-width interactive comparison.
  *
- * The panels currently carry statements rather than screenshots, because
- * there are no finished projects to show yet. When the first one is live,
- * swap the two ComparePanel elements for <Image /> and nothing else in this
- * file has to change.
+ * The two screenshots show the same fictional company, "Holzbau Muster",
+ * before and after. They are a demonstration, not a client project, and the
+ * caption says so: passing off an invented case study as real work is the
+ * one thing that would cost us a prospect who checks.
+ *
+ * When the first real project ships, replace the two files in
+ * public/beispiel and rewrite the caption. Nothing else here changes.
  */
 export default function BeforeAfter() {
   return (
@@ -30,31 +31,31 @@ export default function BeforeAfter() {
         <Reveal index={1} className="mt-12">
           <CompareSlider
             before={
-              <ComparePanel
-                variant="before"
-                align="left"
-                headline={comparison.before.headline}
-                points={comparison.before.points}
+              <Image
+                src="/beispiel/vorher.jpg"
+                alt="Beispielhafte Unternehmensseite im Stand von 2011: blauer Verlaufsbalken, langer Fliesstext, Hinweis auf Internet Explorer"
+                fill
+                sizes="(max-width: 1024px) 100vw, 1100px"
+                className="object-cover object-left-top"
               />
             }
             after={
-              <ComparePanel
-                variant="after"
-                align="right"
-                headline={comparison.after.headline}
-                points={comparison.after.points}
+              <Image
+                src="/beispiel/nachher.jpg"
+                alt="Dieselbe Seite neu aufgebaut: klare Typografie, deutlicher Handlungsaufruf, ruhige Bildflächen"
+                fill
+                sizes="(max-width: 1024px) 100vw, 1100px"
+                className="object-cover object-left-top"
               />
             }
-            beforeLabel={comparison.before.label}
-            afterLabel={comparison.after.label}
           />
         </Reveal>
 
         <Reveal index={2}>
           <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted">
-            Eine Gegenüberstellung dessen, was wir verändern. Sobald die ersten
-            Projekte live sind, stehen hier echte Screenshots und gemessene
-            Werte.
+            Beispieldarstellung an einem erfundenen Betrieb, kein Kundenprojekt.
+            Sobald die ersten Seiten live sind, stehen hier echte Screenshots
+            mit gemessenen Werten.
           </p>
         </Reveal>
       </div>
