@@ -126,7 +126,7 @@ export default function Header() {
               aria-expanded={open}
               aria-controls="mobile-nav"
               aria-label={open ? "Menü schliessen" : "Menü öffnen"}
-              className="-mr-2 flex h-10 w-10 items-center justify-center rounded-brand text-foreground md:hidden"
+              className="-mr-2 flex h-11 w-11 items-center justify-center rounded-brand text-foreground md:hidden"
             >
               <span className="relative block h-3.5 w-5">
                 <span

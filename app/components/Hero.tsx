@@ -69,7 +69,7 @@ export default function Hero() {
             </a>
             <a
               href="#beispiele"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-accent-text"
+              className="group -my-2 inline-flex items-center gap-2 py-2 text-sm font-semibold text-foreground transition-colors hover:text-accent-text"
             >
               Beispiele ansehen
               <span

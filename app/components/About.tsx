@@ -40,14 +40,17 @@ export default function About() {
             <Reveal key={person.name} index={index} className="scroll-lift">
               <article className="sheen group h-full rounded-brand border border-border bg-gradient-to-br from-surface to-surface-2/40 p-6 transition-colors duration-300 hover:border-border-strong">
                 <div className="flex items-start gap-5">
-                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-brand sm:h-24 sm:w-24">
+                  {/* Landscape headshots: object-cover on a square keeps the
+                      full height, so the face stays small. A slight scale
+                      crops the headroom and brings it up to size. */}
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-brand ring-1 ring-border sm:h-32 sm:w-32">
                     {hasPhoto(person.photo) ? (
                       <Image
                         src={person.photo}
                         alt={`Portrait von ${person.name}`}
                         fill
                         sizes="96px"
-                        className="object-cover object-top"
+                        className="scale-[1.18] object-cover object-[50%_18%]"
                       />
                     ) : (
                       <PlaceholderImage
