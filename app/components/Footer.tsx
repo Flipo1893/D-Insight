@@ -3,7 +3,6 @@ import ConsentReset from "./ConsentReset";
 import { site } from "../lib/content";
 
 const legalLinks = [
-  { href: "/wissen", label: "Wissen" },
   { href: "/agb", label: "AGB" },
   { href: "/nutzungsbedingungen", label: "Nutzungsbedingungen" },
   { href: "/impressum", label: "Impressum" },

@@ -3,10 +3,10 @@ import { getCurrentUser } from "@/lib/supabase/auth";
 import LogoutButton from "./LogoutButton";
 import MobileMenu from "./MobileMenu";
 
-// Beispiele and Kontakt dropped in favour of the two entries that were
-// unreachable: the quick check sat mid-page in no menu at all, and /wissen
-// was linked only from the footer. Both anchors keep working from the
-// subpages because they carry the leading slash.
+// Startseite and Referenzen are listed explicitly: the wordmark already goes
+// home, but only people who know that convention find it, and the references
+// were reachable from nowhere. The anchor carries a leading slash so it also
+// works from the subpages.
 const navItems = [
   { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
@@ -14,7 +14,6 @@ const navItems = [
   { href: "/prozess", label: "Prozess" },
   { href: "/referenzen", label: "Referenzen" },
   { href: "/#schnellcheck", label: "Schnellcheck" },
-  { href: "/wissen", label: "Wissen" },
 ];
 
 export default async function Header() {

@@ -80,18 +80,6 @@ export default function ExploreLinks() {
                 &rarr;
               </span>
             </Link>
-            <Link
-              href="/wissen"
-              className="group inline-flex items-center gap-2 py-2 text-muted transition-colors hover:text-foreground"
-            >
-              Was wir bei Relaunches sehen
-              <span
-                aria-hidden
-                className="transition-transform duration-200 group-hover:translate-x-1"
-              >
-                &rarr;
-              </span>
-            </Link>
           </div>
         </Reveal>
       </div>

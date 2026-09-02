@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { articles } from "./lib/articles";
 import { references } from "./lib/references";
 import { site } from "./lib/content";
 
@@ -23,12 +22,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
     {
-      url: `${site.url}/wissen`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
       url: `${site.url}/impressum`,
       lastModified,
       changeFrequency: "yearly",
@@ -41,15 +34,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.3,
     },
   ];
-
-  const articlePages: MetadataRoute.Sitemap = articles
-    .filter((article) => !article.draft)
-    .map((article) => ({
-      url: `${site.url}/wissen/${article.slug}`,
-      lastModified: new Date(article.published),
-      changeFrequency: "yearly" as const,
-      priority: 0.6,
-    }));
 
   const referencePages: MetadataRoute.Sitemap = references.map((reference) => ({
     url: `${site.url}/referenzen/${reference.slug}`,
@@ -67,5 +51,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
-  return [...staticPages, ...articlePages, ...referencePages];
+  return [...staticPages, ...referencePages];
 }

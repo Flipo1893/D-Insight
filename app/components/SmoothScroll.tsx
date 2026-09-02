@@ -56,9 +56,9 @@ export default function SmoothScroll() {
       ) as HTMLAnchorElement | null;
       if (!anchor || anchor.target === "_blank") return;
 
-      // Nav links are written as /#abschnitt so they also work from /wissen
-      // and the legal pages. Only handle them when we are already on the page
-      // they point at; otherwise let Next route there normally.
+      // Nav links are written as /#abschnitt so they also work from the
+      // subpages and the legal pages. Only handle one when we are already on
+      // the page it points at; otherwise let Next route there normally.
       const url = new URL(anchor.href, location.href);
       if (url.origin !== location.origin) return;
       if (url.pathname !== location.pathname) return;
