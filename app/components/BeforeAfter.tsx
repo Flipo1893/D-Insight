@@ -1,6 +1,5 @@
 import Image from "next/image";
 import CompareSlider from "./CompareSlider";
-import EraDemo from "./EraDemo";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 
@@ -8,12 +7,12 @@ import SectionHeading from "./SectionHeading";
  * Layout family: full-width interactive comparison.
  *
  * The two screenshots show the same fictional company, "Holzbau Muster",
- * before and after. They are a demonstration, not a client project, and the
- * caption says so: passing off an invented case study as real work is the
- * one thing that would cost us a prospect who checks.
+ * before and after.
  *
- * When the first real project ships, replace the two files in
- * public/beispiel and rewrite the caption. Nothing else here changes.
+ * The caption that said so was removed on request. Nothing on the page now
+ * marks these as invented, so a visitor may read them as a client project.
+ * Replacing them with real screenshots of a delivered site is the fix;
+ * prebuilt.ch is live and would do. Until then this is worth knowing.
  */
 export default function BeforeAfter() {
   return (
@@ -50,24 +49,6 @@ export default function BeforeAfter() {
               />
             }
           />
-        </Reveal>
-
-        <Reveal index={2}>
-          <p className="mt-6 max-w-xl text-sm leading-relaxed text-muted">
-            Beispieldarstellung an einem erfundenen Betrieb, kein Kundenprojekt.
-            Sobald die ersten Seiten live sind, stehen hier echte Screenshots
-            mit gemessenen Werten.
-          </p>
-        </Reveal>
-
-        <Reveal index={3} className="mt-24">
-          <SectionHeading className="max-w-2xl">
-            Oder legen Sie den Schalter selbst um.
-          </SectionHeading>
-        </Reveal>
-
-        <Reveal index={4} className="mt-8">
-          <EraDemo />
         </Reveal>
       </div>
     </section>
