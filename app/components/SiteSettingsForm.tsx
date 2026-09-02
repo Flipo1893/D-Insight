@@ -6,6 +6,7 @@ import {
   type SettingsActionState,
 } from "@/app/dashboard/kunden/[userId]/actions";
 import type { Site, SiteField, SiteFieldType } from "@/lib/mongodb/sites";
+import { steps } from "../lib/content";
 
 const initialState: SettingsActionState = { error: null };
 
@@ -56,6 +57,60 @@ export default function SiteSettingsForm({ site }: { site: Site }) {
             className={inputClasses}
           />
         </div>
+      </div>
+
+      {/* Project status. The customer sees this on their own overview, which
+          saves the recurring "wie weit seid ihr" email in both directions. */}
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div>
+          <label htmlFor="phase" className="mb-1 block text-sm text-muted">
+            Projektstand
+          </label>
+          <select
+            id="phase"
+            name="phase"
+            defaultValue={String(site.phase)}
+            className={inputClasses}
+          >
+            <option value="-1">Noch nicht gestartet</option>
+            {steps.map((step, index) => (
+              <option key={step.title} value={String(index)}>
+                {index + 1}. {step.title}
+              </option>
+            ))}
+            <option value={String(steps.length)}>Abgeschlossen</option>
+          </select>
+        </div>
+        <div>
+          <label htmlFor="phaseNote" className="mb-1 block text-sm text-muted">
+            Notiz an den Kunden
+            <span className="ml-2 text-muted">optional</span>
+          </label>
+          <input
+            id="phaseNote"
+            name="phaseNote"
+            type="text"
+            maxLength={500}
+            defaultValue={site.phaseNote}
+            placeholder="Konzept ist raus, wir warten auf Rückmeldung."
+            className={inputClasses}
+          />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="pending" className="mb-1 block text-sm text-muted">
+          Offen vom Kunden
+          <span className="ml-2 text-muted">eine Sache pro Zeile</span>
+        </label>
+        <textarea
+          id="pending"
+          name="pending"
+          rows={4}
+          defaultValue={site.pending.join("\n")}
+          placeholder={"Logo in hoher Auflösung\nTexte für die Über-uns-Seite\nZugang zur Domain"}
+          className={`${inputClasses} resize-y`}
+        />
       </div>
 
       <div>
@@ -135,8 +190,15 @@ export default function SiteSettingsForm({ site }: { site: Site }) {
         </button>
       </div>
 
-      {state.error && <p className="text-sm text-accent">{state.error}</p>}
-      {state.success && <p className="text-sm text-accent">Gespeichert.</p>}
+      {/* Success and failure must not look identical. A red "Gespeichert."
+          reads as an error at a glance. */}
+      <p aria-live="polite" className="min-h-5 text-sm">
+        {state.error ? (
+          <span className="text-accent-text">{state.error}</span>
+        ) : state.success ? (
+          <span className="text-foreground">Gespeichert.</span>
+        ) : null}
+      </p>
 
       <button
         type="submit"

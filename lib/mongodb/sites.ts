@@ -24,6 +24,19 @@ export type Site = {
   fields: SiteField[];
   /** The actual values, keyed by SiteField.key. */
   content: Record<string, string>;
+  /**
+   * Where the project stands, as an index into the process steps. -1 means
+   * not started, steps.length means finished. An index rather than free
+   * text, so the customer view can draw progress without parsing prose.
+   */
+  phase: number;
+  /**
+   * What we are waiting for from the customer. The most common reason a
+   * project stalls is that nobody said out loud whose turn it is.
+   */
+  pending: string[];
+  /** Optional note from us, shown above the steps. */
+  phaseNote: string;
   updatedAt: Date;
 };
 
@@ -68,6 +81,10 @@ function normalize(doc: StoredSite): Site {
     siteUrl: doc.siteUrl ?? "",
     fields: doc.fields?.length ? doc.fields : defaultSiteFields,
     content: doc.content ?? { ...defaultContent, ...legacyContent },
+    // Documents written before project tracking existed carry none of these.
+    phase: typeof doc.phase === "number" ? doc.phase : -1,
+    pending: Array.isArray(doc.pending) ? doc.pending : [],
+    phaseNote: doc.phaseNote ?? "",
     updatedAt: doc.updatedAt ?? new Date(),
   };
 }
@@ -138,7 +155,14 @@ export async function saveSiteContent(
 /** Saved by an admin from /dashboard/kunden/[userId]. */
 export async function saveSiteSettings(
   userId: string,
-  settings: { siteName: string; siteUrl: string; fields: SiteField[] },
+  settings: {
+    siteName: string;
+    siteUrl: string;
+    fields: SiteField[];
+    phase: number;
+    pending: string[];
+    phaseNote: string;
+  },
 ): Promise<void> {
   const collection = await getCollection();
 

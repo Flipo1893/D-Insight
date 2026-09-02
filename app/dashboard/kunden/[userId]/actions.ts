@@ -5,6 +5,7 @@ import { isAdminEmail } from "@/lib/admin";
 import { isMongoConfigured } from "@/lib/mongodb/config";
 import { saveSiteSettings, type SiteField } from "@/lib/mongodb/sites";
 import { getCurrentUser } from "@/lib/supabase/auth";
+import { steps } from "@/app/lib/content";
 
 export type SettingsActionState = {
   error: string | null;
@@ -74,10 +75,29 @@ export async function saveSettings(
   }
 
   try {
+    // Phase is a select, but a server action is a public endpoint, so the
+    // value is clamped rather than trusted.
+    const rawPhase = Number(formData.get("phase"));
+    const phase = Number.isInteger(rawPhase)
+      ? Math.min(Math.max(rawPhase, -1), steps.length)
+      : -1;
+
+    // One item per line, which is how someone actually types a list.
+    const pending = ((formData.get("pending") as string | null) ?? "")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .slice(0, 20);
+
     await saveSiteSettings(targetUserId, {
       siteName: ((formData.get("siteName") as string | null) ?? "").trim(),
       siteUrl: ((formData.get("siteUrl") as string | null) ?? "").trim(),
       fields,
+      phase,
+      pending,
+      phaseNote: ((formData.get("phaseNote") as string | null) ?? "")
+        .trim()
+        .slice(0, 500),
     });
   } catch {
     return {
