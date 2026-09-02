@@ -1,5 +1,6 @@
 import Image from "next/image";
 import CompareSlider from "./CompareSlider";
+import EraDemo from "./EraDemo";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
 
@@ -57,6 +58,16 @@ export default function BeforeAfter() {
             Sobald die ersten Seiten live sind, stehen hier echte Screenshots
             mit gemessenen Werten.
           </p>
+        </Reveal>
+
+        <Reveal index={3} className="mt-24">
+          <SectionHeading className="max-w-2xl">
+            Oder legen Sie den Schalter selbst um.
+          </SectionHeading>
+        </Reveal>
+
+        <Reveal index={4} className="mt-8">
+          <EraDemo />
         </Reveal>
       </div>
     </section>

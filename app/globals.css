@@ -602,20 +602,19 @@ section[id] {
 }
 
 /* ==========================================================================
-   Zeitschalter: die Seite im Stand von 2011
+   Zeitschalter: eine Demo-Website im Stand von 2011
    ==========================================================================
 
-   The service, demonstrated on ourselves. Everything is done by overriding
-   the same tokens the rest of the site is built from, which is only possible
-   because nothing hardcodes a colour. That is the actual argument: a site
-   built this way can be reskinned completely without touching a component.
+   Scoped to the demo frame, never to the page. Turning the whole site ugly
+   made the point at the cost of the site itself, and a visitor who lands
+   mid-transformation just sees a broken page.
 
-   Layout is deliberately left alone. The point is to show what changed
-   between 2011 and today in type, colour and surface, not to break the page
-   and dare the visitor to find their way back.
+   Everything is done by overriding the same tokens the rest of the site is
+   built from, inside one container. That is the actual argument: nothing
+   here hardcodes a colour, so a complete reskin touches no component.
    ========================================================================== */
 
-:root[data-era="2011"] {
+[data-era="2011"] {
   --background: #ffffff;
   --surface: #f4f4f4;
   --surface-2: #eeeeee;
@@ -626,7 +625,7 @@ section[id] {
   --muted-strong: #1a1a1a;
 
   /* The blue every business site of the era used, at contrast that still
-     passes: 5.7:1 for the text step on white. */
+     passes: 8.98:1 for white text on the button fill. */
   --accent: #2d4a73;
   --accent-strong: #2d4a73;
   --accent-hover: #1c2f4a;
@@ -635,61 +634,49 @@ section[id] {
 
   /* Nothing was rounded in 2011. */
   --radius: 0px;
-}
 
-:root[data-era="2011"] body {
   font-family: "Times New Roman", Times, serif;
+  background: var(--background);
+  color: var(--foreground);
 }
 
-/* Era styling is scoped to the marketing pages. The dashboard is a working
-   tool, and turning a customer's admin area into a gag is not funny. */
-:root[data-era="2011"] main :where(a):not([class*="rounded"]) {
+[data-era="2011"] a {
   color: var(--accent-text);
   text-decoration: underline;
 }
 
-:root[data-era="2011"] header {
+[data-era="2011"] .era-demo__bar {
   background: linear-gradient(#4a6fa5, #2d4a73);
   border-bottom: 3px solid #1c2f4a;
-  backdrop-filter: none;
+  color: #ffffff;
 }
 
-:root[data-era="2011"] header a,
-:root[data-era="2011"] header button {
+[data-era="2011"] .era-demo__bar a {
   color: #ffffff;
   text-decoration: none;
 }
 
-/* The decorative layers are the giveaway of a modern build, so they go. */
-:root[data-era="2011"] .grain,
-:root[data-era="2011"] .hero-visual,
-:root[data-era="2011"] .sheen::after {
-  display: none;
+[data-era="2011"] .era-demo__cta {
+  background: var(--accent-strong);
+  color: #ffffff;
+  text-decoration: none;
 }
 
-:root[data-era="2011"] [class*="bg-gradient"] {
-  background-image: none;
+[data-era="2011"] .era-demo__art {
+  background: #dddddd;
+  border: 1px solid #999999;
 }
 
-/* Flat, hard-edged, and a little cramped, the way it was. */
-:root[data-era="2011"] main :where(article, section > div > div) {
-  box-shadow: none;
+/* The demo frame keeps its own surface so the flip is contained and the page
+   around it never moves. */
+.era-demo {
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease;
 }
 
-:root[data-era="2011"] img {
-  filter: saturate(0.85);
-}
-
-/* The switch itself, so it reads as a control rather than as damage. */
-.era-note {
-  background: var(--accent-soft);
-  border-bottom: 1px solid var(--border);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  :root {
-    transition:
-      background-color 0.4s ease,
-      color 0.4s ease;
+@media (prefers-reduced-motion: reduce) {
+  .era-demo {
+    transition: none;
   }
 }
