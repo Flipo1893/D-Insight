@@ -48,7 +48,11 @@ const htmlBytes = compressed(html);
 // same chunk is often both preloaded and requested.
 const referenced = [
   ...new Set(
-    [...html.toString().matchAll(/["'](\/_next\/static\/[^"']+)["']/g)].map(
+    // Backslash excluded from the path: the same asset also appears inside
+    // escaped JSON in the payload, as ...woff2\" — without this the trailing
+    // backslash makes it a second, distinct entry and every font is counted
+    // twice. That inflated the published figure by 52 KB and two requests.
+    [...html.toString().matchAll(/["'](\/_next\/static\/[^"'\\]+)["']/g)].map(
       (match) => match[1].replace(/&amp;/g, "&"),
     ),
   ),
