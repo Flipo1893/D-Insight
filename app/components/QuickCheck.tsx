@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import type { CheckResponse, CheckStatus } from "@/lib/site-check/analyse";
 import { rememberCheckedUrl } from "@/lib/checked-url";
 import { measured } from "../lib/content";
+import LoadTime from "./LoadTime";
 import SectionHeading from "./SectionHeading";
 import Reveal from "./Reveal";
 
@@ -179,6 +180,7 @@ export default function QuickCheck() {
                   </div>
                 ))}
               </dl>
+              <LoadTime />
               <p className="mt-3 max-w-sm text-xs leading-relaxed text-muted">
                 Gemessen am {formatMeasuredDate(measured.date)} am fertigen
                 Build, mit Kompression. Nachprüfbar mit denselben Werkzeugen,

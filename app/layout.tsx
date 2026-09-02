@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Analytics from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
+import EraBanner from "./components/EraBanner";
 import PageViewTracker from "./components/PageViewTracker";
 import SmoothScroll from "./components/SmoothScroll";
 import { site } from "./lib/content";
@@ -78,6 +79,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Zum Inhalt springen
         </a>
+        <EraBanner />
         <SmoothScroll />
         <PageViewTracker />
         <Analytics />

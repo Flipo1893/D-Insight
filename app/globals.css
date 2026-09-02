@@ -600,3 +600,96 @@ section[id] {
     transform: none;
   }
 }
+
+/* ==========================================================================
+   Zeitschalter: die Seite im Stand von 2011
+   ==========================================================================
+
+   The service, demonstrated on ourselves. Everything is done by overriding
+   the same tokens the rest of the site is built from, which is only possible
+   because nothing hardcodes a colour. That is the actual argument: a site
+   built this way can be reskinned completely without touching a component.
+
+   Layout is deliberately left alone. The point is to show what changed
+   between 2011 and today in type, colour and surface, not to break the page
+   and dare the visitor to find their way back.
+   ========================================================================== */
+
+:root[data-era="2011"] {
+  --background: #ffffff;
+  --surface: #f4f4f4;
+  --surface-2: #eeeeee;
+  --border: #999999;
+  --border-strong: #777777;
+  --foreground: #000000;
+  --muted: #333333;
+  --muted-strong: #1a1a1a;
+
+  /* The blue every business site of the era used, at contrast that still
+     passes: 5.7:1 for the text step on white. */
+  --accent: #2d4a73;
+  --accent-strong: #2d4a73;
+  --accent-hover: #1c2f4a;
+  --accent-text: #0000ee;
+  --accent-soft: #e8edf4;
+
+  /* Nothing was rounded in 2011. */
+  --radius: 0px;
+}
+
+:root[data-era="2011"] body {
+  font-family: "Times New Roman", Times, serif;
+}
+
+/* Era styling is scoped to the marketing pages. The dashboard is a working
+   tool, and turning a customer's admin area into a gag is not funny. */
+:root[data-era="2011"] main :where(a):not([class*="rounded"]) {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+
+:root[data-era="2011"] header {
+  background: linear-gradient(#4a6fa5, #2d4a73);
+  border-bottom: 3px solid #1c2f4a;
+  backdrop-filter: none;
+}
+
+:root[data-era="2011"] header a,
+:root[data-era="2011"] header button {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* The decorative layers are the giveaway of a modern build, so they go. */
+:root[data-era="2011"] .grain,
+:root[data-era="2011"] .hero-visual,
+:root[data-era="2011"] .sheen::after {
+  display: none;
+}
+
+:root[data-era="2011"] [class*="bg-gradient"] {
+  background-image: none;
+}
+
+/* Flat, hard-edged, and a little cramped, the way it was. */
+:root[data-era="2011"] main :where(article, section > div > div) {
+  box-shadow: none;
+}
+
+:root[data-era="2011"] img {
+  filter: saturate(0.85);
+}
+
+/* The switch itself, so it reads as a control rather than as damage. */
+.era-note {
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    transition:
+      background-color 0.4s ease,
+      color 0.4s ease;
+  }
+}

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import LogoutButton from "./LogoutButton";
 import MobileMenu from "./MobileMenu";
+import EraSwitch from "./EraSwitch";
 
 // Startseite and Referenzen are listed explicitly: the wordmark already goes
 // home, but only people who know that convention find it, and the references
@@ -49,6 +50,7 @@ export default async function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-3 sm:gap-4">
+          <EraSwitch />
           <div className="hidden md:block">{authLink}</div>
           <Link
             href={user ? "/dashboard" : "/registrieren"}
