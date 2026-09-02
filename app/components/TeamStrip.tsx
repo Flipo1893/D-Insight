@@ -35,7 +35,8 @@ export default function TeamStrip() {
                       src={person.photo}
                       alt={`Portrait von ${person.name}`}
                       fill
-                      sizes="64px"
+                      sizes="80px"
+                      quality={85}
                       className="scale-[1.18] object-cover object-[50%_18%]"
                     />
                   </div>

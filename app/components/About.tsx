@@ -49,7 +49,12 @@ export default function About() {
                         src={person.photo}
                         alt={`Portrait von ${person.name}`}
                         fill
-                        sizes="96px"
+                        // Box is 128px at sm and the image is scaled 1.18 on
+                        // top, so the rendered size is ~150 CSS px. Asking for
+                        // 96 made Next serve a variant far too small, which is
+                        // what made the faces look soft.
+                        sizes="160px"
+                        quality={85}
                         className="scale-[1.18] object-cover object-[50%_18%]"
                       />
                     ) : (

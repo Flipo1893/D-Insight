@@ -8,9 +8,11 @@ import MobileMenu from "./MobileMenu";
 // was linked only from the footer. Both anchors keep working from the
 // subpages because they carry the leading slash.
 const navItems = [
+  { href: "/", label: "Startseite" },
   { href: "/leistungen", label: "Leistungen" },
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/prozess", label: "Prozess" },
+  { href: "/referenzen", label: "Referenzen" },
   { href: "/#schnellcheck", label: "Schnellcheck" },
   { href: "/wissen", label: "Wissen" },
 ];

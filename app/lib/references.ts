@@ -16,17 +16,41 @@ export type Reference = {
   industry: string;
   year: string;
   summary: string;
-  /** What the site looked like and why it was a problem. */
-  situation: string;
-  /** What we changed. */
-  work: string[];
+  /** Live address of the finished site. */
+  url?: string;
+  /**
+   * The narrative parts are optional so a reference can go up with the
+   * measured facts alone. Publishing a half-written story is worse than
+   * publishing numbers and a link.
+   */
+  situation?: string;
+  work?: string[];
   /** Measured afterwards. Only numbers you can actually show a client. */
   results: { label: string; value: string }[];
   beforeImage?: string;
   afterImage?: string;
 };
 
-export const references: Reference[] = [];
+export const references: Reference[] = [
+  {
+    slug: "prebuilt",
+    client: "Prebuilt",
+    industry: "Vorgefertigte Bauelemente",
+    year: "2026",
+    summary:
+      "Von uns gebaut und live. Die gemessenen Werte stehen unten, geprüft mit demselben Schnellcheck, den wir auf dieser Seite anbieten.",
+    // Real measurements from our own check on 2026-09-02. Re-measure before
+    // quoting them anywhere else; a reference with stale numbers is worse
+    // than one with none.
+    results: [
+      { label: "Sichtbarkeit", value: "88 / 100" },
+      { label: "Barrierefreiheit", value: "94 / 100" },
+      { label: "Antwortzeit", value: "506 ms" },
+      { label: "Seitengrösse", value: "169 KB" },
+    ],
+    url: "https://prebuilt.ch",
+  },
+];
 
 export function getReference(slug: string): Reference | undefined {
   return references.find((reference) => reference.slug === slug);
