@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Reveal from "./Reveal";
 import { primaryCta } from "../lib/content";
 
@@ -15,8 +16,10 @@ export default function CtaBanner() {
           <h2 className="max-w-xl text-3xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
             Bereit für eine neue Website?
           </h2>
-          <a
-            href="#kontakt"
+          <Link
+            // Mit Schrägstrich, weil dieses Banner auch auf den Unterseiten
+            // steht und der Anker dort ins Leere führt.
+            href="/#kontakt"
             className="group inline-flex w-fit shrink-0 self-start items-center gap-2 rounded-brand bg-white px-6 py-3 text-sm font-semibold whitespace-nowrap text-accent-strong shadow-lg transition-transform duration-200 hover:-translate-y-0.5 active:translate-y-0"
           >
             {primaryCta}
@@ -26,7 +29,7 @@ export default function CtaBanner() {
             >
               &rarr;
             </span>
-          </a>
+          </Link>
         </Reveal>
       </div>
     </section>

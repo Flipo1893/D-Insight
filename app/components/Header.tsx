@@ -13,6 +13,7 @@ const navItems = [
   { href: "/ueber-uns", label: "Über uns" },
   { href: "/prozess", label: "Prozess" },
   { href: "/referenzen", label: "Referenzen" },
+  { href: "/preise", label: "Preise" },
   { href: "/#schnellcheck", label: "Schnellcheck" },
 ];
 

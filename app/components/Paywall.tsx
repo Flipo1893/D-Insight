@@ -1,6 +1,7 @@
 import Link from "next/link";
 import BillingButton from "./BillingButton";
 import { startCheckout } from "@/app/dashboard/abo/actions";
+import { planFeatures } from "@/app/lib/content";
 import type { Access } from "@/lib/billing";
 
 /**
@@ -22,8 +23,20 @@ export default function Paywall({ access }: { access: Access }) {
       <p className="mt-4 text-muted">
         {wasCustomer
           ? "Der Zugang zu Inhalten, Projektstatus und Auswertungen ist abgelaufen. Mit einem neuen Abo sind Ihre Daten sofort wieder da — gelöscht wurde nichts."
-          : "Im Abo enthalten: Texte Ihrer Website selbst bearbeiten, Projektstatus verfolgen, Besucherzahlen und die technische Überwachung Ihrer Seite."}
+          : "Im Monatsabo enthalten:"}
       </p>
+
+      {/* Dieselbe Liste wie auf der Preisseite, aus einer Quelle. Drei
+          Kopien wären drei Gelegenheiten, unterschiedliche Versprechen zu
+          machen. */}
+      <ul className="mx-auto mt-6 flex max-w-sm flex-col gap-2 text-left">
+        {planFeatures.map((feature) => (
+          <li key={feature} className="flex gap-3 text-sm text-muted">
+            <span aria-hidden className="mt-2.5 h-px w-4 shrink-0 bg-accent" />
+            <span className="leading-relaxed">{feature}</span>
+          </li>
+        ))}
+      </ul>
 
       <div className="mt-8 flex justify-center">
         <BillingButton

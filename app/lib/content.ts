@@ -127,6 +127,18 @@ export const faqs = [
       "Nicht, wenn der Umzug sauber gemacht wird. Wir übernehmen bestehende URLs oder richten Weiterleitungen ein und behalten die Sichtbarkeit nach dem Launch im Blick.",
   },
   {
+    slug: "abo-kosten",
+    question: "Was kostet der Kundenbereich?",
+    answer:
+      "Der Kundenbereich läuft im Monatsabo und ist optional — das Refactoring selbst funktioniert auch ohne. Den aktuellen Preis und alles, was enthalten ist, finden Sie auf der Seite Preise.",
+  },
+  {
+    slug: "abo-kuendigung",
+    question: "Kann ich den Kundenbereich jederzeit kündigen?",
+    answer:
+      "Ja. Es gibt keine Mindestlaufzeit; das Abo verlängert sich monatlich und lässt sich mit einem Klick im Kundenbereich kündigen. Der Zugang bleibt bis zum Ende der bezahlten Periode bestehen. Ihre Website läuft unabhängig davon weiter — ohne Abo können Sie die Inhalte nur nicht mehr selbst bearbeiten.",
+  },
+  {
     slug: "kosten",
     question: "Was kostet ein Refactoring?",
     answer:
@@ -134,6 +146,22 @@ export const faqs = [
   },
 ] as const;
 
+
+/**
+ * Was im Monatsabo für den Kundenbereich steckt.
+ *
+ * Hier und nicht in der Seite, weil dieselbe Liste an drei Stellen
+ * auftaucht: auf der Preisseite, auf der Abo-Seite im Dashboard und in der
+ * Bezahlschranke. Drei Kopien wären drei Gelegenheiten, unterschiedliche
+ * Versprechen zu machen.
+ */
+export const planFeatures = [
+  "Texte und Inhalte Ihrer Website selbst bearbeiten",
+  "Projektstatus mit offenen Punkten in Echtzeit",
+  "Wöchentliche technische Prüfung Ihrer Website",
+  "Verlauf von Ladezeit, Sichtbarkeit und Barrierefreiheit",
+  "Besucherzahlen und beliebteste Seiten",
+] as const;
 
 /** Qualification options on the contact form. */
 export const budgetOptions = [

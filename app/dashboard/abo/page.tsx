@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import BillingButton from "@/app/components/BillingButton";
-import { getAccess } from "@/lib/billing";
-import { getStripe } from "@/lib/stripe/client";
-import { isStripeConfigured, stripePriceId } from "@/lib/stripe/config";
+import { planFeatures } from "@/app/lib/content";
+import { checkSubscription, getAccess } from "@/lib/billing";
+import { isStripeConfigured } from "@/lib/stripe/config";
+import { getPlanPrice, intervalLabel } from "@/lib/stripe/price";
 import type { SubscriptionStatus } from "@/lib/mongodb/sites";
 import { openPortal, startCheckout } from "./actions";
 
@@ -25,37 +27,6 @@ const statusLabels: Record<SubscriptionStatus, string> = {
 
 const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("de-CH", { dateStyle: "long" }).format(date);
-
-/**
- * Preis und Bezeichnung kommen aus Stripe statt aus dem Code.
- *
- * Ein hier fest eingetragener Betrag wäre genau einmal richtig — beim
- * nächsten Preiswechsel im Stripe-Dashboard stünde auf der Seite etwas
- * anderes, als tatsächlich abgebucht wird.
- */
-async function loadPrice() {
-  try {
-    const price = await getStripe().prices.retrieve(stripePriceId, {
-      expand: ["product"],
-    });
-
-    const amount =
-      price.unit_amount === null
-        ? null
-        : new Intl.NumberFormat("de-CH", {
-            style: "currency",
-            currency: price.currency.toUpperCase(),
-          }).format(price.unit_amount / 100);
-
-    const product = price.product;
-    const name =
-      typeof product === "object" && "name" in product ? product.name : "Kundenbereich";
-
-    return { amount, name, interval: price.recurring?.interval ?? "month" };
-  } catch {
-    return null;
-  }
-}
 
 export default async function Abo({
   searchParams,
@@ -81,8 +52,12 @@ export default async function Abo({
     );
   }
 
-  const price = await loadPrice();
+  const price = await getPlanPrice();
   const hasCustomer = Boolean(subscription.customerId);
+  // Nicht access.allowed, sondern das tatsächliche Abo: für Admins ist
+  // allowed immer true, und die brauchen trotzdem den Kaufknopf — sonst gibt
+  // es keinen Weg, den Ablauf zu testen, den Kund:innen durchlaufen.
+  const hasLiveSubscription = checkSubscription(subscription).allowed;
 
   return (
     <div className="flex flex-col gap-8">
@@ -115,7 +90,8 @@ export default async function Abo({
             <p className="text-lg font-semibold">
               {price.amount}
               <span className="text-sm font-normal text-muted">
-                {price.interval === "year" ? " / Jahr" : " / Monat"}
+                {" "}
+                / {intervalLabel(price.interval)}
               </span>
             </p>
           )}
@@ -142,6 +118,17 @@ export default async function Abo({
           )}
         </dl>
 
+        {!hasLiveSubscription && (
+          <ul className="mt-6 flex flex-col gap-2 border-t border-border pt-6">
+            {planFeatures.map((feature) => (
+              <li key={feature} className="flex gap-3 text-sm text-muted">
+                <span aria-hidden className="mt-2.5 h-px w-4 shrink-0 bg-accent" />
+                <span className="leading-relaxed">{feature}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
         {access.reason === "zahlung-offen" && (
           <p className="mt-6 text-sm text-accent">
             Die letzte Abbuchung ist fehlgeschlagen. Bitte hinterlegen Sie ein
@@ -150,12 +137,16 @@ export default async function Abo({
         )}
         {access.reason === "admin" && (
           <p className="mt-6 text-sm text-muted">
-            Sie sind als Admin angemeldet und brauchen kein Abo.
+            Sie sind als Admin angemeldet und haben den Kundenbereich frei
+            —{" "}
+            {hasLiveSubscription
+              ? "dieses Abo läuft zusätzlich und kann jederzeit gekündigt werden."
+              : "der Knopf unten führt trotzdem in den Checkout, damit sich der Ablauf testen lässt."}
           </p>
         )}
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          {access.allowed && access.reason !== "admin" ? (
+        <div className="mt-6 flex flex-wrap items-start gap-3">
+          {hasLiveSubscription ? (
             <BillingButton
               action={openPortal}
               label="Abo verwalten"
@@ -163,17 +154,15 @@ export default async function Abo({
               variant="secondary"
             />
           ) : (
-            access.reason !== "admin" && (
-              <BillingButton
-                action={startCheckout}
-                label="Abo starten"
-                pendingLabel="Weiterleitung…"
-              />
-            )
+            <BillingButton
+              action={startCheckout}
+              label="Abo starten"
+              pendingLabel="Weiterleitung…"
+            />
           )}
           {/* Wer schon einmal gezahlt hat, kommt auch nach einer Kündigung
               noch an seine Rechnungen. */}
-          {!access.allowed && hasCustomer && (
+          {!hasLiveSubscription && hasCustomer && (
             <BillingButton
               action={openPortal}
               label="Rechnungen ansehen"
@@ -183,6 +172,14 @@ export default async function Abo({
           )}
         </div>
       </div>
+
+      <p className="text-sm text-muted">
+        Preise und Leistungsumfang stehen auch öffentlich auf{" "}
+        <Link href="/preise" className="text-accent-text hover:underline">
+          der Preisseite
+        </Link>
+        .
+      </p>
     </div>
   );
 }

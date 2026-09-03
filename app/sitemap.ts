@@ -15,7 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // Leistungen, Prozess and Über uns are their own pages on this branch,
     // so they belong here. Leaving them out would hide three of the most
     // relevant pages from search entirely.
-    ...["leistungen", "prozess", "ueber-uns"].map((slug) => ({
+    ...["leistungen", "prozess", "ueber-uns", "preise"].map((slug) => ({
       url: `${site.url}/${slug}`,
       lastModified,
       changeFrequency: "monthly" as const,

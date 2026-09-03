@@ -88,19 +88,23 @@ export const getAccess = cache(async (): Promise<Access & { site: Site | null }>
     return noGate("keine-schranke");
   }
 
-  // Wir selbst zahlen nicht für unser eigenes Werkzeug.
-  if (isAdminEmail(user.email)) {
-    return noGate("admin");
-  }
+  // Wir selbst zahlen nicht für unser eigenes Werkzeug. Das Abo wird
+  // trotzdem gelesen: ein Admin, der den Ablauf durchgetestet hat, muss sein
+  // Testabo auch wieder kündigen können.
+  const isAdmin = isAdminEmail(user.email);
 
   try {
     const site = await getSite(user.id);
-    return { ...checkSubscription(site.subscription), site };
+    const own = checkSubscription(site.subscription);
+
+    return isAdmin
+      ? { allowed: true, reason: "admin", subscription: site.subscription, site }
+      : { ...own, site };
   } catch {
     // Die Datenbank ist nicht erreichbar. Im Zweifel aufschliessen statt
     // zusperren: eine Datenbankstörung darf keine zahlenden Kund:innen
     // aussperren, und die Seiten dahinter melden das Problem ohnehin
     // selbst.
-    return noGate("keine-schranke");
+    return noGate(isAdmin ? "admin" : "keine-schranke");
   }
 });
