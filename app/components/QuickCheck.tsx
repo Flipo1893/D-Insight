@@ -401,6 +401,59 @@ export default function QuickCheck() {
                   </p>
                 </div>
 
+                {/* Kept apart from the two blocks above, and labelled as an
+                    assessment rather than a measurement. Everything else on
+                    this page is reproducible with the same tools; this part
+                    is a model's opinion and can be wrong. Mixing the two
+                    would make the honest numbers carry the doubt. */}
+                {report.ai && (
+                  <div className="mt-10">
+                    <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-border pb-4">
+                      <h3 className="text-lg font-semibold tracking-tight">
+                        Inhaltliche Einschätzung
+                      </h3>
+                      <p className="text-2xl font-semibold tracking-tight tabular-nums">
+                        {report.ai.score}
+                        <span className="text-base text-muted"> / 100</span>
+                      </p>
+                    </div>
+
+                    <ul>
+                      {report.ai.items.map((item) => (
+                        <li
+                          key={item.id}
+                          className="flex gap-4 border-b border-border py-4"
+                        >
+                          <span
+                            aria-hidden
+                            className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${statusStyles[item.status].dot}`}
+                          />
+                          <div className="min-w-0">
+                            <p className="font-medium">
+                              {item.label}
+                              <span className="ml-2 text-sm font-normal text-muted">
+                                {statusStyles[item.status].label}
+                              </span>
+                            </p>
+                            <p className="mt-1 text-sm leading-relaxed text-muted">
+                              {item.detail}
+                            </p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <p className="mt-4 text-xs leading-relaxed text-muted">
+                      Die Punkte oben sind gemessen. Dieser Abschnitt ist die
+                      Einschätzung eines Sprachmodells (
+                      <span className="font-mono">{report.ai.model}</span>) und
+                      beurteilt, ob Ihre Texte verständlich sind, nicht ob sie
+                      vorhanden sind. Sprachmodelle irren sich. Widersprechen
+                      Sie uns, wenn ein Befund nicht stimmt.
+                    </p>
+                  </div>
+                )}
+
                 {/* The findings are the argument, so the handover names them
                     instead of repeating a generic CTA. The address is carried
                     into the form, so nobody types it twice. */}

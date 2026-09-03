@@ -1,4 +1,6 @@
 import { accessibilityScore, analyseAccessibility } from "./accessibility";
+import type { AiVerdict } from "./ai/judge";
+import { judgePage } from "./ai/judge";
 
 export type CheckStatus = "gut" | "teilweise" | "fehlt";
 
@@ -19,6 +21,12 @@ export type CheckReport = {
   htmlKb: number;
   score: number;
   items: CheckItem[];
+  /**
+   * The model's assessment, when one is configured and it answered in a form
+   * we could verify. Null covers both "not configured" and "answered badly",
+   * because the report reads the same either way: this part is simply absent.
+   */
+  ai?: AiVerdict | null;
 };
 
 const MAX_BYTES = 1_500_000;
@@ -45,7 +53,19 @@ function countTags(html: string, tag: string): number {
   return html.match(new RegExp(`<${tag}[\\s>]`, "gi"))?.length ?? 0;
 }
 
-export async function analyse(url: URL): Promise<CheckReport> {
+type AnalyseOptions = {
+  /**
+   * Whether to ask the model as well. Off by default so every existing
+   * caller keeps the old, fast, entirely deterministic behaviour, and the
+   * one place that wants an opinion has to say so.
+   */
+  withAi?: boolean;
+};
+
+export async function analyse(
+  url: URL,
+  options: AnalyseOptions = {},
+): Promise<CheckReport> {
   const started = Date.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -181,6 +201,12 @@ export async function analyse(url: URL): Promise<CheckReport> {
 
   const a11yItems = analyseAccessibility(html);
 
+  // Last, and never in the way. Everything above is already final by this
+  // point, so a model that is slow, unreachable or talking nonsense costs
+  // the report nothing but its own section. judgePage swallows its failures
+  // for the same reason.
+  const ai = options.withAi ? await judgePage(html) : null;
+
   return {
     url: url.toString(),
     finalUrl,
@@ -190,6 +216,7 @@ export async function analyse(url: URL): Promise<CheckReport> {
     items,
     a11yItems,
     a11yScore: accessibilityScore(a11yItems),
+    ai,
   };
 }
 
