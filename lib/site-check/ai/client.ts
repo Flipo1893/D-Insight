@@ -45,7 +45,21 @@ export async function askForJson(
       }),
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      // Silent in production, because a visitor should never see our
+      // provider's problems. Loud in development, because without this a
+      // wrong API key, an unpaid account, a model name that does not exist
+      // and a rejected parameter all look identical from the outside: an
+      // assessment that quietly fails to appear. That is a bad hour to
+      // spend, and it is the hour you spend right after switching provider.
+      if (process.env.NODE_ENV === "development") {
+        const body = await response.text().catch(() => "");
+        console.error(
+          `[ai] ${response.status} ${response.statusText} von ${aiBaseUrl}: ${body.slice(0, 300)}`,
+        );
+      }
+      return null;
+    }
 
     const data = (await response.json()) as {
       choices?: { message?: { content?: unknown } }[];
