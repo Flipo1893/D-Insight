@@ -75,11 +75,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    // Only the visitor's own site is put in front of the model. The rival is
-    // a comparison of measurements, and doubling the slowest and, on a paid
-    // API, the only billed part of the check to decorate someone else's page
-    // is not worth it.
-    const report = await analyse(guarded.url, { withAi: true });
+    const report = await analyse(guarded.url);
 
     // Sharing stores the report this server just computed, never a body
     // sent from the browser. Otherwise anyone could publish arbitrary

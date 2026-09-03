@@ -29,8 +29,11 @@ export const aiApiKey = process.env.AI_CHECK_API_KEY ?? "";
 export const aiCheckEnabled = aiBaseUrl.length > 0;
 
 /**
- * Local models on a laptop are slow, and this runs while someone watches a
- * spinner. Long enough for a small model to finish a short answer, short
- * enough that a stuck one does not hold the report hostage.
+ * Local models on a laptop are slow. Measured against llama3.2 on this
+ * machine: about 9 seconds per question warm, and roughly ten more the
+ * first time, while the model is loaded into memory. Forty-five covers a
+ * cold start with room to spare. It can be this generous because the
+ * assessment no longer blocks the measured report; nobody is watching a
+ * spinner for the whole of it.
  */
-export const AI_TIMEOUT_MS = 25_000;
+export const AI_TIMEOUT_MS = 45_000;

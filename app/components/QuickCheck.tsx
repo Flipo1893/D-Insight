@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import type { CheckResponse, CheckStatus } from "@/lib/site-check/analyse";
+import type { AiVerdict } from "@/lib/site-check/ai/judge";
 import { rememberCheckedUrl } from "@/lib/checked-url";
 import { measured } from "../lib/content";
 import LoadTime from "./LoadTime";
@@ -57,6 +58,13 @@ export default function QuickCheck() {
   const [sharing, setSharing] = useState(false);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  /**
+   * The assessment arrives on its own, after the numbers. Measuring takes
+   * about a second and a language model takes ten to twenty, so asking for
+   * both in one request meant staring at a spinner long after the numbers
+   * were ready. "idle" means nothing was asked for.
+   */
+  const [aiState, setAiState] = useState<"idle" | "pending" | "done">("idle");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -65,6 +73,7 @@ export default function QuickCheck() {
     setReport(null);
     setShareUrl(null);
     setCopied(false);
+    setAiState("idle");
 
     try {
       const response = await fetch("/api/check", {
@@ -79,11 +88,41 @@ export default function QuickCheck() {
         const result = data as CheckResponse;
         setReport(result);
         rememberCheckedUrl(result.finalUrl);
+        void loadAssessment(result.finalUrl);
       }
     } catch {
       setError("Die Prüfung hat nicht geklappt. Bitte versuchen Sie es erneut.");
     } finally {
       setPending(false);
+    }
+  }
+
+  /**
+   * Deliberately not awaited by the submit handler and deliberately silent
+   * on failure. The visitor came for the numbers, which they already have;
+   * our model being slow or unreachable is our problem, and an error message
+   * about it would only be noise next to a report that is complete.
+   */
+  async function loadAssessment(finalUrl: string) {
+    setAiState("pending");
+    try {
+      const response = await fetch("/api/check/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: finalUrl }),
+      });
+      const data = (await response.json()) as { ai?: AiVerdict | null };
+      // Attached to whichever report is on screen, and only if the visitor
+      // has not started another check in the meantime.
+      setReport((current) =>
+        current && current.finalUrl === finalUrl
+          ? { ...current, ai: data.ai ?? null }
+          : current,
+      );
+    } catch {
+      // Left as it was: no assessment, no complaint.
+    } finally {
+      setAiState("done");
     }
   }
 
@@ -406,6 +445,13 @@ export default function QuickCheck() {
                     this page is reproducible with the same tools; this part
                     is a model's opinion and can be wrong. Mixing the two
                     would make the honest numbers carry the doubt. */}
+                {aiState === "pending" && !report.ai && (
+                  <p className="mt-10 border-t border-border pt-6 text-sm text-muted">
+                    Ein Sprachmodell liest gerade Ihre Texte. Das dauert einen
+                    Moment und ändert nichts an den Werten oben.
+                  </p>
+                )}
+
                 {report.ai && (
                   <div className="mt-10">
                     <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-border pb-4">

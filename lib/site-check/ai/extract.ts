@@ -18,6 +18,12 @@ export type PageExtract = {
   headings: string[];
   navLabels: string[];
   bodyStart: string;
+  /**
+   * The tail of the visible text, which on most sites is the footer. Address,
+   * phone number and opening hours live there far more often than at the top,
+   * and the question about reachability is unanswerable without it.
+   */
+  bodyEnd: string;
   altTexts: string[];
   imageCount: number;
   imagesWithoutAlt: number;
@@ -30,6 +36,7 @@ const MAX_HEADINGS = 18;
 const MAX_NAV = 14;
 const MAX_ALTS = 12;
 const MAX_BODY_CHARS = 2200;
+const MAX_BODY_END_CHARS = 700;
 
 /**
  * Collapses whitespace and drops control characters, then caps the length.
@@ -131,12 +138,18 @@ export function buildExtract(html: string): PageExtract {
     300,
   );
 
+  const fullText = clean(visibleText(html), 200_000);
+
   return {
     title,
     description,
     headings,
     navLabels,
-    bodyStart: clean(visibleText(html), MAX_BODY_CHARS),
+    bodyStart: fullText.slice(0, MAX_BODY_CHARS),
+    bodyEnd:
+      fullText.length > MAX_BODY_CHARS
+        ? fullText.slice(-MAX_BODY_END_CHARS)
+        : "",
     altTexts,
     imageCount: imageTags.length,
     imagesWithoutAlt,
