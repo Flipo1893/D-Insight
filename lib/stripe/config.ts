@@ -19,3 +19,34 @@ export const stripePriceId = process.env.STRIPE_PRICE_ID ?? "";
  * gebraucht, und der weist ohne ihn ohnehin jede Anfrage ab.
  */
 export const isStripeConfigured = Boolean(stripeSecretKey && stripePriceId);
+
+/**
+ * Welche der beiden Variablen fehlt — und ob der Wert wenigstens plausibel
+ * aussieht.
+ *
+ * "Nicht konfiguriert, bitte STRIPE_SECRET_KEY und STRIPE_PRICE_ID setzen"
+ * beantwortet die Frage nicht, die man in dem Moment hat: welche von beiden
+ * denn. Und ein Preis, der mit sk_ beginnt, ist ein vertauschtes
+ * Copy-Paste, kein fehlender Wert.
+ */
+export function describeStripeConfig(): string[] {
+  const problems: string[] = [];
+
+  if (!stripeSecretKey) {
+    problems.push("STRIPE_SECRET_KEY fehlt.");
+  } else if (!/^(sk|rk)_(test|live)_/.test(stripeSecretKey)) {
+    problems.push(
+      "STRIPE_SECRET_KEY sieht nicht nach einem Stripe-Schlüssel aus (erwartet sk_test_…, sk_live_… oder rk_…).",
+    );
+  }
+
+  if (!stripePriceId) {
+    problems.push("STRIPE_PRICE_ID fehlt.");
+  } else if (!stripePriceId.startsWith("price_")) {
+    problems.push(
+      "STRIPE_PRICE_ID beginnt nicht mit price_ — das ist die ID des Preises, nicht die des Produkts (prod_…).",
+    );
+  }
+
+  return problems;
+}

@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BillingButton from "@/app/components/BillingButton";
 import { planFeatures } from "@/app/lib/content";
+import { isAdminEmail } from "@/lib/admin";
 import { checkSubscription, getAccess } from "@/lib/billing";
-import { isStripeConfigured } from "@/lib/stripe/config";
+import { describeStripeConfig, isStripeConfigured } from "@/lib/stripe/config";
 import { getPlanPrice, intervalLabel } from "@/lib/stripe/price";
 import type { SubscriptionStatus } from "@/lib/mongodb/sites";
+import { getCurrentUser } from "@/lib/supabase/auth";
 import { openPortal, startCheckout } from "./actions";
 
 export const metadata: Metadata = {
@@ -38,16 +40,34 @@ export default async function Abo({
   const { subscription } = access;
 
   if (!isStripeConfigured) {
+    // Nicht access.reason: ohne Stripe-Konfiguration gibt es gar keine
+    // Schranke, und getAccess() kommt dann nie bis zur Admin-Prüfung.
+    //
+    // Kund:innen bekommen keine Variablennamen zu sehen — damit können sie
+    // nichts anfangen, und es erzählt Fremden, wie der Server konfiguriert
+    // ist. Für uns steht dafür da, welche der beiden Variablen es ist.
+    const user = await getCurrentUser();
+    const isAdmin = isAdminEmail(user?.email);
+
     return (
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">Abo</h2>
         <p className="mt-4 rounded-brand border border-border bg-surface px-4 py-3 text-sm text-muted">
-          Die Zahlungsabwicklung ist noch nicht konfiguriert — sobald{" "}
-          <code className="text-foreground">STRIPE_SECRET_KEY</code> und{" "}
-          <code className="text-foreground">STRIPE_PRICE_ID</code> gesetzt sind,
-          lässt sich das Abo hier abschliessen und verwalten. Bis dahin ist der
-          Kundenbereich für alle offen.
+          Die Zahlungsabwicklung ist im Moment nicht verfügbar. Der
+          Kundenbereich bleibt so lange für alle offen.
         </p>
+
+        {isAdmin && (
+          <ul className="mt-3 flex flex-col gap-1 rounded-brand border border-border bg-surface px-4 py-3 text-sm text-accent">
+            {describeStripeConfig().map((problem) => (
+              <li key={problem}>{problem}</li>
+            ))}
+            <li className="text-muted">
+              Nach dem Ändern von <code>.env.local</code> den Entwicklungsserver
+              neu starten — Umgebungsvariablen werden beim Start gelesen.
+            </li>
+          </ul>
+        )}
       </div>
     );
   }
