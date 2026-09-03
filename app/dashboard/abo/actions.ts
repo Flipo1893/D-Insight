@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { isMongoConfigured } from "@/lib/mongodb/config";
 import { getSite, rememberStripeCustomer } from "@/lib/mongodb/sites";
 import { getStripe } from "@/lib/stripe/client";
+import { describeStripeFailure } from "@/lib/stripe/errors";
+import { getPlanPrice } from "@/lib/stripe/price";
 import { isStripeConfigured, stripePriceId } from "@/lib/stripe/config";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { siteUrl } from "@/lib/supabase/config";
@@ -55,6 +57,19 @@ export async function startCheckout(): Promise<BillingActionState> {
   const user = await getCurrentUser();
   if (!user?.email) return sessionExpired;
 
+  // Vor dem Checkout, nicht danach: Stripe lehnt mode=subscription mit einem
+  // einmaligen Preis ab, und die Meldung dafür ist für niemanden lesbar.
+  const price = await getPlanPrice();
+  if (price && !price.recurring) {
+    return {
+      error: describeStripeFailure(
+        { message: "one-time price" },
+        user.email,
+        "Das Abo ist nicht korrekt eingerichtet. Bitte melden Sie sich bei uns.",
+      ),
+    };
+  }
+
   let checkoutUrl: string | null = null;
 
   try {
@@ -82,8 +97,11 @@ export async function startCheckout(): Promise<BillingActionState> {
   } catch (error) {
     console.error("[stripe] Checkout konnte nicht gestartet werden:", error);
     return {
-      error:
+      error: describeStripeFailure(
+        error,
+        user.email,
         "Die Zahlungsseite konnte nicht geöffnet werden. Bitte versuchen Sie es in einem Moment erneut.",
+      ),
     };
   }
 
@@ -127,8 +145,11 @@ export async function openPortal(): Promise<BillingActionState> {
     // Stripe-Dashboard noch nicht eingerichtet.
     console.error("[stripe] Kundenportal konnte nicht geöffnet werden:", error);
     return {
-      error:
+      error: describeStripeFailure(
+        error,
+        user.email,
         "Das Kundenportal konnte nicht geöffnet werden. Bitte versuchen Sie es in einem Moment erneut.",
+      ),
     };
   }
 

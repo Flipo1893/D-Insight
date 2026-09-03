@@ -146,10 +146,12 @@ export default async function Preise() {
                 {price?.amount ? (
                   <p className="mt-4 text-3xl font-semibold tracking-tight">
                     {price.amount}
-                    <span className="text-base font-normal text-muted">
-                      {" "}
-                      / {intervalLabel(price.interval)}
-                    </span>
+                    {price.recurring && (
+                      <span className="text-base font-normal text-muted">
+                        {" "}
+                        / {intervalLabel(price.interval)}
+                      </span>
+                    )}
                   </p>
                 ) : (
                   <p className="mt-4 text-3xl font-semibold tracking-tight">

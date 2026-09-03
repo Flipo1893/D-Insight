@@ -6,6 +6,13 @@ export type PlanPrice = {
   amount: string | null;
   /** Produktname aus Stripe, z. B. "Kundenbereich". */
   name: string;
+  /**
+   * Ein Abo braucht einen wiederkehrenden Preis. Ein einmaliger hat kein
+   * Intervall — und darf auch keines vorgespielt bekommen: genau das hat
+   * einen falsch angelegten Preis wie einen richtigen aussehen lassen,
+   * während der Checkout ihn ablehnte.
+   */
+  recurring: boolean;
   /** Wie Stripe es nennt; unbekannte Werte werden als "month" gelesen. */
   interval: "day" | "week" | "month" | "year";
 };
@@ -63,6 +70,7 @@ export async function getPlanPrice(): Promise<PlanPrice | null> {
         typeof product === "object" && "name" in product
           ? product.name
           : "Kundenbereich",
+      recurring: price.recurring !== null,
       interval: readInterval(price.recurring?.interval),
     };
   } catch (error) {

@@ -89,10 +89,12 @@ export default async function Abo({
           {price?.amount && (
             <p className="text-lg font-semibold">
               {price.amount}
-              <span className="text-sm font-normal text-muted">
-                {" "}
-                / {intervalLabel(price.interval)}
-              </span>
+              {price.recurring && (
+                <span className="text-sm font-normal text-muted">
+                  {" "}
+                  / {intervalLabel(price.interval)}
+                </span>
+              )}
             </p>
           )}
         </div>
@@ -129,6 +131,13 @@ export default async function Abo({
           </ul>
         )}
 
+        {price && !price.recurring && (
+          <p className="mt-6 text-sm text-accent">
+            Dieser Preis ist in Stripe als einmalige Zahlung angelegt. Ein Abo
+            braucht einen Preis mit &quot;Recurring&quot; — der Checkout wird
+            ihn sonst ablehnen.
+          </p>
+        )}
         {access.reason === "zahlung-offen" && (
           <p className="mt-6 text-sm text-accent">
             Die letzte Abbuchung ist fehlgeschlagen. Bitte hinterlegen Sie ein
