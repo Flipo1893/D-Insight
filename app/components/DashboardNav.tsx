@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link, { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
 
 const baseTabs = [
@@ -16,6 +16,27 @@ const adminTabs = [
   { href: "/dashboard/statistik", label: "Statistik" },
   { href: "/dashboard/monitoring", label: "Monitoring" },
 ];
+
+/**
+ * Lives inside <Link> so useLinkStatus can report that tab's navigation.
+ * Gives immediate feedback on the tab you clicked, before the next page's
+ * skeleton takes over.
+ */
+function TabLabel({ label }: { label: string }) {
+  const { pending } = useLinkStatus();
+
+  return (
+    <span className="flex items-center gap-2">
+      {label}
+      <span
+        aria-hidden
+        className={`h-1.5 w-1.5 rounded-full bg-accent transition-opacity duration-200 ${
+          pending ? "animate-pulse opacity-100" : "opacity-0"
+        }`}
+      />
+    </span>
+  );
+}
 
 export default function DashboardNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const pathname = usePathname();
@@ -39,7 +60,7 @@ export default function DashboardNav({ isAdmin = false }: { isAdmin?: boolean })
                 : "border-transparent text-muted hover:text-foreground"
             }`}
           >
-            {tab.label}
+            <TabLabel label={tab.label} />
           </Link>
         );
       })}
