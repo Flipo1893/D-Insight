@@ -14,6 +14,15 @@ import { readCheckedUrl, subscribeToCheckedUrl } from "@/lib/checked-url";
 // .env.local as NEXT_PUBLIC_FORMSPREE_ID (see .env.local.example).
 const FORMSPREE_ID = process.env.NEXT_PUBLIC_FORMSPREE_ID;
 
+// Warned once when the module loads rather than on every render, and only in
+// development: a config reminder belongs to whoever runs the dev server, not
+// to the visitor and not to the production log.
+if (!FORMSPREE_ID && process.env.NODE_ENV === "development") {
+  console.warn(
+    "ContactForm: NEXT_PUBLIC_FORMSPREE_ID fehlt, es wird der Mail-Link statt des Formulars gezeigt.",
+  );
+}
+
 type Status = "idle" | "submitting" | "success" | "error";
 
 const fieldClass =
@@ -83,22 +92,24 @@ export default function ContactForm() {
 
   // Without a configured endpoint the form would post to a dead URL and always
   // fail, so fall back to a mail link that actually reaches us.
+  //
+  // Nothing here tells the visitor the form is unfinished. They cannot act on
+  // that, and an aside about our own setup, on a page whose whole argument is
+  // that we finish things, costs more than it explains. The reminder goes to
+  // the dev log, where the person who can fix it will see it.
   if (!FORMSPREE_ID) {
     return (
-      <div className="rounded-brand border border-dashed border-border bg-surface p-6">
-        <p className="text-sm text-muted-strong">
-          Das Formular ist noch nicht verbunden. Schreiben Sie uns solange
-          direkt:
+      <div className="rounded-brand border border-border bg-surface p-6">
+        <p className="text-sm leading-relaxed text-muted-strong">
+          Schreiben Sie uns die Adresse Ihrer Website und was Sie stört. Mehr
+          brauchen wir für eine erste Einschätzung nicht.
         </p>
         <a
           href={`mailto:${site.email}?subject=${encodeURIComponent(primaryCta)}`}
-          className="mt-4 inline-block rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
+          className="mt-5 inline-block rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-hover"
         >
           {site.email}
         </a>
-        <p className="mt-4 font-mono text-xs text-muted">
-          Setup: NEXT_PUBLIC_FORMSPREE_ID in .env.local eintragen.
-        </p>
       </div>
     );
   }

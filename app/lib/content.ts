@@ -12,6 +12,18 @@ export const site = {
   tagline: "Website-Refactoring & KI-SEO",
   email: "info@d-insight.ch",
   replyWindow: "zwei Werktagen",
+  /**
+   * Kept in parts rather than as one string so the same data can serve the
+   * footer, the imprint and the structured data without three of them
+   * drifting apart. Impressum and Datenschutz still spell it out by hand;
+   * those are the next two to point here.
+   */
+  address: {
+    street: "Bahnhofplatz 1",
+    postalCode: "8001",
+    city: "Zürich",
+    country: "Schweiz",
+  },
 } as const;
 
 /** One label per intent, reused in the nav, hero, banner and form. */

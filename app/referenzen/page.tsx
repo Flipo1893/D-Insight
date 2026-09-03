@@ -7,8 +7,12 @@ import { references } from "../lib/references";
 
 export const metadata: Metadata = {
   title: "Referenzen",
+  // Promises only what the entries actually carry. They are published with
+  // the measured numbers first and the narrative added later, so a
+  // description advertising "Ausgangslage und Vorgehen" was writing a cheque
+  // the page could not cash.
   description:
-    "Umgesetzte Projekte mit Ausgangslage, Vorgehen und messbarem Ergebnis.",
+    "Von uns gebaute Websites mit den Werten, die wir daran gemessen haben.",
   alternates: { canonical: "/referenzen" },
   // Nothing to index while the list is empty.
   robots: references.length === 0 ? { index: false, follow: true } : undefined,
@@ -58,7 +62,18 @@ export default function Referenzen() {
               </div>
             </div>
           ) : (
-            <ul className="mt-16 grid gap-6 sm:grid-cols-2">
+            /* Two columns need two cards. With one entry the second column
+               is an empty half-screen next to the only thing on the page,
+               which reads as something failing to load rather than as a
+               short list. A single card is capped instead, so it sits at a
+               readable width and the whitespace looks chosen. */
+            <ul
+              className={
+                references.length === 1
+                  ? "mt-16 max-w-xl"
+                  : "mt-16 grid gap-6 sm:grid-cols-2"
+              }
+            >
               {references.map((reference, index) => (
                 <Reveal key={reference.slug} index={index}>
                   <li className="h-full">

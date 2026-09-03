@@ -21,18 +21,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.8,
     })),
-    {
-      url: `${site.url}/impressum`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${site.url}/datenschutz`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
+    // All four legal pages, not just two. They rank for nothing and carry the
+    // lowest priority here, but an offer refers to the AGB by name and the
+    // recipient will look for them. A page a client is pointed at should be
+    // findable, and half a legal section listed is the kind of gap that only
+    // shows up once someone goes looking.
+    ...["impressum", "datenschutz", "agb", "nutzungsbedingungen"].map(
+      (slug) => ({
+        url: `${site.url}/${slug}`,
+        lastModified,
+        changeFrequency: "yearly" as const,
+        priority: 0.3,
+      }),
+    ),
   ];
 
   const referencePages: MetadataRoute.Sitemap = references.map((reference) => ({
