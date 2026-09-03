@@ -3,13 +3,32 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { isAdminEmail } from "@/lib/admin";
 import { isMongoConfigured } from "@/lib/mongodb/config";
-import { listSites } from "@/lib/mongodb/sites";
+import { listSites, type SiteSubscription } from "@/lib/mongodb/sites";
+import { checkSubscription } from "@/lib/billing";
 import { getCurrentUser } from "@/lib/supabase/auth";
 
 export const metadata: Metadata = {
   title: "Kunden",
   robots: { index: false, follow: false },
 };
+
+function subscriptionLabel(subscription: SiteSubscription): string {
+  switch (subscription.status) {
+    case "active":
+      return subscription.cancelAtPeriodEnd ? "Gekündigt" : "Abo aktiv";
+    case "trialing":
+      return "Testphase";
+    case "past_due":
+    case "unpaid":
+      return "Zahlung offen";
+    case "canceled":
+      return "Beendet";
+    case "none":
+      return "Kein Abo";
+    default:
+      return "Abo unklar";
+  }
+}
 
 export default async function Kunden() {
   const user = await getCurrentUser();
@@ -64,6 +83,18 @@ export default async function Kunden() {
                 {site.siteUrl || "Keine Website hinterlegt"}
               </p>
               <p className="text-sm text-muted">
+                {/* Ob jemand zahlt, ist beim Blick auf die Kundenliste die
+                    Frage, die man am haeufigsten hat. */}
+                <span
+                  className={
+                    checkSubscription(site.subscription).allowed
+                      ? "text-foreground"
+                      : "text-accent-text"
+                  }
+                >
+                  {subscriptionLabel(site.subscription)}
+                </span>
+                <span className="mx-2">·</span>
                 {site.fields.length} Feld{site.fields.length === 1 ? "" : "er"}{" "}
                 <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
                   →

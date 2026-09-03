@@ -9,6 +9,7 @@ const baseTabs = [
   { href: "/dashboard/inhalte", label: "Inhalte" },
   { href: "/dashboard/verlauf", label: "Verlauf" },
   { href: "/dashboard/traffic", label: "Traffic" },
+  { href: "/dashboard/abo", label: "Abo" },
 ];
 
 const adminTabs = [

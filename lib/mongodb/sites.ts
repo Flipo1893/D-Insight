@@ -37,6 +37,8 @@ export type Site = {
   pending: string[];
   /** Optional note from us, shown above the steps. */
   phaseNote: string;
+  /** Abo-Status, gespiegelt aus Stripe — siehe SiteSubscription. */
+  subscription: SiteSubscription;
   updatedAt: Date;
 };
 
@@ -66,6 +68,18 @@ type StoredSite = Partial<Site> & {
   aboutText?: string;
 };
 
+/**
+ * Dokumente aus der Zeit vor der Bezahlschranke haben kein `subscription`,
+ * und ein halb geschriebenes trägt nur die Kundennummer (siehe
+ * rememberStripeCustomer). Beides muss ein vollständiges Objekt ergeben,
+ * sonst prüft die Zugriffskontrolle gegen undefined.
+ */
+function normalizeSubscription(
+  stored: Partial<SiteSubscription> | undefined,
+): SiteSubscription {
+  return { ...noSubscription, ...stored };
+}
+
 function normalize(doc: StoredSite): Site {
   const legacyContent: Record<string, string> = {};
   for (const key of ["heroTitle", "heroSubtitle", "aboutText"] as const) {
@@ -85,6 +99,7 @@ function normalize(doc: StoredSite): Site {
     phase: typeof doc.phase === "number" ? doc.phase : -1,
     pending: Array.isArray(doc.pending) ? doc.pending : [],
     phaseNote: doc.phaseNote ?? "",
+    subscription: normalizeSubscription(doc.subscription),
     updatedAt: doc.updatedAt ?? new Date(),
   };
 }
@@ -171,4 +186,96 @@ export async function saveSiteSettings(
     { $set: { ...settings, updatedAt: new Date() } },
     { upsert: true },
   );
+}
+
+/**
+ * Der Abo-Status, wie Stripe ihn kennt.
+ *
+ * "none" ist kein Stripe-Status, sondern unser Zustand für "war noch nie
+ * Kunde". Alles andere kommt eins zu eins von Stripe, damit hier keine
+ * eigene Übersetzungstabelle entsteht, die bei einem neuen Status still
+ * das Falsche tut.
+ */
+export type SubscriptionStatus =
+  | "none"
+  | "trialing"
+  | "active"
+  | "past_due"
+  | "unpaid"
+  | "incomplete"
+  | "incomplete_expired"
+  | "paused"
+  | "canceled";
+
+export type SiteSubscription = {
+  /** Bleibt dem Konto für immer erhalten, auch nach einer Kündigung. */
+  customerId: string;
+  subscriptionId: string;
+  status: SubscriptionStatus;
+  priceId: string;
+  /** Bis hierhin ist bezahlt — auch bei einer laufenden Kündigung. */
+  currentPeriodEnd: Date | null;
+  /** Gekündigt, läuft aber noch bis currentPeriodEnd. */
+  cancelAtPeriodEnd: boolean;
+  updatedAt: Date;
+};
+
+export const noSubscription: SiteSubscription = {
+  customerId: "",
+  subscriptionId: "",
+  status: "none",
+  priceId: "",
+  currentPeriodEnd: null,
+  cancelAtPeriodEnd: false,
+  updatedAt: new Date(0),
+};
+
+/**
+ * Merkt sich die Stripe-Kundennummer, bevor der Checkout überhaupt startet.
+ *
+ * Damit bekommt niemand bei einem zweiten Abo eine zweite Kundennummer —
+ * sonst stünde derselbe Mensch mehrfach in Stripe und die Rechnungen im
+ * Kundenportal wären auf mehrere Konten verteilt.
+ */
+export async function rememberStripeCustomer(
+  userId: string,
+  customerId: string,
+): Promise<void> {
+  const collection = await getCollection();
+
+  await collection.updateOne(
+    { userId },
+    { $set: { "subscription.customerId": customerId } },
+    { upsert: true },
+  );
+}
+
+/** Geschrieben ausschliesslich vom Stripe-Webhook. */
+export async function saveSubscription(
+  userId: string,
+  subscription: SiteSubscription,
+): Promise<void> {
+  const collection = await getCollection();
+
+  await collection.updateOne(
+    { userId },
+    { $set: { subscription } },
+    { upsert: true },
+  );
+}
+
+/**
+ * Der Weg vom Stripe-Event zurück zum Konto.
+ *
+ * Ereignisse zu einem Abo nennen die Kundennummer, nicht unsere userId.
+ * Die Metadaten am Abo sind der erste Weg, das hier der zweite — für
+ * Abos, die jemand von Hand im Stripe-Dashboard angelegt hat.
+ */
+export async function findSiteByStripeCustomer(
+  customerId: string,
+): Promise<Site | null> {
+  const collection = await getCollection();
+  const doc = await collection.findOne({ "subscription.customerId": customerId });
+
+  return doc ? normalize(doc) : null;
 }
