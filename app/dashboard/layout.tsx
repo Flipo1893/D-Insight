@@ -1,12 +1,15 @@
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import DashboardNav from "../components/DashboardNav";
+import Paywall from "../components/Paywall";
 import Reveal from "../components/Reveal";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { isAdminEmail } from "@/lib/admin";
 import { isMongoConfigured } from "@/lib/mongodb/config";
+import { getAccess } from "@/lib/billing";
 import { rememberSiteOwner } from "@/lib/mongodb/sites";
 
 export default async function DashboardLayout({
@@ -45,16 +48,25 @@ export default async function DashboardLayout({
   }
 
   // Record who this account belongs to, so admins see the customer in the
-  // list even before they have saved any content. Bookkeeping only — an
-  // unreachable database must not take the whole dashboard down with it,
-  // and errors thrown in a layout escape the segment's error boundary.
+  // list even before they have saved any content. Runs via after() so this
+  // bookkeeping write never delays the first paint — and its failure can't
+  // take the dashboard down, since errors thrown in a layout escape the
+  // segment's error boundary anyway.
   if (isMongoConfigured && user.email) {
-    try {
-      await rememberSiteOwner(user.id, user.email);
-    } catch {
-      // The pages below surface the database problem themselves.
-    }
+    const { id, email } = user;
+    after(async () => {
+      try {
+        await rememberSiteOwner(id, email);
+      } catch {
+        // The pages themselves surface database problems to the customer.
+      }
+    });
   }
+
+  // Eine einzige Stelle entscheidet über den Zugang zum ganzen
+  // Kundenbereich. Ohne Stripe-Konfiguration und für Admins ist das immer
+  // ein Ja — siehe getAccess().
+  const access = await getAccess();
 
   return (
     <>
@@ -74,14 +86,16 @@ export default async function DashboardLayout({
             Willkommen, {user.email}
           </h1>
         </div>
-        <div
-          className="animate-hero mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-8"
-          style={{ animationDelay: "160ms" }}
-        >
-          <DashboardNav isAdmin={isAdminEmail(user.email)} />
-        </div>
+        {access.allowed && (
+          <div
+            className="animate-hero mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 pt-8"
+            style={{ animationDelay: "160ms" }}
+          >
+            <DashboardNav isAdmin={isAdminEmail(user.email)} />
+          </div>
+        )}
         <div className="mx-auto max-w-6xl xl:max-w-7xl 2xl:max-w-[1440px] px-6 py-12">
-          <Reveal>{children}</Reveal>
+          <Reveal>{access.allowed ? children : <Paywall access={access} />}</Reveal>
         </div>
       </main>
       <Footer />

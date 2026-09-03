@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { isMongoConfigured } from "@/lib/mongodb/config";
 import { getSite, saveSiteContent } from "@/lib/mongodb/sites";
 import { getCurrentUser } from "@/lib/supabase/auth";
+import { getAccess } from "@/lib/billing";
 
 export type ContentActionState = {
   error: string | null;
@@ -28,6 +29,14 @@ export async function saveContent(
   const user = await getCurrentUser();
   if (!user) {
     return { error: "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an." };
+  }
+
+  // Die Bezahlschranke im Layout versteckt nur die Oberfläche. Eine Server
+  // Action ist ein öffentlicher Endpunkt: wer die Adresse kennt, kann sie
+  // ohne die Seite aufrufen.
+  const access = await getAccess();
+  if (!access.allowed) {
+    return { error: "Für dieses Konto ist kein aktives Abo hinterlegt." };
   }
 
   try {

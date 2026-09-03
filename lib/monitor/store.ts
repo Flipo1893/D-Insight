@@ -1,6 +1,7 @@
 import type { Collection } from "mongodb";
 import { getMongoClientPromise } from "@/lib/mongodb/client";
 import { isMongoConfigured, mongodbDbName } from "@/lib/mongodb/config";
+import { createIndexGuard } from "@/lib/mongodb/indexes";
 import type { Site } from "@/lib/mongodb/sites";
 
 /**
@@ -34,7 +35,15 @@ export type SiteTrend = {
 
 const TTL_DAYS = 730;
 
-let indexReady: Promise<unknown> | undefined;
+const ensureIndexes = createIndexGuard<MonitorRun>((collection) =>
+  Promise.all([
+    collection.createIndex({ userId: 1, at: -1 }),
+    collection.createIndex(
+      { at: 1 },
+      { expireAfterSeconds: 60 * 60 * 24 * TTL_DAYS, name: "at_ttl" },
+    ),
+  ]),
+);
 
 async function getCollection(): Promise<Collection<MonitorRun>> {
   const client = await getMongoClientPromise();
@@ -42,14 +51,7 @@ async function getCollection(): Promise<Collection<MonitorRun>> {
     .db(mongodbDbName)
     .collection<MonitorRun>("monitorruns");
 
-  indexReady ??= Promise.all([
-    collection.createIndex({ userId: 1, at: -1 }),
-    collection.createIndex(
-      { at: 1 },
-      { expireAfterSeconds: 60 * 60 * 24 * TTL_DAYS, name: "at_ttl" },
-    ),
-  ]);
-  await indexReady;
+  await ensureIndexes(collection);
 
   return collection;
 }

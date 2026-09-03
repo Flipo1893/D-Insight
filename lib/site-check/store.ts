@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import type { Collection } from "mongodb";
 import { getMongoClientPromise } from "@/lib/mongodb/client";
 import { isMongoConfigured, mongodbDbName } from "@/lib/mongodb/config";
+import { createIndexGuard } from "@/lib/mongodb/indexes";
 import type { CheckReport } from "./analyse";
 
 export type StoredReport = {
@@ -25,15 +26,8 @@ export type StoredReport = {
  */
 const TTL_DAYS = 30;
 
-let indexReady: Promise<unknown> | undefined;
-
-async function getCollection(): Promise<Collection<StoredReport>> {
-  const client = await getMongoClientPromise();
-  const collection = client
-    .db(mongodbDbName)
-    .collection<StoredReport>("checkreports");
-
-  indexReady ??= Promise.all([
+const ensureIndexes = createIndexGuard<StoredReport>((collection) =>
+  Promise.all([
     collection.createIndex({ id: 1 }, { unique: true }),
     // Reports are a conversation starter, not an archive. They expire so
     // someone's findings do not sit on our server indefinitely.
@@ -41,8 +35,16 @@ async function getCollection(): Promise<Collection<StoredReport>> {
       { createdAt: 1 },
       { expireAfterSeconds: 60 * 60 * 24 * TTL_DAYS, name: "createdAt_ttl" },
     ),
-  ]);
-  await indexReady;
+  ]),
+);
+
+async function getCollection(): Promise<Collection<StoredReport>> {
+  const client = await getMongoClientPromise();
+  const collection = client
+    .db(mongodbDbName)
+    .collection<StoredReport>("checkreports");
+
+  await ensureIndexes(collection);
 
   return collection;
 }

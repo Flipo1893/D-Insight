@@ -575,6 +575,37 @@ section[id] {
   animation: fade-in 0.6s ease-out 0.8s forwards;
 }
 
+/* Skeleton placeholders shown while a dashboard page loads its data.
+   A sweeping highlight reads as "loading" without the jitter of a pulse. */
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  background-color: var(--surface);
+  background-image: linear-gradient(
+    90deg,
+    transparent 20%,
+    rgb(255 255 255 / 6%) 50%,
+    transparent 80%
+  );
+  background-size: 200% 100%;
+  /* Shape lock: skeletons carry the same radius as the real containers. */
+  border-radius: var(--radius);
+  animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+  }
+}
+
 /* Top-pages bars grow in from zero width. */
 @keyframes grow-width {
   from {

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import type { Collection } from "mongodb";
 import { getMongoClientPromise } from "@/lib/mongodb/client";
 import { isMongoConfigured, mongodbDbName } from "@/lib/mongodb/config";
+import { createIndexGuard } from "@/lib/mongodb/indexes";
 import { statsSalt } from "./config";
 
 export type PageView = {
@@ -42,23 +43,30 @@ export function visitorHash(ip: string, userAgent: string, day: string) {
 
 export const today = () => new Date().toISOString().slice(0, 10);
 
-let indexReady: Promise<unknown> | undefined;
+const ensureIndexes = createIndexGuard<PageView>((collection) =>
+  Promise.all([
+    collection.createIndex({ day: 1 }),
+    // Views expire after a year. Analytics nobody looks at is just a
+    // liability sitting in a database.
+    //
+    // There is deliberately no second, plain index on { at: 1 }: MongoDB
+    // refuses two indexes on the same key with different names or options,
+    // so requesting both made whichever lost the race throw
+    // IndexOptionsConflict. A TTL index is an ordinary single-field index
+    // that also carries an expiry, so it already serves the range queries
+    // on `at` below.
+    collection.createIndex(
+      { at: 1 },
+      { expireAfterSeconds: 60 * 60 * 24 * 365, name: "at_ttl" },
+    ),
+  ]),
+);
 
 async function getCollection(): Promise<Collection<PageView>> {
   const client = await getMongoClientPromise();
   const collection = client.db(mongodbDbName).collection<PageView>("pageviews");
 
-  indexReady ??= Promise.all([
-    collection.createIndex({ day: 1 }),
-    collection.createIndex({ at: 1 }),
-    // Views expire after a year. Analytics nobody looks at is just a
-    // liability sitting in a database.
-    collection.createIndex(
-      { at: 1 },
-      { expireAfterSeconds: 60 * 60 * 24 * 365, name: "at_ttl" },
-    ),
-  ]);
-  await indexReady;
+  await ensureIndexes(collection);
 
   return collection;
 }

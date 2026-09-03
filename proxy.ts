@@ -7,6 +7,9 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // api/stripe/webhook ist bewusst ausgenommen: dort ist niemand
+    // angemeldet, die Stripe-Signatur ist die Authentifizierung. Ein
+    // Session-Refresh waere dort nur eine Supabase-Anfrage ohne Zweck.
+    "/((?!_next/static|_next/image|favicon.ico|api/stripe/webhook|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

@@ -95,8 +95,54 @@ denen ihr euch im Portal einloggt).
 3. Ihr baut die Kundenwebsite wie gewohnt als eigenes Projekt und lest die
    freigegebenen Felder über die Content-API aus (siehe unten) — die
    passende URL steht auf der Kundenseite zum Kopieren.
-4. Der Kunde pflegt seine Texte unter `/dashboard/inhalte`; seine Website
+4. Der Kunde schliesst unter `/dashboard/abo` das Monatsabo ab — vorher
+   sieht er statt der Tabs nur die Abo-Seite.
+5. Der Kunde pflegt seine Texte unter `/dashboard/inhalte`; seine Website
    zieht die Änderung beim nächsten Revalidate automatisch nach.
+
+## Abo / Bezahlschranke (Stripe)
+
+Der Kundenbereich läuft im Monatsabo. Ohne aktives Abo sieht ein Konto
+statt der Tabs nur die Abo-Seite; die Website des Kunden läuft
+unverändert weiter, denn die Content-API bleibt offen — nur das
+Bearbeiten hängt am Abo. Admins (`ADMIN_EMAILS`) sind ausgenommen.
+
+Sind `STRIPE_SECRET_KEY` und `STRIPE_PRICE_ID` nicht gesetzt, gibt es
+keine Bezahlschranke und das Dashboard verhält sich wie zuvor.
+
+### Einrichten
+
+1. Produkt und wiederkehrenden Preis (CHF, monatlich) im
+   [Stripe-Dashboard](https://dashboard.stripe.com) anlegen, Preis-ID
+   (`price_…`) als `STRIPE_PRICE_ID` eintragen.
+2. Secret Key aus *Developers → API keys* als `STRIPE_SECRET_KEY`
+   eintragen. Server-only, kein `NEXT_PUBLIC_`.
+3. Webhook-Endpunkt auf `https://<domain>/api/stripe/webhook` anlegen,
+   Ereignisse `checkout.session.completed` und `customer.subscription.*`
+   abonnieren, Signaturgeheimnis als `STRIPE_WEBHOOK_SECRET` eintragen.
+4. *Settings → Billing → Customer portal* einmal speichern — sonst
+   schlägt "Abo verwalten" fehl.
+
+Lokal testen ohne öffentliche Domain:
+
+```bash
+stripe login
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+# gibt ein whsec_… aus -> als STRIPE_WEBHOOK_SECRET in .env.local
+```
+
+### Wie der Status in die Datenbank kommt
+
+Stripe ist die Wahrheit, MongoDB nur der Spiegel: der Webhook schreibt
+`subscription` auf das Site-Dokument (`lib/mongodb/sites.ts`), alles
+andere liest nur. Bei jedem Ereignis wird das Abo frisch von Stripe
+geholt statt dem Ereignis geglaubt — Webhooks kommen nicht garantiert in
+der Reihenfolge an, in der sie entstanden sind.
+
+Über den Zugang entscheidet ausschliesslich `getAccess()` in
+`lib/billing.ts`. Zwei bewusste Entscheidungen darin: eine fehlgeschlagene
+Zahlung (`past_due`) sperrt nicht sofort aus, und ist die Datenbank nicht
+erreichbar, wird aufgeschlossen statt zugesperrt.
 
 ## Wie Kundenwebsites die Inhalte einbinden
 
