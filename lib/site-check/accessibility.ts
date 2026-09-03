@@ -74,6 +74,55 @@ export function analyseAccessibility(html: string): CheckItem[] {
           : `${withoutAlt} von ${images.length} Bildern haben keinen Alternativtext. Blinde Nutzer hören dort nur "Grafik".`,
   });
 
+  // 3b. Alt text that exists but says nothing.
+  //
+  // The check above asks whether the attribute is there. This one asks
+  // whether it does its job, which is a different question and the one that
+  // decides whether a blind visitor learns anything. An alt of "bild1.jpg"
+  // passes every automated tool and is read aloud as "bild eins punkt jay
+  // peg".
+  //
+  // This started as a question for the language model and did not work
+  // there: across three prompt versions and three test pages it answered
+  // "teilweise" nine times out of nine, to filenames and to good
+  // descriptions alike. Deciding whether a string is a filename, a camera
+  // name or a single filler word is pattern matching, and a regex is right
+  // about it every time.
+  const withAlt = images
+    .map((tag) => tag.match(/\salt\s*=\s*["']([^"']*)["']/i)?.[1]?.trim())
+    .filter((alt): alt is string => typeof alt === "string" && alt.length > 0);
+
+  // Only alt text that has content is judged. An empty alt is the correct
+  // markup for a decorative image and means "skip this", so counting it as
+  // a bad description would penalise the sites that got it right.
+  const uselessAlt = withAlt.filter((alt) => {
+    // A file name, with or without its extension left on.
+    if (/\.(jpe?g|png|gif|webp|avif|svg|bmp)$/i.test(alt)) return true;
+    // What cameras and phones produce: IMG_2931, DSC00042, P1010101.
+    if (/^(img|dsc|dscn|p|foto|bild|image|pic)[-_ ]?\d+$/i.test(alt)) return true;
+    // A single filler word that describes nothing.
+    if (/^(bild|foto|logo|grafik|icon|image|photo|banner|header)$/i.test(alt)) {
+      return true;
+    }
+    // Too short to carry a description.
+    return alt.length < 4;
+  }).length;
+
+  if (withAlt.length > 0) {
+    const share = uselessAlt / withAlt.length;
+    items.push({
+      id: "a11y-alt-quality",
+      label: "Aussagekraft der Alternativtexte",
+      status: share === 0 ? "gut" : share <= 0.5 ? "teilweise" : "fehlt",
+      detail:
+        uselessAlt === 0
+          ? withAlt.length === 1
+            ? "Der einzige gefüllte Alternativtext beschreibt ein Motiv statt einen Dateinamen."
+            : `Alle ${withAlt.length} gefüllten Alternativtexte beschreiben ein Motiv statt einen Dateinamen.`
+          : `${uselessAlt} von ${withAlt.length} gefüllten Alternativtexten sind Dateinamen oder Füllwörter wie "Bild". Vorleseprogramme lesen sie wörtlich vor.`,
+    });
+  }
+
   // 4. Inputs without a label
   const inputs =
     html.match(/<(input|select|textarea)\b[^>]*>/gi)?.filter(
