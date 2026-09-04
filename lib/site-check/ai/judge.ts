@@ -65,6 +65,14 @@ type Question = {
    * judge without a standard will always reach for the middle.
    */
   rubrik: { gut: string; teilweise: string; fehlt: string };
+  /**
+   * Present when the verdict is a count rather than a judgement. The model
+   * is asked which of these it found and nothing else; the status follows
+   * from how many came back, not from the model's own arithmetic.
+   */
+  aspekte?: { key: string; frage: string }[];
+  /** How many found aspects earn each verdict. Only read with `aspekte`. */
+  schwelle?: { gut: number; teilweise: number };
 };
 
 const QUESTIONS: Question[] = [
@@ -116,12 +124,40 @@ const QUESTIONS: Question[] = [
           ? `Überschriften:\n${extract.headings.map((heading) => `  ${heading}`).join("\n")}`
           : null,
         extract.bodyStart
-          ? `Seitentext:\n  ${extract.bodyStart.slice(0, 900)}`
+          // No further cut here. This question looks for five separate
+          // topics, and unlike the others it cannot know where on the page
+          // any of them appears: the area served is often a footer line, the
+          // process a section halfway down. A 900-character window answered
+          // "two of five" about a page that answered four, because the last
+          // two were past the cut. bodyStart is already capped in extract.ts,
+          // which is the bound that belongs here.
+          ? `Seitentext:\n  ${extract.bodyStart}`
           : null,
       ].filter(Boolean);
       return parts.length ? parts.join("\n\n") : null;
     },
-    ask: "Welche dieser fünf Fragen beantwortet die Seite: was wird gemacht, für wen, in welchem Gebiet, wie läuft ein Auftrag ab, was kostet es ungefähr? Zähle sie und urteile danach.",
+    /*
+     * Counted rather than judged.
+     *
+     * Asked for a verdict, the model answered "teilweise" — its own rubric's
+     * word for two of five — about a page that answers four: what is made,
+     * for whom, in which area, and how a job runs. Only the price was
+     * missing. Widening the material did not change it, so it was not a
+     * question of what it could see.
+     *
+     * Counting is the part a language model is worst at and code is exact
+     * at, so it is taken away from the model. It now reports which of the
+     * five it found; the threshold below is arithmetic.
+     */
+    aspekte: [
+      { key: "leistung", frage: "Was wird gemacht?" },
+      { key: "zielgruppe", frage: "Für wen?" },
+      { key: "gebiet", frage: "In welchem Gebiet?" },
+      { key: "ablauf", frage: "Wie läuft ein Auftrag ab?" },
+      { key: "preis", frage: "Was kostet es ungefähr?" },
+    ],
+    schwelle: { gut: 3, teilweise: 2 },
+    ask: "Welche dieser fünf Fragen beantwortet die Seite?",
     rubrik: {
       gut: "Mindestens drei der fünf Fragen sind beantwortet.",
       teilweise: "Zwei der fünf Fragen sind beantwortet.",
@@ -140,15 +176,25 @@ const QUESTIONS: Question[] = [
         ]
           .filter(Boolean)
           .join(", ") || "keine";
-      return [
-        `Im Quelltext gefundene Kontaktwege: ${wege}.`,
-        extract.bodyStart
-          ? `Anfang des Seitentexts:\n  ${extract.bodyStart.slice(0, 400)}`
-          : "",
-        extract.bodyEnd
-          ? `Ende des Seitentexts (meist der Fussbereich):\n  ${extract.bodyEnd}`
-          : "",
-      ]
+      // Address and phone sit at the foot of a page far more often than at
+      // the top, so this question is built around the tail. bodyEnd only
+      // exists once a page is long enough to have a tail distinct from its
+      // head; on a shorter page the whole text goes in instead.
+      //
+      // Sending only the first 400 characters plus an empty bodyEnd was a
+      // real defect, not a cautious cut: a short page that printed its
+      // address in the last line was judged as having none, and the model
+      // was right about the material it had been given.
+      const text = extract.bodyEnd
+        ? [
+            `Anfang des Seitentexts:\n  ${extract.bodyStart.slice(0, 400)}`,
+            `Ende des Seitentexts (meist der Fussbereich):\n  ${extract.bodyEnd}`,
+          ].join("\n\n")
+        : extract.bodyStart
+          ? `Seitentext:\n  ${extract.bodyStart}`
+          : "";
+
+      return [`Im Quelltext gefundene Kontaktwege: ${wege}.`, text]
         .filter(Boolean)
         .join("\n\n");
     },
@@ -211,6 +257,28 @@ async function askOne(
   evidence: string,
 ): Promise<CheckItem | null> {
   const started = Date.now();
+  const auftrag = question.aspekte
+    ? [
+        `Frage: ${question.ask}`,
+        "",
+        ...question.aspekte.map(
+          (aspekt) => `  ${aspekt.key}: ${aspekt.frage}`,
+        ),
+        "",
+        'Antworte mit JSON der Form {"beantwortet": ["key", ...], "begruendung": "ein bis zwei Sätze"}.',
+        "Nimm nur die Schlüssel auf, die die Angaben wirklich beantworten. Vergib kein Urteil, zähle nicht, sortiere nicht.",
+      ]
+    : [
+        `Frage: ${question.ask}`,
+        "",
+        "Vergib genau eines dieser drei Urteile:",
+        `  gut: ${question.rubrik.gut}`,
+        `  teilweise: ${question.rubrik.teilweise}`,
+        `  fehlt: ${question.rubrik.fehlt}`,
+        "",
+        "Prüfe zuerst, ob 'gut' zutrifft, dann ob 'fehlt' zutrifft. Nur wenn beides nicht zutrifft, ist es 'teilweise'.",
+      ];
+
   const raw = await askForJson(
     SYSTEM_PROMPT,
     [
@@ -218,14 +286,7 @@ async function askOne(
       evidence,
       "--- ENDE ANGABEN ---",
       "",
-      `Frage: ${question.ask}`,
-      "",
-      "Vergib genau eines dieser drei Urteile:",
-      `  gut: ${question.rubrik.gut}`,
-      `  teilweise: ${question.rubrik.teilweise}`,
-      `  fehlt: ${question.rubrik.fehlt}`,
-      "",
-      "Prüfe zuerst, ob 'gut' zutrifft, dann ob 'fehlt' zutrifft. Nur wenn beides nicht zutrifft, ist es 'teilweise'.",
+      ...auftrag,
     ].join("\n"),
   );
 
@@ -250,9 +311,38 @@ async function askOne(
   }
 
   const record = parsed as Record<string, unknown>;
-  const status = cleanStatus(record?.status);
   const detail = cleanDetail(record?.begruendung);
-  if (!status || !detail) return null;
+  if (!detail) return null;
+
+  let status: CheckStatus | null;
+  if (question.aspekte && question.schwelle) {
+    // Only keys we asked about are counted, and each at most once. A model
+    // that invents a sixth aspect, or names the same one twice, must not be
+    // able to talk a page up the scale.
+    const reported = Array.isArray(record?.beantwortet)
+      ? record.beantwortet
+      : null;
+    if (!reported) return null;
+
+    const valid = new Set(
+      reported.filter(
+        (key): key is string =>
+          typeof key === "string" &&
+          question.aspekte!.some((aspekt) => aspekt.key === key),
+      ),
+    );
+
+    status =
+      valid.size >= question.schwelle.gut
+        ? "gut"
+        : valid.size >= question.schwelle.teilweise
+          ? "teilweise"
+          : "fehlt";
+  } else {
+    status = cleanStatus(record?.status);
+  }
+
+  if (!status) return null;
 
   return { id: question.id, label: question.label, status, detail };
 }
