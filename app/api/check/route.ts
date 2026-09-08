@@ -7,6 +7,15 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
+ * This route fetches a stranger's website, and analyse() gives that fetch
+ * twelve seconds. With a comparison site it does that twice. The default
+ * ten-second limit on Vercel's free tier would cut it off before its own
+ * timeout could produce the honest answer, which is "die Seite hat nicht
+ * rechtzeitig geantwortet - das ist selbst schon ein Befund".
+ */
+export const maxDuration = 30;
+
+/**
  * Very small in-memory throttle. This endpoint makes our server fetch a URL
  * a stranger chose, so it should not be free to hammer. Per-process state is
  * enough here: it is a speed bump, not a security control, and the guard is

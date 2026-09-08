@@ -210,9 +210,17 @@ const QUESTIONS: Question[] = [
 /**
  * How long the whole assessment may take, across all questions. The
  * per-request timeout in config.ts bounds one call; this bounds the set, so
- * five slow answers cannot add up to something nobody waits for.
+ * four slow answers cannot add up to something nobody waits for.
+ *
+ * It has to stay comfortably under the route's maxDuration. Whoever runs out
+ * of time first decides what the visitor sees: if we do, the response is a
+ * normal report with no assessment section, which is the designed outcome.
+ * If the platform does, the function is killed mid-flight and the browser
+ * gets a gateway error instead of a report. Same delay, one is a feature and
+ * the other is a bug, and the only thing separating them is that this number
+ * is the smaller one.
  */
-const TOTAL_BUDGET_MS = 90_000;
+const TOTAL_BUDGET_MS = 45_000;
 
 const SYSTEM_PROMPT = [
   "Du bewertest eine Website für eine Schweizer Webagentur. Du antwortest auf Deutsch und ausschliesslich mit JSON.",

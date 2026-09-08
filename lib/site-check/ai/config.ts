@@ -29,11 +29,22 @@ export const aiApiKey = process.env.AI_CHECK_API_KEY ?? "";
 export const aiCheckEnabled = aiBaseUrl.length > 0;
 
 /**
- * Local models on a laptop are slow. Measured against llama3.2 on this
- * machine: about 9 seconds per question warm, and roughly ten more the
- * first time, while the model is loaded into memory. Forty-five covers a
- * cold start with room to spare. It can be this generous because the
- * assessment no longer blocks the measured report; nobody is watching a
- * spinner for the whole of it.
+ * How long one question may take.
+ *
+ * Twenty seconds is generous for a hosted model: measured against
+ * gpt-4o-mini, a full assessment of four questions came back in 3 to 8
+ * seconds total. It is deliberately not generous for a local one. llama3.2
+ * on this machine needed 40 to 119 seconds for the same four questions, and
+ * a value that covered that would also let one stuck request eat the whole
+ * budget on a deployed server, where the platform kills the function before
+ * we ever get to answer.
+ *
+ * So the default is sized for the deployed case, and anyone running a slow
+ * local model raises it in their own environment rather than everyone
+ * carrying the cost of that case.
  */
-export const AI_TIMEOUT_MS = 45_000;
+const timeoutFromEnv = Number(process.env.AI_CHECK_TIMEOUT_MS);
+export const AI_TIMEOUT_MS =
+  Number.isFinite(timeoutFromEnv) && timeoutFromEnv > 0
+    ? timeoutFromEnv
+    : 20_000;
