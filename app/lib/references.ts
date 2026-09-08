@@ -35,7 +35,7 @@ export const references: Reference[] = [
   {
     slug: "prebuilt",
     client: "Prebuilt",
-    industry: "Vorgefertigte Bauelemente",
+    industry: "Marktplatz für KI-Prompts und Automatisierung",
     year: "2026",
     summary:
       "Von uns gebaut und live. Die gemessenen Werte stehen unten, geprüft mit demselben Schnellcheck, den wir auf dieser Seite anbieten.",

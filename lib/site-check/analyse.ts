@@ -1,4 +1,5 @@
 import { accessibilityScore, analyseAccessibility } from "./accessibility";
+import type { AiVerdict } from "./ai/judge";
 
 export type CheckStatus = "gut" | "teilweise" | "fehlt";
 
@@ -19,6 +20,12 @@ export type CheckReport = {
   htmlKb: number;
   score: number;
   items: CheckItem[];
+  /**
+   * The model's assessment, when one is configured and it answered in a form
+   * we could verify. Null covers both "not configured" and "answered badly",
+   * because the report reads the same either way: this part is simply absent.
+   */
+  ai?: AiVerdict | null;
 };
 
 const MAX_BYTES = 1_500_000;
