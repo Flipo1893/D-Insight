@@ -7,6 +7,19 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
+ * Hosting platforms read this from the build output and size the function's
+ * time limit to it. Without it the default applies, which on Vercel's free
+ * tier is ten seconds — and a measured assessment already takes three to
+ * eight. One slow page would be killed mid-request, and the visitor would
+ * get a gateway error where the code has a perfectly good "no assessment
+ * this time" path waiting.
+ *
+ * Sixty, with the assessment's own budget set to forty-five, so ours is
+ * always the limit that fires first.
+ */
+export const maxDuration = 60;
+
+/**
  * The model's assessment, asked for separately from the measurements.
  *
  * It was inline at first, and that was wrong. The measurements take about a
