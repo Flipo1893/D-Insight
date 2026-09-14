@@ -58,6 +58,15 @@ export default function ContactForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // Der Knopf ist auf jedem Schritt ein Submit-Knopf, damit die Enter-Taste
+    // dasselbe tut wie ein Klick. Gesendet wird trotzdem nur vom letzten
+    // Schritt aus — vorher rueckt er eine Stufe weiter.
+    if (step < STEPS.length - 1) {
+      setStep((current) => current + 1);
+      return;
+    }
+
     const form = event.currentTarget;
     const data = new FormData(form);
 
@@ -140,8 +149,11 @@ export default function ContactForm() {
   const isLast = step === STEPS.length - 1;
   const canAdvance = step > 0 || problem.trim().length > 0;
 
+  // Bewusst ohne noValidate: das schaltete die required-Attribute und die
+  // E-Mail-Pruefung des Browsers vollstaendig ab, ohne dass etwas an ihre
+  // Stelle trat — ein leeres Formular ging damit durch.
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Named steps rather than "2 von 3", so the visitor sees how little is
           left instead of only how far they have come. */}
       <ol className="flex gap-2" aria-label="Fortschritt">
@@ -330,24 +342,23 @@ export default function ContactForm() {
           </button>
         )}
 
-        {isLast ? (
-          <button
-            type="submit"
-            disabled={busy}
-            className="rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {busy ? "Wird gesendet" : primaryCta}
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setStep((current) => current + 1)}
-            disabled={busy || !canAdvance}
-            className="rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            Weiter
-          </button>
-        )}
+        {/* Ein einziger Knopf, der sein Etikett wechselt — nicht zwei, die
+            sich an derselben Stelle abloesen.
+            
+            Vorher stand hier ein type="button" fuer "Weiter" und ein
+            type="submit" fuer den letzten Schritt. React hat dabei dasselbe
+            DOM-Element wiederverwendet und beim Schritt auf den letzten nur
+            dessen type gepatcht — waehrend der Klick noch lief. Die
+            Standardaktion wird aber erst nach dem Event ausgewertet, und da
+            stand dort bereits submit: der Klick auf "Weiter" hat die Anfrage
+            abgeschickt, ohne Name und E-Mail. */}
+        <button
+          type="submit"
+          disabled={busy || !canAdvance}
+          className="rounded-brand bg-accent-strong px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-colors duration-200 hover:bg-accent-hover active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {isLast ? (busy ? "Wird gesendet" : primaryCta) : "Weiter"}
+        </button>
       </div>
 
       <p aria-live="polite" className="min-h-5 text-sm">
