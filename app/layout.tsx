@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Analytics from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
 import PageViewTracker from "./components/PageViewTracker";
-import SmoothScroll from "./components/SmoothScroll";
 import { site } from "./lib/content";
 import "./globals.css";
 
@@ -78,7 +77,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Zum Inhalt springen
         </a>
-        <SmoothScroll />
         <PageViewTracker />
         <Analytics />
         {children}

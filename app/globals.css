@@ -52,7 +52,14 @@
 }
 
 html {
+  /* Sanftes Springen zu Ankern, vom Browser statt von einer Bibliothek.
+     Eine JS-Schicht, die das Scrollen uebernimmt, muss ueber jede
+     Hoehenaenderung Bescheid wissen — Reveals, Routenwechsel, nachgeladene
+     Inhalte — und verliert genau dann das Scrollen, wenn sie eine verpasst. */
   scroll-behavior: smooth;
+  /* Damit ein Anker nicht unter dem klebenden Header landet. Entspricht
+     dessen Hoehe plus etwas Luft. */
+  scroll-padding-top: 6rem;
   /* Page theme lock: the site is dark end to end, so tell the UA that. */
   color-scheme: dark;
 }

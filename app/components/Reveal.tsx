@@ -21,6 +21,11 @@ type RevealProps = {
  * Pairs with the [data-reveal] rules in globals.css, which also carry the
  * reduced-motion fallback. Uses IntersectionObserver rather than a scroll
  * listener so nothing runs per frame.
+ *
+ * Der Anfangszustand ist unsichtbar, also ist jeder Weg, auf dem die
+ * Einblendung ausbleibt, ein verschwundener Seitenabschnitt. Deshalb loest
+ * sie aus, sobald die Oberkante ins Bild kommt, und wird sofort gesetzt,
+ * wenn es keinen IntersectionObserver gibt.
  */
 export default function Reveal({
   children,
@@ -35,14 +40,26 @@ export default function Reveal({
     const node = ref.current;
     if (!node) return;
 
+    const show = () => node.classList.add("is-visible");
+
+    if (typeof IntersectionObserver === "undefined") {
+      show();
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          node.classList.add("is-visible");
+          show();
           observer.unobserve(node);
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -60px 0px" },
+      // threshold 0 statt 0.12: ein Abschnitt, der hoeher ist als das
+      // Fenster, erreicht 12 Prozent seiner eigenen Hoehe erst weit nachdem
+      // er sichtbar wurde — er blendete sich dann mitten im Lesen ein.
+      // Der negative untere Rand haelt trotzdem den Moment zurueck, bis das
+      // Element wirklich im Bild ist.
+      { threshold: 0, rootMargin: "0px 0px -80px 0px" },
     );
 
     observer.observe(node);
