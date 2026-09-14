@@ -4,6 +4,11 @@ import { revalidatePath } from "next/cache";
 import { isAdminEmail } from "@/lib/admin";
 import { isMongoConfigured } from "@/lib/mongodb/config";
 import { saveSiteSettings, type SiteField } from "@/lib/mongodb/sites";
+import {
+  DEFAULT_CONTENT_PATH,
+  normalizeContentPath,
+  normalizeRepo,
+} from "@/lib/github/publish";
 import { getCurrentUser } from "@/lib/supabase/auth";
 import { steps } from "@/app/lib/content";
 
@@ -32,7 +37,7 @@ function parseFields(raw: string): SiteField[] {
     const { key, label, type } = entry as Record<string, unknown>;
 
     // A field is only usable if its key is a valid, unique identifier — it
-    // becomes a JSON key in the public content API.
+    // becomes a JSON key in the customer's content file or the content API.
     if (typeof key !== "string" || !/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)) continue;
     if (seen.has(key)) continue;
     seen.add(key);
@@ -74,6 +79,27 @@ export async function saveSettings(
     return { error: "Mindestens ein gültiges Feld angeben (Schlüssel z. B. heroTitle)." };
   }
 
+  // Empty repository is a valid choice: the site keeps reading the content
+  // API. Anything typed in has to be a real "owner/name", because it decides
+  // where the customer's texts are written.
+  const rawRepo = ((formData.get("repo") as string | null) ?? "").trim();
+  const repo = rawRepo ? normalizeRepo(rawRepo) : "";
+  if (repo === null) {
+    return {
+      error:
+        "Repository bitte als besitzer/name angeben, z. B. Beg10/kundenvorlage, oder die GitHub-Adresse einfügen.",
+    };
+  }
+
+  const rawPath = ((formData.get("contentPath") as string | null) ?? "").trim();
+  const contentPath = rawPath ? normalizeContentPath(rawPath) : DEFAULT_CONTENT_PATH;
+  if (contentPath === null) {
+    return {
+      error:
+        "Die Inhaltsdatei muss eine .json-Datei innerhalb des Repositorys sein, z. B. content/site.json.",
+    };
+  }
+
   try {
     // Phase is a select, but a server action is a public endpoint, so the
     // value is clamped rather than trusted.
@@ -92,6 +118,8 @@ export async function saveSettings(
     await saveSiteSettings(targetUserId, {
       siteName: ((formData.get("siteName") as string | null) ?? "").trim(),
       siteUrl: ((formData.get("siteUrl") as string | null) ?? "").trim(),
+      repo,
+      contentPath,
       fields,
       phase,
       pending,
