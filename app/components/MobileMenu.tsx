@@ -1,16 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 type NavItem = { href: string; label: string };
 
 type MobileMenuProps = {
   navItems: NavItem[];
-  authLink: ReactNode;
 };
 
-export default function MobileMenu({ navItems, authLink }: MobileMenuProps) {
+export default function MobileMenu({ navItems }: MobileMenuProps) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -55,12 +54,6 @@ export default function MobileMenu({ navItems, authLink }: MobileMenuProps) {
               </Link>
             ))}
           </nav>
-          <div
-            className="mt-6 border-t border-border pt-6"
-            onClick={() => setOpen(false)}
-          >
-            {authLink}
-          </div>
         </div>
       )}
     </div>

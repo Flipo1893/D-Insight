@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Analytics from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
-import PageViewTracker from "./components/PageViewTracker";
 import { site } from "./lib/content";
 import "./globals.css";
 
@@ -77,7 +76,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Zum Inhalt springen
         </a>
-        <PageViewTracker />
         <Analytics />
         {children}
         <div className="grain" aria-hidden />

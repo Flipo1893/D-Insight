@@ -3,9 +3,9 @@ import { references } from "./lib/references";
 import { site } from "./lib/content";
 
 /**
- * Only pages that should actually rank. Login, dashboard and drafts are
- * noindex, so listing them here would just ask Google to crawl pages we
- * then tell it to ignore.
+ * Only pages that should actually rank. Shared check reports are noindex
+ * and deliberately unguessable, so listing them here would both ask Google
+ * to crawl pages we tell it to ignore and publish someone else's findings.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();

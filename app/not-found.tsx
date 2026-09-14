@@ -76,8 +76,8 @@ export default function NotFound() {
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="transition-colors hover:text-foreground">
-                  Kundenbereich
+                <Link href="/referenzen" className="transition-colors hover:text-foreground">
+                  Referenzen
                 </Link>
               </li>
             </ul>

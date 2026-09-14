@@ -133,32 +133,6 @@ export default function Datenschutz() {
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Reichweitenmessung
-              </h2>
-              <p>
-                Wir zählen selbst, wie oft welche Seite aufgerufen wird. Dabei
-                wird kein Cookie gesetzt und kein Merkmal in Ihrem Browser
-                gespeichert. Erfasst werden die aufgerufene Seite und die
-                Website, von der Sie kamen, jeweils ohne den vollständigen
-                Link.
-              </p>
-              <p className="mt-3">
-                Um Besucherinnen und Besucher zu zählen, ohne sie
-                wiederzuerkennen, bilden wir aus IP-Adresse, Browserkennung,
-                dem heutigen Datum und einem geheimen Zusatz eine Prüfsumme.
-                Diese lässt sich nicht zurückrechnen und ändert sich täglich,
-                sodass kein Verlauf über mehrere Tage entsteht. Die
-                IP-Adresse selbst wird nicht gespeichert.
-              </p>
-              <p className="mt-3">
-                Die Daten liegen auf unserer eigenen Datenbank, werden nicht an
-                Dritte weitergegeben und nach zwölf Monaten automatisch
-                gelöscht.
-              </p>
-            </section>
-
-            <section>
-              <h2 className="mb-2 text-lg font-semibold text-foreground">
                 Website-Schnellcheck
               </h2>
               <p>
