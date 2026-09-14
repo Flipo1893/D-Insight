@@ -1,6 +1,5 @@
 import { getMongoClientPromise } from "./client";
 import { mongodbDbName } from "./config";
-import { DEFAULT_CONTENT_PATH } from "../github/publish";
 
 export type SiteFieldType = "text" | "textarea";
 
@@ -22,13 +21,6 @@ export type Site = {
   siteName: string;
   /** The customer's live website, e.g. "https://baeckerei-mueller.de". */
   siteUrl: string;
-  /**
-   * GitHub repository the customer's website is built from, as "owner/name".
-   * Empty for sites that still read the content API at runtime.
-   */
-  repo: string;
-  /** JSON file in that repository that holds the texts. */
-  contentPath: string;
   fields: SiteField[];
   /** The actual values, keyed by SiteField.key. */
   content: Record<string, string>;
@@ -101,9 +93,6 @@ function normalize(doc: StoredSite): Site {
     email: doc.email ?? "",
     siteName: doc.siteName ?? "",
     siteUrl: doc.siteUrl ?? "",
-    // Sites created before publishing to a repository existed carry neither.
-    repo: doc.repo ?? "",
-    contentPath: doc.contentPath || DEFAULT_CONTENT_PATH,
     fields: doc.fields?.length ? doc.fields : defaultSiteFields,
     content: doc.content ?? { ...defaultContent, ...legacyContent },
     // Documents written before project tracking existed carry none of these.
@@ -184,8 +173,6 @@ export async function saveSiteSettings(
   settings: {
     siteName: string;
     siteUrl: string;
-    repo: string;
-    contentPath: string;
     fields: SiteField[];
     phase: number;
     pending: string[];

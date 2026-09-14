@@ -59,46 +59,6 @@ export default function SiteSettingsForm({ site }: { site: Site }) {
         </div>
       </div>
 
-      {/* Where the customer's texts are published. With a repository,
-          saving in the customer dashboard writes the content file and the
-          site rebuilds; without one, the site keeps reading the API. */}
-      <div className="flex flex-col gap-2">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="repo" className="mb-1 block text-sm text-muted">
-              GitHub-Repository
-              <span className="ml-2 text-muted">optional</span>
-            </label>
-            <input
-              id="repo"
-              name="repo"
-              type="text"
-              defaultValue={site.repo}
-              placeholder="Beg10/kundenvorlage"
-              className={`${inputClasses} font-mono`}
-            />
-          </div>
-          <div>
-            <label htmlFor="contentPath" className="mb-1 block text-sm text-muted">
-              Inhaltsdatei
-            </label>
-            <input
-              id="contentPath"
-              name="contentPath"
-              type="text"
-              defaultValue={site.contentPath}
-              placeholder="content/site.json"
-              className={`${inputClasses} font-mono`}
-            />
-          </div>
-        </div>
-        <p className="text-sm text-muted">
-          Mit Repository schreibt Speichern im Kundendashboard die Texte in
-          diese Datei, und die Website baut neu. Ohne Repository liest die
-          Website die Texte weiter über die Content-API.
-        </p>
-      </div>
-
       {/* Project status. The customer sees this on their own overview, which
           saves the recurring "wie weit seid ihr" email in both directions. */}
       <div className="grid gap-5 sm:grid-cols-2">
@@ -156,9 +116,8 @@ export default function SiteSettingsForm({ site }: { site: Site }) {
       <div>
         <p className="text-sm font-medium">Editierbare Felder</p>
         <p className="mt-1 text-sm text-muted">
-          Der Schlüssel ist der Name des Werts in der Inhaltsdatei der
-          Kundenwebsite, bei der Vorlage siehe content/felder.json. Die
-          Bezeichnung sieht der Kunde im Dashboard.
+          Der Schlüssel ist der Name, unter dem die Kundenwebsite den Wert aus
+          der Content-API liest. Die Bezeichnung sieht der Kunde im Dashboard.
         </p>
 
         <div className="mt-4 flex flex-col gap-3">

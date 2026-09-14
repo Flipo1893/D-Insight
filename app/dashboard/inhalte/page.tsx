@@ -17,19 +17,14 @@ export default async function Inhalte() {
   const fields = site?.fields ?? defaultSiteFields;
   const content = site?.content ?? {};
 
-  // A site that is built from its own repository never calls the content
-  // API, so the API address would only confuse its owner.
-  const publishesToRepo = Boolean(site?.repo);
-
   return (
     <div className="max-w-xl">
       <h2 className="text-2xl font-semibold tracking-tight">
         Website-Inhalte
       </h2>
       <p className="mt-2 text-muted">
-        {publishesToRepo
-          ? "Passen Sie die Texte Ihrer Website an. Nach dem Speichern dauert es etwa eine Minute, bis die Änderung auf Ihrer Website erscheint."
-          : "Passen Sie die Texte Ihrer Website an — Änderungen erscheinen nach dem Speichern automatisch auf Ihrer Seite."}
+        Passen Sie die Texte Ihrer Website an — Änderungen erscheinen nach dem
+        Speichern automatisch auf Ihrer Seite.
       </p>
 
       {!isMongoConfigured && (
@@ -44,7 +39,7 @@ export default async function Inhalte() {
         <ContentForm fields={fields} content={content} />
       </div>
 
-      {user && !publishesToRepo && (
+      {user && (
         <div className="mt-10 rounded-md border border-border bg-surface p-4">
           <p className="text-sm font-medium">Content-API für Ihre Website</p>
           <p className="mt-1 text-sm text-muted">
