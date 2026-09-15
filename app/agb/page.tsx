@@ -121,7 +121,7 @@ export default function AGB() {
             Allgemeine Geschäftsbedingungen
           </h1>
           <p className="mt-2 font-mono text-xs text-muted">
-            Stand: 15. September 2026, angepasst am 15. September 2026
+            Stand: 15. September 2026
           </p>
 
           <div className="mt-12 space-y-10 text-muted">
