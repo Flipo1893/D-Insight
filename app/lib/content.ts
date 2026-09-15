@@ -137,10 +137,10 @@ export const faqs = [
 
 /** Qualification options on the contact form. */
 export const budgetOptions = [
-  "unter 1'500 CHF",
-  "1'500 bis 3'000 CHF",
-  "3'000 bis 6'000 CHF",
-  "über 6'000 CHF",
+  "bis 500 CHF",
+  "500 bis 1'000 CHF",
+  "1'000 bis 1'500 CHF",
+  "noch unklar",
 ] as const;
 
 export const timelineOptions = [
