@@ -137,9 +137,9 @@ export const faqs = [
 
 /** Qualification options on the contact form. */
 export const budgetOptions = [
-  "bis 500 CHF",
-  "500 bis 1'000 CHF",
-  "1'000 bis 1'500 CHF",
+  "bis 200 CHF",
+  "200 bis 350 CHF",
+  "350 bis 500 CHF",
   "noch unklar",
 ] as const;
 
