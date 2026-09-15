@@ -12,10 +12,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const address = `${site.address.street}, ${site.address.postalCode} ${site.address.city}`;
+
 const sections = [
   {
-    title: "1. Geltungsbereich",
+    title: "1. Vertragspartner und Geltungsbereich",
     paragraphs: [
+      `Vertragspartner ist D-Insight, eine einfache Gesellschaft von Dominic Felder und Beg Sherifi, ${address}.`,
       "Diese Bedingungen gelten für alle Verträge zwischen D-Insight und dem Auftraggeber über Website-Refactoring, visuelles Redesign, Suchmaschinenoptimierung und damit verbundene Leistungen.",
       "Abweichende Bedingungen des Auftraggebers gelten nur, wenn wir ihnen schriftlich zustimmen.",
     ],
@@ -24,7 +27,7 @@ const sections = [
     title: "2. Angebot und Vertragsschluss",
     paragraphs: [
       "Darstellungen auf dieser Website sind unverbindlich und stellen kein Angebot dar. Ein Vertrag kommt zustande, wenn wir eine Offerte stellen und der Auftraggeber diese schriftlich oder per E-Mail annimmt.",
-      "Der Leistungsumfang ergibt sich aus der Offerte. Was dort nicht aufgeführt ist, ist nicht Vertragsbestandteil.",
+      "Der Leistungsumfang ergibt sich aus der Offerte. Was dort nicht aufgeführt ist, ist nicht Vertragsbestandteil. Zusätzliche Wünsche erfassen wir als Nachtrag mit eigenem Preis.",
     ],
   },
   {
@@ -53,14 +56,15 @@ const sections = [
     title: "6. Abnahme",
     paragraphs: [
       "Nach Fertigstellung teilen wir die Leistung zur Abnahme mit. Der Auftraggeber prüft sie innert zehn Arbeitstagen und meldet Mängel schriftlich.",
-      "Erfolgt innert dieser Frist keine Rückmeldung, gilt die Leistung als abgenommen. Unwesentliche Abweichungen berechtigen nicht zur Verweigerung der Abnahme.",
+      "Erfolgt innert dieser Frist keine Rückmeldung oder wird die Website produktiv genutzt, gilt die Leistung als abgenommen. Unwesentliche Abweichungen berechtigen nicht zur Verweigerung der Abnahme.",
     ],
   },
   {
     title: "7. Preise und Zahlung",
     paragraphs: [
-      "Es gelten die Preise der Offerte, zuzüglich Mehrwertsteuer, sofern anwendbar. Bei Projekten wird üblicherweise ein Teilbetrag bei Auftragserteilung und der Rest nach Abnahme in Rechnung gestellt.",
-      "Rechnungen sind innert 30 Tagen ohne Abzug zahlbar. Nach Ablauf gerät der Auftraggeber ohne weitere Mahnung in Verzug.",
+      "Es gelten die Preise der Offerte in Schweizer Franken. D-Insight ist nicht mehrwertsteuerpflichtig; die Preise sind Endpreise, es wird keine Mehrwertsteuer ausgewiesen.",
+      "Bei Projekten stellen wir üblicherweise 50 Prozent bei Auftragserteilung und den Rest nach Abnahme in Rechnung, sofern die Offerte nichts anderes vorsieht.",
+      "Rechnungen sind innert 30 Tagen ohne Abzug zahlbar. Nach Ablauf dieser Frist gerät der Auftraggeber ohne weitere Mahnung in Verzug.",
     ],
   },
   {
@@ -74,8 +78,8 @@ const sections = [
   {
     title: "9. Haftung",
     paragraphs: [
-      "Wir haften für Schäden aus Vorsatz und grober Fahrlässigkeit unbeschränkt. Bei leichter Fahrlässigkeit haften wir nur für die Verletzung wesentlicher Vertragspflichten, und begrenzt auf den vorhersehbaren, vertragstypischen Schaden.",
-      "Die Haftung für entgangenen Gewinn, ausgebliebene Aufträge und mittelbare Schäden ist ausgeschlossen, soweit gesetzlich zulässig.",
+      "Wir haften für Schäden aus Vorsatz und grober Fahrlässigkeit. Für leichte Fahrlässigkeit ist die Haftung ausgeschlossen, soweit gesetzlich zulässig.",
+      "Die Haftung für entgangenen Gewinn, ausgebliebene Aufträge und mittelbare Schäden ist ausgeschlossen, soweit gesetzlich zulässig. Die Haftung für Personenschäden bleibt unberührt.",
       "Der Auftraggeber ist für Sicherungskopien seiner Daten verantwortlich.",
     ],
   },
@@ -87,16 +91,22 @@ const sections = [
     ],
   },
   {
-    title: "11. Änderungen dieser Bedingungen",
+    title: "11. Datenschutz",
+    paragraphs: [
+      "Wir bearbeiten Personendaten des Auftraggebers nur, soweit dies für die Vertragserfüllung nötig ist. Einzelheiten stehen in der Datenschutzerklärung.",
+    ],
+  },
+  {
+    title: "12. Änderungen dieser Bedingungen",
     paragraphs: [
       "Wir können diese Bedingungen für künftige Verträge ändern. Für einen bereits geschlossenen Vertrag gilt die Fassung, die bei Vertragsschluss in Kraft war.",
     ],
   },
   {
-    title: "12. Anwendbares Recht und Gerichtsstand",
+    title: "13. Anwendbares Recht und Gerichtsstand",
     paragraphs: [
       "Es gilt schweizerisches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist Zürich, soweit nicht zwingende Bestimmungen etwas anderes vorschreiben.",
-      "Gegenüber Verbrauchern mit Wohnsitz in der EU bleiben die zwingenden Verbraucherschutzbestimmungen ihres Wohnsitzstaates unberührt.",
+      "Gegenüber Konsumentinnen und Konsumenten bleiben die zwingenden Gerichtsstände nach Art. 32 ZPO sowie die zwingenden Schutzbestimmungen ihres Wohnsitzstaates unberührt.",
     ],
   },
 ];
@@ -110,12 +120,8 @@ export default function AGB() {
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Allgemeine Geschäftsbedingungen
           </h1>
-          <p className="mt-4 text-sm text-accent-text">
-            Entwurf. Vor dem Livegang von einer juristisch qualifizierten
-            Person prüfen lassen und die Angaben in eckigen Klammern ersetzen.
-          </p>
           <p className="mt-2 font-mono text-xs text-muted">
-            Stand: 1. September 2026
+            Stand: 15. September 2026
           </p>
 
           <div className="mt-12 space-y-10 text-muted">
@@ -133,18 +139,22 @@ export default function AGB() {
             ))}
           </div>
 
-          <p className="mt-12 border-t border-border pt-6 text-xs leading-relaxed text-muted">
-            Dieser Entwurf ersetzt keine Rechtsberatung. Er deckt den
-            üblichen Rahmen einer Projektdienstleistung ab, kennt aber weder
-            eure Rechtsform noch eure Versicherungssituation. Fragen dazu
-            gerne an{" "}
+          <p className="mt-12 border-t border-border pt-6 text-sm leading-relaxed text-muted">
+            Fragen zu diesen Bedingungen beantworten wir gerne unter{" "}
             <a
               href={`mailto:${site.email}`}
               className="underline transition-colors hover:text-foreground"
             >
               {site.email}
             </a>
-            . Für die Nutzung des Kundenbereichs gelten zusätzlich die{" "}
+            . Siehe auch{" "}
+            <Link
+              href="/datenschutz"
+              className="underline transition-colors hover:text-foreground"
+            >
+              Datenschutz
+            </Link>{" "}
+            und{" "}
             <Link
               href="/nutzungsbedingungen"
               className="underline transition-colors hover:text-foreground"

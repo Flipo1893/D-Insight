@@ -8,6 +8,15 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 };
 
+/**
+ * Anbieterkennzeichnung nach Art. 3 Abs. 1 lit. s UWG: Identität und
+ * Kontaktadresse inklusive E-Mail. Eine Telefonnummer verlangt das Gesetz
+ * nicht, deshalb steht bewusst keine da.
+ *
+ * D-Insight ist eine einfache Gesellschaft (Art. 530 ff. OR). Sie hat keine
+ * eigene Rechtspersönlichkeit und keinen Handelsregistereintrag, deshalb
+ * werden die Gesellschafter namentlich genannt.
+ */
 export default function Impressum() {
   return (
     <>
@@ -17,26 +26,22 @@ export default function Impressum() {
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Impressum
           </h1>
-          <p className="mt-4 text-sm text-accent-text">
-            Entwurf. Die Angaben in eckigen Klammern müssen vor dem Livegang
-            ersetzt und von euch geprüft werden.
-          </p>
 
           <div className="mt-10 space-y-8 text-muted">
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Verantwortlich für diese Website
+                Anbieter
               </h2>
               <p>
                 D-Insight
                 <br />
-                Dominic Felder und Beg Sherifi
+                Einfache Gesellschaft von Dominic Felder und Beg Sherifi
                 <br />
-                Bahnhofplatz 1
+                {site.address.street}
                 <br />
-                8001 Zürich
+                {site.address.postalCode} {site.address.city}
                 <br />
-                Schweiz
+                {site.address.country}
               </p>
             </section>
 
@@ -52,22 +57,19 @@ export default function Impressum() {
                 >
                   {site.email}
                 </a>
-                <br />
-                Telefon: [Telefonnummer]
               </p>
             </section>
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Rechtsform und Register
+                Rechtsform, Register und Mehrwertsteuer
               </h2>
               <p>
-                [Rechtsform, zum Beispiel Einzelunternehmen oder GmbH]
+                Rechtsform: Einfache Gesellschaft nach Art. 530 ff. OR
                 <br />
-                Handelsregister: [UID-Nummer CHE-xxx.xxx.xxx, sofern
-                eingetragen]
+                Handelsregister: nicht eingetragen
                 <br />
-                Mehrwertsteuer: [MWST-Nummer, sofern MWST-pflichtig]
+                Mehrwertsteuer: nicht mehrwertsteuerpflichtig
               </p>
             </section>
 
@@ -94,14 +96,6 @@ export default function Impressum() {
               </p>
             </section>
           </div>
-
-          {/* Not legal advice: this is a starting structure, not a reviewed
-              text. The Swiss requirement for an easily findable contact point
-              comes from UWG Art. 3 Abs. 1 lit. s for anyone selling online. */}
-          <p className="mt-12 border-t border-border pt-6 text-xs text-muted">
-            Hinweis: Dieser Entwurf ersetzt keine Rechtsberatung. Die
-            Kontaktangaben orientieren sich an Art. 3 Abs. 1 lit. s UWG.
-          </p>
         </div>
       </main>
       <Footer />

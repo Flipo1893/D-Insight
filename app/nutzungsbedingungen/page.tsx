@@ -7,90 +7,73 @@ import { site } from "../lib/content";
 export const metadata: Metadata = {
   title: "Nutzungsbedingungen",
   description:
-    "Regeln für die Nutzung des Kundenbereichs und der kostenlosen Werkzeuge auf dieser Website.",
+    "Regeln für die Nutzung dieser Website und des kostenlosen Website-Schnellchecks.",
   alternates: { canonical: "/nutzungsbedingungen" },
   robots: { index: true, follow: true },
 };
 
 /**
- * Terms of use, separate from the AGB.
+ * Nutzungsbedingungen, getrennt von den AGB.
  *
- * The AGB govern a paid project. These govern the account, the dashboard and
- * the free tools, which is where the risk actually sits: without stated
- * rules there is no basis for suspending an account, and the quick check is
- * an endpoint that makes our server fetch a URL somebody else chose. That
- * needs a written boundary, not only a rate limit.
+ * Die AGB regeln bezahlte Projekte. Diese hier regeln die Website und den
+ * kostenlosen Schnellcheck, einen Endpunkt, der unseren Server eine Adresse
+ * abrufen lässt, die jemand anderes gewählt hat. Dafür braucht es eine
+ * schriftliche Grenze, nicht nur ein Abfragelimit.
+ *
+ * Ein Kundenkonto gibt es auf dieser Website nicht mehr, deshalb sind die
+ * Abschnitte zu Konto, Kundenbereich und Sperrung entfallen.
  */
 const sections = [
   {
-    title: "1. Was diese Bedingungen regeln",
+    title: "1. Geltungsbereich",
     paragraphs: [
-      "Diese Bedingungen gelten für die Nutzung dieser Website, des Kundenbereichs und der kostenlos angebotenen Werkzeuge, insbesondere des Website-Schnellchecks.",
-      "Für kostenpflichtige Projekte gelten zusätzlich unsere Allgemeinen Geschäftsbedingungen. Bei Widersprüchen gehen für den Projektvertrag die AGB vor.",
+      "Diese Bedingungen gelten für die Nutzung dieser Website und der kostenlos angebotenen Werkzeuge, insbesondere des Website-Schnellchecks.",
+      "Für kostenpflichtige Projekte gelten unsere Allgemeinen Geschäftsbedingungen.",
     ],
   },
   {
-    title: "2. Konto",
-    paragraphs: [
-      "Ein Konto ist für Kundinnen und Kunden bestimmt, deren Website wir betreuen. Die Zugangsdaten sind vertraulich zu behandeln und nicht weiterzugeben.",
-      "Wer den Verdacht hat, dass Unbefugte Zugriff haben, meldet uns das unverzüglich. Bis zur Meldung gelten Handlungen über das Konto als vom Kontoinhaber veranlasst.",
-      "Angaben im Konto müssen zutreffend sein. Konten auf falschen Namen können wir schliessen.",
-    ],
-  },
-  {
-    title: "3. Zulässige Nutzung der Werkzeuge",
+    title: "2. Zulässige Nutzung des Schnellchecks",
     paragraphs: [
       "Der Schnellcheck darf für Websites genutzt werden, die Ihnen gehören oder für deren Prüfung Sie berechtigt sind, sowie für öffentlich erreichbare Seiten zu Vergleichszwecken in üblichem Umfang.",
-      "Nicht zulässig ist insbesondere: automatisiertes Abfragen in grossem Umfang, das Umgehen technischer Begrenzungen, das Prüfen von Adressen in fremden internen Netzen, sowie jede Nutzung, die einen Dienst Dritter beeinträchtigt.",
-      "Wir begrenzen die Zahl der Abfragen pro Zeitraum und prüfen ausschliesslich öffentlich abrufbare Angaben der aufgerufenen Seite.",
+      "Nicht zulässig sind insbesondere automatisierte Abfragen in grossem Umfang, das Umgehen technischer Begrenzungen, das Prüfen von Adressen in internen Netzen sowie jede Nutzung, die einen Dienst Dritter beeinträchtigt.",
+      "Wir begrenzen die Zahl der Abfragen pro Zeitraum und rufen ausschliesslich öffentlich erreichbare Seiten ab.",
+    ],
+  },
+  {
+    title: "3. Ergebnisse",
+    paragraphs: [
+      "Die Ergebnisse des Schnellchecks sind eine automatisierte Einschätzung anhand öffentlich sichtbarer Angaben der geprüften Seite. Teile davon können mithilfe eines Sprachmodells erstellt werden. Sie ersetzen keine vollständige Prüfung und sind keine Zusicherung.",
     ],
   },
   {
     title: "4. Geteilte Berichte",
     paragraphs: [
-      "Wer einen Prüfbericht teilbar macht, erzeugt eine Adresse, die für jeden erreichbar ist, der den Link kennt. Teilen Sie ihn nur mit Personen, die den Bericht sehen dürfen.",
+      "Wer einen Prüfbericht teilbar macht, erzeugt eine Adresse, die für jede Person erreichbar ist, die den Link kennt. Teilen Sie ihn nur mit Personen, die den Bericht sehen dürfen.",
       "Geteilte Berichte werden nach 30 Tagen automatisch gelöscht. Wir können Berichte vorher entfernen, wenn ein begründeter Hinweis auf Missbrauch vorliegt.",
     ],
   },
   {
-    title: "5. Inhalte im Kundenbereich",
+    title: "5. Verfügbarkeit",
     paragraphs: [
-      "Für Inhalte, die Sie im Kundenbereich einstellen, bleiben Sie verantwortlich. Sie sichern zu, über die nötigen Rechte zu verfügen und keine rechtswidrigen Inhalte einzustellen.",
-      "Wir sichten Inhalte nicht vorab. Erhalten wir Kenntnis von rechtswidrigen Inhalten, entfernen wir sie.",
+      "Wir bemühen uns um einen zuverlässigen Betrieb, schulden aber keine bestimmte Verfügbarkeit. Die kostenlosen Werkzeuge können wir jederzeit ändern oder einstellen.",
     ],
   },
   {
-    title: "6. Sperrung und Kündigung",
+    title: "6. Haftung",
     paragraphs: [
-      "Wir können ein Konto sperren oder Leistungen aussetzen, wenn diese Bedingungen erheblich oder wiederholt verletzt werden, wenn der Betrieb oder die Sicherheit unserer Systeme gefährdet ist, oder wenn wir dazu rechtlich verpflichtet sind.",
-      "Soweit möglich und zumutbar, weisen wir vorher darauf hin und geben Gelegenheit zur Abhilfe. Bei Gefahr im Verzug sperren wir sofort und informieren danach.",
-      "Sie können Ihr Konto jederzeit ohne Angabe von Gründen kündigen. Nach Kündigung löschen wir Ihre im Kundenbereich gespeicherten Inhalte innert 30 Tagen, soweit keine Aufbewahrungspflichten entgegenstehen.",
+      "Für die kostenlos angebotenen Werkzeuge und die Inhalte dieser Website haften wir nur für Vorsatz und grobe Fahrlässigkeit, soweit gesetzlich zulässig.",
     ],
   },
   {
-    title: "7. Verfügbarkeit",
+    title: "7. Änderungen",
     paragraphs: [
-      "Wir bemühen uns um einen zuverlässigen Betrieb, schulden aber keine bestimmte Verfügbarkeit. Wartungsarbeiten, Störungen bei Vorleistern und Ereignisse ausserhalb unseres Einflussbereichs können zu Unterbrechungen führen.",
-      "Die kostenlosen Werkzeuge werden ohne Zusicherung angeboten. Wir können sie ändern oder einstellen.",
+      "Wir können diese Bedingungen ändern. Es gilt die jeweils auf dieser Seite veröffentlichte Fassung.",
     ],
   },
   {
-    title: "8. Haftung",
+    title: "8. Anwendbares Recht",
     paragraphs: [
-      "Für die kostenlos angebotenen Werkzeuge haften wir nur für Vorsatz und grobe Fahrlässigkeit. Die Ergebnisse des Schnellchecks sind eine automatisierte Einschätzung anhand öffentlich sichtbarer Angaben und ersetzen keine vollständige Prüfung.",
-      "Im Übrigen gelten die Haftungsregeln unserer AGB.",
-    ],
-  },
-  {
-    title: "9. Änderungen",
-    paragraphs: [
-      "Wir können diese Bedingungen ändern, wenn dafür ein sachlicher Grund besteht. Über wesentliche Änderungen informieren wir Kontoinhaber mindestens 30 Tage vorher per E-Mail. Wer nicht widerspricht, stimmt zu; bei Widerspruch endet die Nutzung des Kontos zum Zeitpunkt des Inkrafttretens.",
-    ],
-  },
-  {
-    title: "10. Anwendbares Recht",
-    paragraphs: [
-      "Es gilt schweizerisches Recht. Gerichtsstand ist Zürich. Gegenüber Verbrauchern mit Wohnsitz in der EU bleiben die zwingenden Bestimmungen ihres Wohnsitzstaates unberührt.",
+      "Es gilt schweizerisches Recht. Gerichtsstand ist Zürich, soweit nicht zwingende Bestimmungen etwas anderes vorschreiben.",
     ],
   },
 ];
@@ -104,12 +87,8 @@ export default function Nutzungsbedingungen() {
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
             Nutzungsbedingungen
           </h1>
-          <p className="mt-4 text-sm text-accent-text">
-            Entwurf. Vor dem Livegang juristisch prüfen lassen und die Angaben
-            in eckigen Klammern ersetzen.
-          </p>
           <p className="mt-2 font-mono text-xs text-muted">
-            Stand: 1. September 2026
+            Stand: 15. September 2026
           </p>
 
           <div className="mt-12 space-y-10 text-muted">
@@ -127,8 +106,8 @@ export default function Nutzungsbedingungen() {
             ))}
           </div>
 
-          <p className="mt-12 border-t border-border pt-6 text-xs leading-relaxed text-muted">
-            Dieser Entwurf ersetzt keine Rechtsberatung. Fragen an{" "}
+          <p className="mt-12 border-t border-border pt-6 text-sm leading-relaxed text-muted">
+            Fragen an{" "}
             <a
               href={`mailto:${site.email}`}
               className="underline transition-colors hover:text-foreground"
