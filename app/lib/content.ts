@@ -106,7 +106,7 @@ export const faqs = [
     slug: "dauer",
     question: "Wie lange dauert ein Refactoring-Projekt?",
     answer:
-      "Je nach Umfang zwischen zwei und sechs Wochen. Nach der Analyse erhalten Sie einen konkreten Zeitplan mit festen Meilensteinen.",
+      "In der Regel ein bis zwei Wochen, je nach Umfang. Nach einem kurzen Gespräch wissen Sie, wann Ihre neue Website steht.",
   },
   {
     slug: "offline",

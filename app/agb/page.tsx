@@ -63,14 +63,14 @@ const sections = [
     title: "7. Preise und Zahlung",
     paragraphs: [
       "Es gelten die Preise der Offerte in Schweizer Franken. D-Insight ist nicht mehrwertsteuerpflichtig; die Preise sind Endpreise, es wird keine Mehrwertsteuer ausgewiesen.",
-      "Bei Projekten stellen wir üblicherweise 50 Prozent bei Auftragserteilung und den Rest nach Abnahme in Rechnung, sofern die Offerte nichts anderes vorsieht.",
-      "Rechnungen sind innert 30 Tagen ohne Abzug zahlbar. Nach Ablauf dieser Frist gerät der Auftraggeber ohne weitere Mahnung in Verzug.",
+      "Wir stellen den gesamten Betrag nach der Abnahme in einer einzigen Rechnung, sofern die Offerte nichts anderes vorsieht.",
+      "Rechnungen sind innert 10 Tagen ohne Abzug zahlbar. Nach Ablauf dieser Frist gerät der Auftraggeber ohne weitere Mahnung in Verzug.",
     ],
   },
   {
     title: "8. Gewährleistung",
     paragraphs: [
-      "Wir gewährleisten, dass die Leistung bei Abnahme der vereinbarten Beschaffenheit entspricht. Mängel, die innert sechs Monaten nach Abnahme gemeldet werden, beheben wir kostenlos.",
+      "Wir gewährleisten, dass die Leistung bei Abnahme der vereinbarten Beschaffenheit entspricht. Mängel, die innert 30 Tagen nach Abnahme schriftlich gemeldet werden, beheben wir kostenlos. Danach erfolgen Anpassungen und Fehlerbehebungen gegen Verrechnung.",
       "Nicht als Mangel gelten Beeinträchtigungen durch Änderungen, die der Auftraggeber oder Dritte vornehmen, durch Ausfälle beim Hosting-Anbieter oder durch Änderungen an Diensten Dritter.",
       "Rankings in Suchmaschinen und Sichtbarkeit in KI-Systemen hängen von Faktoren ab, die ausserhalb unseres Einflusses liegen. Eine bestimmte Position oder Reichweite können wir daher nicht zusichern.",
     ],
@@ -121,7 +121,7 @@ export default function AGB() {
             Allgemeine Geschäftsbedingungen
           </h1>
           <p className="mt-2 font-mono text-xs text-muted">
-            Stand: 15. September 2026
+            Stand: 15. September 2026, angepasst am 15. September 2026
           </p>
 
           <div className="mt-12 space-y-10 text-muted">
