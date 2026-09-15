@@ -133,6 +133,35 @@ export default function Datenschutz() {
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
+                Vercel Web Analytics
+              </h2>
+              <p>
+                Diese Website nutzt Vercel Web Analytics, einen Dienst der
+                Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA.
+                Erfasst werden die aufgerufene Seite, die verweisende Seite,
+                ungefährer Standort auf Länderebene sowie Angaben zu Gerät,
+                Betriebssystem und Browser.
+              </p>
+              <p className="mt-3">
+                Es werden keine Cookies gesetzt und keine Kennungen in Ihrem
+                Browser gespeichert. Besucherinnen und Besucher werden nicht
+                über mehrere Seitenaufrufe hinweg wiedererkannt und nicht
+                seitenübergreifend verfolgt; die IP-Adresse wird nicht
+                gespeichert. Aus diesem Grund ist für den Einsatz keine
+                Einwilligung erforderlich.
+              </p>
+              <p className="mt-3">
+                Die Verarbeitung erfolgt in den USA. Rechtsgrundlage ist unser
+                berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO
+                beziehungsweise Art. 31 DSG an einer datensparsamen
+                Reichweitenmessung. Die USA gelten datenschutzrechtlich nicht
+                als Land mit gleichwertigem Schutzniveau; Vercel stützt die
+                Übermittlung auf Standardvertragsklauseln.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="mb-2 text-lg font-semibold text-foreground">
                 Website-Schnellcheck
               </h2>
               <p>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import Analytics from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
 import { site } from "./lib/content";
@@ -77,6 +78,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Zum Inhalt springen
         </a>
         <Analytics />
+        {/* Vercel Web Analytics. Umbenannt beim Import, weil <Analytics />
+            hier schon vergeben ist — das ist unsere Google-Analytics-
+            Komponente, die hinter der Einwilligung haengt. Die von Vercel
+            setzt keine Cookies und laeuft deshalb ohne Banner, gehoert aber
+            als Uebermittlung an Dritte in die Datenschutzerklaerung. */}
+        <VercelAnalytics />
         {children}
         <div className="grain" aria-hidden />
         <CookieConsent />
