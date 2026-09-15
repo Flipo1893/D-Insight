@@ -145,9 +145,9 @@ export const budgetOptions = [
 
 export const timelineOptions = [
   "so bald wie möglich",
-  "in 1 bis 3 Monaten",
-  "in 3 bis 6 Monaten",
-  "noch in Planung",
+  "in den nächsten 2 Wochen",
+  "innert eines Monats",
+  "noch unklar",
 ] as const;
 
 
