@@ -133,14 +133,17 @@ export default function Datenschutz() {
 
             <section>
               <h2 className="mb-2 text-lg font-semibold text-foreground">
-                Vercel Web Analytics
+                Vercel Web Analytics und Speed Insights
               </h2>
               <p>
-                Diese Website nutzt Vercel Web Analytics, einen Dienst der
-                Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA.
-                Erfasst werden die aufgerufene Seite, die verweisende Seite,
-                ungefährer Standort auf Länderebene sowie Angaben zu Gerät,
-                Betriebssystem und Browser.
+                Diese Website nutzt Vercel Web Analytics und Vercel Speed
+                Insights, zwei Dienste der Vercel Inc., 440 N Barranca Ave
+                #4133, Covina, CA 91723, USA. Web Analytics erfasst die
+                aufgerufene Seite, die verweisende Seite, ungefähren Standort
+                auf Länderebene sowie Angaben zu Gerät, Betriebssystem und
+                Browser. Speed Insights misst, wie schnell eine Seite bei
+                Ihnen tatsächlich geladen und bedienbar wurde, und erfasst
+                dazu die aufgerufene Seite, Gerätetyp und Verbindungsqualität.
               </p>
               <p className="mt-3">
                 Es werden keine Cookies gesetzt und keine Kennungen in Ihrem
@@ -156,7 +159,9 @@ export default function Datenschutz() {
                 beziehungsweise Art. 31 DSG an einer datensparsamen
                 Reichweitenmessung. Die USA gelten datenschutzrechtlich nicht
                 als Land mit gleichwertigem Schutzniveau; Vercel stützt die
-                Übermittlung auf Standardvertragsklauseln.
+                Übermittlung auf Standardvertragsklauseln. Die Messwerte von
+                Speed Insights nutzen wir ausschliesslich, um langsame Seiten
+                zu finden und zu beheben.
               </p>
             </section>
 

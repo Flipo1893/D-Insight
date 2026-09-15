@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import Analytics from "./components/Analytics";
 import CookieConsent from "./components/CookieConsent";
 import { site } from "./lib/content";
@@ -84,6 +85,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             setzt keine Cookies und laeuft deshalb ohne Banner, gehoert aber
             als Uebermittlung an Dritte in die Datenschutzerklaerung. */}
         <VercelAnalytics />
+        {/* Speed Insights misst die Ladezeiten echter Besuche statt unserer
+            eigenen. Dieselbe Herkunft wie oben, deshalb im selben Abschnitt
+            der Datenschutzerklaerung. */}
+        <SpeedInsights />
         {children}
         <div className="grain" aria-hidden />
         <CookieConsent />
